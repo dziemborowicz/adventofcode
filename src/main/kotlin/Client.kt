@@ -31,6 +31,8 @@ class Client(private val session: String) {
         AnswerResult.Correct(year, day, level, answer)
       response.contains("That's not the right answer.") ->
         AnswerResult.Incorrect(year, day, level, answer)
+      response.contains("That's not the right answer; your answer is too high.") ->
+        AnswerResult.IncorrectTooHigh(year, day, level, answer)
       response.contains("You gave an answer too recently") ->
         AnswerResult.AnsweredTooRecently(year, day, level, answer)
       response.contains("You don't seem to be solving the right level.") ->
@@ -92,6 +94,13 @@ class Client(private val session: String) {
     ) : AnswerResult
 
     data class Incorrect(
+      override val year: Int,
+      override val day: Int,
+      override val level: Int,
+      override val answer: Any?,
+    ) : AnswerResult
+
+    data class IncorrectTooHigh(
       override val year: Int,
       override val day: Int,
       override val level: Int,
