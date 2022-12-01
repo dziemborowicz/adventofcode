@@ -52,4 +52,25 @@ class PuzzleY2021D3 : Puzzle {
     val ones = report.count { it[index] == '1' }
     return if (zeroes > ones) '1' else '0'
   }
+
+  companion object {
+    val testInput1 = """
+      00100
+      11110
+      10110
+      10111
+      10101
+      01111
+      00111
+      11100
+      10000
+      11001
+      00010
+      01010
+      """.trimIndent()
+    val testAnswer1 = 198
+
+    val testInput2 = testInput1
+    val testAnswer2 = 230
+  }
 }
