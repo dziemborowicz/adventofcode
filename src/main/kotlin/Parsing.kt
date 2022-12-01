@@ -692,13 +692,22 @@ fun String.parseStringStringStrings() =
 
 fun <A> String.parseStrings(a: (String) -> A) = parseStrings().map { a(it) }
 fun <A, B> String.parseStrings(a: (String) -> A, b: (String) -> B) =
-  parseStrings().map { it.split(' ') }.map {
+  parseStringLists().map {
     require(it.size == 2)
     Pair(a(it[0]), b(it[1]))
   }
 
 fun <A, B, C> String.parseStrings(a: (String) -> A, b: (String) -> B, c: (String) -> C) =
-  parseStrings().map { it.split(' ') }.map {
+  parseStringLists().map {
     require(it.size == 3)
     Triple(a(it[0]), b(it[1]), c(it[2]))
   }
+
+fun String.parseBigDecimalLists() = parseStringLists { it.toBigDecimal() }
+fun String.parseBigIntegerLists() = parseStringLists { it.toBigInteger() }
+fun String.parseDoubleLists() = parseStringLists { it.toDouble() }
+fun String.parseIntLists() = parseStringLists { it.toInt() }
+fun String.parseLongLists() = parseStringLists { it.toLong() }
+fun String.parseStringLists() = parseStrings().map { it.split(Regex("\\s+")) }
+fun <T> String.parseStringLists(transform: (String) -> T) =
+  parseStringLists().map { it.map(transform) }
