@@ -15,9 +15,10 @@ class Client(private val session: String) {
       InputResult(file, file.readText())
     } else {
       download("https://adventofcode.com/$year/day/$day/input").let {
+        val contents = it.trimEnd()
         file.parentFile.mkdirs()
-        file.writeText(it)
-        InputResult(file, it)
+        file.writeText(contents)
+        InputResult(file, contents)
       }
     }
   }
