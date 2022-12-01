@@ -15,5 +15,6 @@ fun <T> Iterable<T>.split(predicate: (T) -> Boolean): List<List<T>> {
       current.add(it)
     }
   }
+  result.add(current)
   return result
 }
