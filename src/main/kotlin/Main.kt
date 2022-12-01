@@ -1,8 +1,48 @@
+import kotlin.reflect.KClass
+import kotlin.reflect.full.companionObjectInstance
+import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.memberProperties
+
 private fun solve(args: List<String>) {
   require(args.size in 2..3) { "Wrong number of args for `solve` command." }
   val year = args[0].toInt()
   val day = args[1].toInt()
   val levels = if (args.size > 2) (args[2].toInt()..args[2].toInt()) else (1..2)
+
+  @Suppress("UNCHECKED_CAST")
+  val puzzleClass = Class.forName("PuzzleY${year}D${day}").kotlin as KClass<out Puzzle>
+
+  val puzzleCompanion = puzzleClass.companionObjectInstance
+  if (puzzleCompanion != null) {
+    for (level in levels) {
+      for (inputProperty in puzzleCompanion::class.memberProperties) {
+        val match = Regex("testInput($level(_\\d+)?)").matchEntire(inputProperty.name) ?: continue
+        val label = match.groups[1]!!.value
+        val answerProperty =
+          puzzleCompanion::class.memberProperties.firstOrNull { it.name == "testAnswer$label" }
+            ?: throw AssertionError("No testAnswer$label found.")
+
+        val input = inputProperty.call(puzzleCompanion) as String
+        val expectedAnswer = answerProperty.call(puzzleCompanion)
+
+        timed("Test $label") {
+          val puzzle = puzzleClass.createInstance()
+          puzzle.parse(input)
+          val actualAnswer =
+            when (level) {
+              1 -> puzzle.solve1()
+              2 -> puzzle.solve2()
+              else -> throw AssertionError()
+            }
+          println("Expected Answer: $expectedAnswer")
+          println("Actual Answer  : $actualAnswer")
+          if (actualAnswer.toString() != expectedAnswer.toString()) {
+            throw AssertionError("Test $label failed.")
+          }
+        }
+      }
+    }
+  }
 
   val session = System.getenv("ADVENT_OF_CODE_SESSION")
   require(session != null && session.isNotBlank()) { "ADVENT_OF_CODE_SESSION not set." }
@@ -22,23 +62,17 @@ private fun solve(args: List<String>) {
     }
   }
 
-  val puzzleClass = "PuzzleY${year}D${day}"
-  val puzzle = Class.forName(puzzleClass).getDeclaredConstructor().newInstance() as Puzzle
+  val puzzle = puzzleClass.createInstance()
   timed("Parse Input") { puzzle.parse(input) }
 
   for (level in levels) {
     val answer = timed("Solve $level") {
-      try {
-        when (level) {
-          1 -> puzzle.solve1()
-          2 -> puzzle.solve2()
-          else -> throw AssertionError()
-        }.also {
-          println("Answer: $it")
-        }
-      } catch (e: NotImplementedError) {
-        println("Not implemented yet.")
-        return
+      when (level) {
+        1 -> puzzle.solve1()
+        2 -> puzzle.solve2()
+        else -> throw AssertionError()
+      }.also {
+        println("Answer: $it")
       }
     }
     timed("Upload Answer $level") {
