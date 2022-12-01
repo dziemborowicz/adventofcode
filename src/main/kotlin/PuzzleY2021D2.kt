@@ -37,4 +37,19 @@ class PuzzleY2021D2 : Puzzle {
     }
     return horizontalPosition * depth
   }
+
+  companion object {
+    val testInput1 = """
+      forward 5
+      down 5
+      forward 8
+      up 3
+      down 8
+      forward 2
+      """.trimIndent()
+    val testAnswer1 = 150
+
+    val testInput2 = testInput1
+    val testAnswer2 = 900
+  }
 }
