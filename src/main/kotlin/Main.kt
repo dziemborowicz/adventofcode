@@ -9,14 +9,16 @@ private fun solve(args: List<String>) {
 
   val client = Client(session)
   val input = timed("Download Input") {
-    client.downloadInput(year, day).also {
-      if (it.length > 32) {
-        println("${it.take(32)}...")
+    client.downloadInput(year, day).let {
+      if (it.contents.length > 32) {
+        println("${it.contents.take(32)}...")
       } else {
         println(it)
       }
-      println("${it.length} character(s)")
-      println("${it.count { c -> c == '\n' }} line(s)")
+      println("${it.contents.length} character(s)")
+      println("${it.contents.count { c -> c == '\n' }} line(s)")
+      println("Saved to ${it.file.absolutePath}")
+      it.contents
     }
   }
 

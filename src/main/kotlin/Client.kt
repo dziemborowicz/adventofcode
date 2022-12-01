@@ -1,3 +1,4 @@
+import java.io.File
 import java.io.IOException
 import java.net.URI
 import java.net.URLEncoder
@@ -8,14 +9,15 @@ import java.nio.file.Path
 
 class Client(private val session: String) {
 
-  fun downloadInput(year: Int, day: Int): String {
+  fun downloadInput(year: Int, day: Int): InputResult {
     val file = Path.of(cacheDirectory.toString(), "Input-$year-$day.txt").toFile()
     return if (file.exists()) {
-      file.readText()
+      InputResult(file, file.readText())
     } else {
-      download("https://adventofcode.com/$year/day/$day/input").also {
+      download("https://adventofcode.com/$year/day/$day/input").let {
         file.parentFile.mkdirs()
         file.writeText(it)
+        InputResult(file, it)
       }
     }
   }
@@ -73,6 +75,8 @@ class Client(private val session: String) {
     return HttpRequest.BodyPublishers.ofString(data)
   }
 
+  class InputResult(val file: File, val contents: String)
+
   sealed interface AnswerResult {
 
     val year: Int
@@ -119,7 +123,7 @@ class Client(private val session: String) {
 
   companion object {
 
-    private val cacheDirectory =
+    private val cacheDirectory: Path =
       Path.of(System.getProperty("java.io.tmpdir"), "AdventOfCode", "Inputs")
 
     fun clearCache() {
