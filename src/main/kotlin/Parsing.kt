@@ -1,25 +1,37 @@
+fun String.toChar(): Char {
+  require(length == 1) { "Must contain exactly one character." }
+  return first()
+}
+
 fun <A> String.parse(a: (String) -> A) = lines().parse(a)
+
 fun <A, B> String.parse(a: (String) -> A, b: (String) -> B) = lines().parse(a, b)
+
 fun <A, B, C> String.parse(a: (String) -> A, b: (String) -> B, c: (String) -> C) =
   lines().parse(a, b, c)
-fun <T> String.parseLists(transform: (String) -> T) = lines().parseLists(transform)
 
 fun <A> Iterable<String>.parse(a: (String) -> A) = map { a(it) }
+
 fun <A, B> Iterable<String>.parse(a: (String) -> A, b: (String) -> B) =
   parseStringLists().map {
     require(it.size == 2)
     Pair(a(it[0]), b(it[1]))
   }
+
 fun <A, B, C> Iterable<String>.parse(a: (String) -> A, b: (String) -> B, c: (String) -> C) =
   parseStringLists().map {
     require(it.size == 3)
     Triple(a(it[0]), b(it[1]), c(it[2]))
   }
+
+fun <T> String.parseLists(transform: (String) -> T) = lines().parseLists(transform)
+
 fun <T> Iterable<String>.parseLists(transform: (String) -> T) =
   map { it.trim().split(Regex("[\\s,]+")) }.map { it.map(transform) }
 
 fun String.parseBigDecimals() = parse(String::toBigDecimal)
 fun String.parseBigIntegers() = parse(String::toBigInteger)
+fun String.parseChars() = parse(String::toChar)
 fun String.parseDoubles() = parse(String::toDouble)
 fun String.parseInts() = parse(String::toInt)
 fun String.parseLongs() = parse(String::toLong)
@@ -27,6 +39,7 @@ fun String.parseStrings() = parse(String::toString)
 
 fun Iterable<String>.parseBigDecimals() = parse(String::toBigDecimal)
 fun Iterable<String>.parseBigIntegers() = parse(String::toBigInteger)
+fun Iterable<String>.parseChars() = parse(String::toChar)
 fun Iterable<String>.parseDoubles() = parse(String::toDouble)
 fun Iterable<String>.parseInts() = parse(String::toInt)
 fun Iterable<String>.parseLongs() = parse(String::toLong)
@@ -34,36 +47,49 @@ fun Iterable<String>.parseStrings() = parse(String::toString)
 
 fun String.parseBigDecimalBigDecimals() = parse(String::toBigDecimal, String::toBigDecimal)
 fun String.parseBigDecimalBigIntegers() = parse(String::toBigDecimal, String::toBigInteger)
+fun String.parseBigDecimalChars() = parse(String::toBigDecimal, String::toChar)
 fun String.parseBigDecimalDoubles() = parse(String::toBigDecimal, String::toDouble)
 fun String.parseBigDecimalInts() = parse(String::toBigDecimal, String::toInt)
 fun String.parseBigDecimalLongs() = parse(String::toBigDecimal, String::toLong)
 fun String.parseBigDecimalStrings() = parse(String::toBigDecimal, String::toString)
 fun String.parseBigIntegerBigDecimals() = parse(String::toBigInteger, String::toBigDecimal)
 fun String.parseBigIntegerBigIntegers() = parse(String::toBigInteger, String::toBigInteger)
+fun String.parseBigIntegerChars() = parse(String::toBigInteger, String::toChar)
 fun String.parseBigIntegerDoubles() = parse(String::toBigInteger, String::toDouble)
 fun String.parseBigIntegerInts() = parse(String::toBigInteger, String::toInt)
 fun String.parseBigIntegerLongs() = parse(String::toBigInteger, String::toLong)
 fun String.parseBigIntegerStrings() = parse(String::toBigInteger, String::toString)
+fun String.parseCharBigDecimals() = parse(String::toChar, String::toBigDecimal)
+fun String.parseCharBigIntegers() = parse(String::toChar, String::toBigInteger)
+fun String.parseCharChars() = parse(String::toChar, String::toChar)
+fun String.parseCharDoubles() = parse(String::toChar, String::toDouble)
+fun String.parseCharInts() = parse(String::toChar, String::toInt)
+fun String.parseCharLongs() = parse(String::toChar, String::toLong)
+fun String.parseCharStrings() = parse(String::toChar, String::toString)
 fun String.parseDoubleBigDecimals() = parse(String::toDouble, String::toBigDecimal)
 fun String.parseDoubleBigIntegers() = parse(String::toDouble, String::toBigInteger)
+fun String.parseDoubleChars() = parse(String::toDouble, String::toChar)
 fun String.parseDoubleDoubles() = parse(String::toDouble, String::toDouble)
 fun String.parseDoubleInts() = parse(String::toDouble, String::toInt)
 fun String.parseDoubleLongs() = parse(String::toDouble, String::toLong)
 fun String.parseDoubleStrings() = parse(String::toDouble, String::toString)
 fun String.parseIntBigDecimals() = parse(String::toInt, String::toBigDecimal)
 fun String.parseIntBigIntegers() = parse(String::toInt, String::toBigInteger)
+fun String.parseIntChars() = parse(String::toInt, String::toChar)
 fun String.parseIntDoubles() = parse(String::toInt, String::toDouble)
 fun String.parseIntInts() = parse(String::toInt, String::toInt)
 fun String.parseIntLongs() = parse(String::toInt, String::toLong)
 fun String.parseIntStrings() = parse(String::toInt, String::toString)
 fun String.parseLongBigDecimals() = parse(String::toLong, String::toBigDecimal)
 fun String.parseLongBigIntegers() = parse(String::toLong, String::toBigInteger)
+fun String.parseLongChars() = parse(String::toLong, String::toChar)
 fun String.parseLongDoubles() = parse(String::toLong, String::toDouble)
 fun String.parseLongInts() = parse(String::toLong, String::toInt)
 fun String.parseLongLongs() = parse(String::toLong, String::toLong)
 fun String.parseLongStrings() = parse(String::toLong, String::toString)
 fun String.parseStringBigDecimals() = parse(String::toString, String::toBigDecimal)
 fun String.parseStringBigIntegers() = parse(String::toString, String::toBigInteger)
+fun String.parseStringChars() = parse(String::toString, String::toChar)
 fun String.parseStringDoubles() = parse(String::toString, String::toDouble)
 fun String.parseStringInts() = parse(String::toString, String::toInt)
 fun String.parseStringLongs() = parse(String::toString, String::toLong)
@@ -71,36 +97,49 @@ fun String.parseStringStrings() = parse(String::toString, String::toString)
 
 fun Iterable<String>.parseBigDecimalBigDecimals() = parse(String::toBigDecimal, String::toBigDecimal)
 fun Iterable<String>.parseBigDecimalBigIntegers() = parse(String::toBigDecimal, String::toBigInteger)
+fun Iterable<String>.parseBigDecimalChars() = parse(String::toBigDecimal, String::toChar)
 fun Iterable<String>.parseBigDecimalDoubles() = parse(String::toBigDecimal, String::toDouble)
 fun Iterable<String>.parseBigDecimalInts() = parse(String::toBigDecimal, String::toInt)
 fun Iterable<String>.parseBigDecimalLongs() = parse(String::toBigDecimal, String::toLong)
 fun Iterable<String>.parseBigDecimalStrings() = parse(String::toBigDecimal, String::toString)
 fun Iterable<String>.parseBigIntegerBigDecimals() = parse(String::toBigInteger, String::toBigDecimal)
 fun Iterable<String>.parseBigIntegerBigIntegers() = parse(String::toBigInteger, String::toBigInteger)
+fun Iterable<String>.parseBigIntegerChars() = parse(String::toBigInteger, String::toChar)
 fun Iterable<String>.parseBigIntegerDoubles() = parse(String::toBigInteger, String::toDouble)
 fun Iterable<String>.parseBigIntegerInts() = parse(String::toBigInteger, String::toInt)
 fun Iterable<String>.parseBigIntegerLongs() = parse(String::toBigInteger, String::toLong)
 fun Iterable<String>.parseBigIntegerStrings() = parse(String::toBigInteger, String::toString)
+fun Iterable<String>.parseCharBigDecimals() = parse(String::toChar, String::toBigDecimal)
+fun Iterable<String>.parseCharBigIntegers() = parse(String::toChar, String::toBigInteger)
+fun Iterable<String>.parseCharChars() = parse(String::toChar, String::toChar)
+fun Iterable<String>.parseCharDoubles() = parse(String::toChar, String::toDouble)
+fun Iterable<String>.parseCharInts() = parse(String::toChar, String::toInt)
+fun Iterable<String>.parseCharLongs() = parse(String::toChar, String::toLong)
+fun Iterable<String>.parseCharStrings() = parse(String::toChar, String::toString)
 fun Iterable<String>.parseDoubleBigDecimals() = parse(String::toDouble, String::toBigDecimal)
 fun Iterable<String>.parseDoubleBigIntegers() = parse(String::toDouble, String::toBigInteger)
+fun Iterable<String>.parseDoubleChars() = parse(String::toDouble, String::toChar)
 fun Iterable<String>.parseDoubleDoubles() = parse(String::toDouble, String::toDouble)
 fun Iterable<String>.parseDoubleInts() = parse(String::toDouble, String::toInt)
 fun Iterable<String>.parseDoubleLongs() = parse(String::toDouble, String::toLong)
 fun Iterable<String>.parseDoubleStrings() = parse(String::toDouble, String::toString)
 fun Iterable<String>.parseIntBigDecimals() = parse(String::toInt, String::toBigDecimal)
 fun Iterable<String>.parseIntBigIntegers() = parse(String::toInt, String::toBigInteger)
+fun Iterable<String>.parseIntChars() = parse(String::toInt, String::toChar)
 fun Iterable<String>.parseIntDoubles() = parse(String::toInt, String::toDouble)
 fun Iterable<String>.parseIntInts() = parse(String::toInt, String::toInt)
 fun Iterable<String>.parseIntLongs() = parse(String::toInt, String::toLong)
 fun Iterable<String>.parseIntStrings() = parse(String::toInt, String::toString)
 fun Iterable<String>.parseLongBigDecimals() = parse(String::toLong, String::toBigDecimal)
 fun Iterable<String>.parseLongBigIntegers() = parse(String::toLong, String::toBigInteger)
+fun Iterable<String>.parseLongChars() = parse(String::toLong, String::toChar)
 fun Iterable<String>.parseLongDoubles() = parse(String::toLong, String::toDouble)
 fun Iterable<String>.parseLongInts() = parse(String::toLong, String::toInt)
 fun Iterable<String>.parseLongLongs() = parse(String::toLong, String::toLong)
 fun Iterable<String>.parseLongStrings() = parse(String::toLong, String::toString)
 fun Iterable<String>.parseStringBigDecimals() = parse(String::toString, String::toBigDecimal)
 fun Iterable<String>.parseStringBigIntegers() = parse(String::toString, String::toBigInteger)
+fun Iterable<String>.parseStringChars() = parse(String::toString, String::toChar)
 fun Iterable<String>.parseStringDoubles() = parse(String::toString, String::toDouble)
 fun Iterable<String>.parseStringInts() = parse(String::toString, String::toInt)
 fun Iterable<String>.parseStringLongs() = parse(String::toString, String::toLong)
@@ -111,6 +150,9 @@ fun String.parseBigDecimalBigDecimalBigDecimals() =
 
 fun String.parseBigDecimalBigDecimalBigIntegers() =
   parse(String::toBigDecimal, String::toBigDecimal, String::toBigInteger)
+
+fun String.parseBigDecimalBigDecimalChars() =
+  parse(String::toBigDecimal, String::toBigDecimal, String::toChar)
 
 fun String.parseBigDecimalBigDecimalDoubles() =
   parse(String::toBigDecimal, String::toBigDecimal, String::toDouble)
@@ -130,6 +172,9 @@ fun String.parseBigDecimalBigIntegerBigDecimals() =
 fun String.parseBigDecimalBigIntegerBigIntegers() =
   parse(String::toBigDecimal, String::toBigInteger, String::toBigInteger)
 
+fun String.parseBigDecimalBigIntegerChars() =
+  parse(String::toBigDecimal, String::toBigInteger, String::toChar)
+
 fun String.parseBigDecimalBigIntegerDoubles() =
   parse(String::toBigDecimal, String::toBigInteger, String::toDouble)
 
@@ -142,11 +187,35 @@ fun String.parseBigDecimalBigIntegerLongs() =
 fun String.parseBigDecimalBigIntegerStrings() =
   parse(String::toBigDecimal, String::toBigInteger, String::toString)
 
+fun String.parseBigDecimalCharBigDecimals() =
+  parse(String::toBigDecimal, String::toChar, String::toBigDecimal)
+
+fun String.parseBigDecimalCharBigIntegers() =
+  parse(String::toBigDecimal, String::toChar, String::toBigInteger)
+
+fun String.parseBigDecimalCharChars() =
+  parse(String::toBigDecimal, String::toChar, String::toChar)
+
+fun String.parseBigDecimalCharDoubles() =
+  parse(String::toBigDecimal, String::toChar, String::toDouble)
+
+fun String.parseBigDecimalCharInts() =
+  parse(String::toBigDecimal, String::toChar, String::toInt)
+
+fun String.parseBigDecimalCharLongs() =
+  parse(String::toBigDecimal, String::toChar, String::toLong)
+
+fun String.parseBigDecimalCharStrings() =
+  parse(String::toBigDecimal, String::toChar, String::toString)
+
 fun String.parseBigDecimalDoubleBigDecimals() =
   parse(String::toBigDecimal, String::toDouble, String::toBigDecimal)
 
 fun String.parseBigDecimalDoubleBigIntegers() =
   parse(String::toBigDecimal, String::toDouble, String::toBigInteger)
+
+fun String.parseBigDecimalDoubleChars() =
+  parse(String::toBigDecimal, String::toDouble, String::toChar)
 
 fun String.parseBigDecimalDoubleDoubles() =
   parse(String::toBigDecimal, String::toDouble, String::toDouble)
@@ -166,6 +235,9 @@ fun String.parseBigDecimalIntBigDecimals() =
 fun String.parseBigDecimalIntBigIntegers() =
   parse(String::toBigDecimal, String::toInt, String::toBigInteger)
 
+fun String.parseBigDecimalIntChars() =
+  parse(String::toBigDecimal, String::toInt, String::toChar)
+
 fun String.parseBigDecimalIntDoubles() =
   parse(String::toBigDecimal, String::toInt, String::toDouble)
 
@@ -183,6 +255,9 @@ fun String.parseBigDecimalLongBigDecimals() =
 
 fun String.parseBigDecimalLongBigIntegers() =
   parse(String::toBigDecimal, String::toLong, String::toBigInteger)
+
+fun String.parseBigDecimalLongChars() =
+  parse(String::toBigDecimal, String::toLong, String::toChar)
 
 fun String.parseBigDecimalLongDoubles() =
   parse(String::toBigDecimal, String::toLong, String::toDouble)
@@ -202,6 +277,9 @@ fun String.parseBigDecimalStringBigDecimals() =
 fun String.parseBigDecimalStringBigIntegers() =
   parse(String::toBigDecimal, String::toString, String::toBigInteger)
 
+fun String.parseBigDecimalStringChars() =
+  parse(String::toBigDecimal, String::toString, String::toChar)
+
 fun String.parseBigDecimalStringDoubles() =
   parse(String::toBigDecimal, String::toString, String::toDouble)
 
@@ -219,6 +297,9 @@ fun String.parseBigIntegerBigDecimalBigDecimals() =
 
 fun String.parseBigIntegerBigDecimalBigIntegers() =
   parse(String::toBigInteger, String::toBigDecimal, String::toBigInteger)
+
+fun String.parseBigIntegerBigDecimalChars() =
+  parse(String::toBigInteger, String::toBigDecimal, String::toChar)
 
 fun String.parseBigIntegerBigDecimalDoubles() =
   parse(String::toBigInteger, String::toBigDecimal, String::toDouble)
@@ -238,6 +319,9 @@ fun String.parseBigIntegerBigIntegerBigDecimals() =
 fun String.parseBigIntegerBigIntegerBigIntegers() =
   parse(String::toBigInteger, String::toBigInteger, String::toBigInteger)
 
+fun String.parseBigIntegerBigIntegerChars() =
+  parse(String::toBigInteger, String::toBigInteger, String::toChar)
+
 fun String.parseBigIntegerBigIntegerDoubles() =
   parse(String::toBigInteger, String::toBigInteger, String::toDouble)
 
@@ -250,11 +334,35 @@ fun String.parseBigIntegerBigIntegerLongs() =
 fun String.parseBigIntegerBigIntegerStrings() =
   parse(String::toBigInteger, String::toBigInteger, String::toString)
 
+fun String.parseBigIntegerCharBigDecimals() =
+  parse(String::toBigInteger, String::toChar, String::toBigDecimal)
+
+fun String.parseBigIntegerCharBigIntegers() =
+  parse(String::toBigInteger, String::toChar, String::toBigInteger)
+
+fun String.parseBigIntegerCharChars() =
+  parse(String::toBigInteger, String::toChar, String::toChar)
+
+fun String.parseBigIntegerCharDoubles() =
+  parse(String::toBigInteger, String::toChar, String::toDouble)
+
+fun String.parseBigIntegerCharInts() =
+  parse(String::toBigInteger, String::toChar, String::toInt)
+
+fun String.parseBigIntegerCharLongs() =
+  parse(String::toBigInteger, String::toChar, String::toLong)
+
+fun String.parseBigIntegerCharStrings() =
+  parse(String::toBigInteger, String::toChar, String::toString)
+
 fun String.parseBigIntegerDoubleBigDecimals() =
   parse(String::toBigInteger, String::toDouble, String::toBigDecimal)
 
 fun String.parseBigIntegerDoubleBigIntegers() =
   parse(String::toBigInteger, String::toDouble, String::toBigInteger)
+
+fun String.parseBigIntegerDoubleChars() =
+  parse(String::toBigInteger, String::toDouble, String::toChar)
 
 fun String.parseBigIntegerDoubleDoubles() =
   parse(String::toBigInteger, String::toDouble, String::toDouble)
@@ -274,6 +382,9 @@ fun String.parseBigIntegerIntBigDecimals() =
 fun String.parseBigIntegerIntBigIntegers() =
   parse(String::toBigInteger, String::toInt, String::toBigInteger)
 
+fun String.parseBigIntegerIntChars() =
+  parse(String::toBigInteger, String::toInt, String::toChar)
+
 fun String.parseBigIntegerIntDoubles() =
   parse(String::toBigInteger, String::toInt, String::toDouble)
 
@@ -291,6 +402,9 @@ fun String.parseBigIntegerLongBigDecimals() =
 
 fun String.parseBigIntegerLongBigIntegers() =
   parse(String::toBigInteger, String::toLong, String::toBigInteger)
+
+fun String.parseBigIntegerLongChars() =
+  parse(String::toBigInteger, String::toLong, String::toChar)
 
 fun String.parseBigIntegerLongDoubles() =
   parse(String::toBigInteger, String::toLong, String::toDouble)
@@ -310,6 +424,9 @@ fun String.parseBigIntegerStringBigDecimals() =
 fun String.parseBigIntegerStringBigIntegers() =
   parse(String::toBigInteger, String::toString, String::toBigInteger)
 
+fun String.parseBigIntegerStringChars() =
+  parse(String::toBigInteger, String::toString, String::toChar)
+
 fun String.parseBigIntegerStringDoubles() =
   parse(String::toBigInteger, String::toString, String::toDouble)
 
@@ -322,11 +439,161 @@ fun String.parseBigIntegerStringLongs() =
 fun String.parseBigIntegerStringStrings() =
   parse(String::toBigInteger, String::toString, String::toString)
 
+fun String.parseCharBigDecimalBigDecimals() =
+  parse(String::toChar, String::toBigDecimal, String::toBigDecimal)
+
+fun String.parseCharBigDecimalBigIntegers() =
+  parse(String::toChar, String::toBigDecimal, String::toBigInteger)
+
+fun String.parseCharBigDecimalChars() =
+  parse(String::toChar, String::toBigDecimal, String::toChar)
+
+fun String.parseCharBigDecimalDoubles() =
+  parse(String::toChar, String::toBigDecimal, String::toDouble)
+
+fun String.parseCharBigDecimalInts() =
+  parse(String::toChar, String::toBigDecimal, String::toInt)
+
+fun String.parseCharBigDecimalLongs() =
+  parse(String::toChar, String::toBigDecimal, String::toLong)
+
+fun String.parseCharBigDecimalStrings() =
+  parse(String::toChar, String::toBigDecimal, String::toString)
+
+fun String.parseCharBigIntegerBigDecimals() =
+  parse(String::toChar, String::toBigInteger, String::toBigDecimal)
+
+fun String.parseCharBigIntegerBigIntegers() =
+  parse(String::toChar, String::toBigInteger, String::toBigInteger)
+
+fun String.parseCharBigIntegerChars() =
+  parse(String::toChar, String::toBigInteger, String::toChar)
+
+fun String.parseCharBigIntegerDoubles() =
+  parse(String::toChar, String::toBigInteger, String::toDouble)
+
+fun String.parseCharBigIntegerInts() =
+  parse(String::toChar, String::toBigInteger, String::toInt)
+
+fun String.parseCharBigIntegerLongs() =
+  parse(String::toChar, String::toBigInteger, String::toLong)
+
+fun String.parseCharBigIntegerStrings() =
+  parse(String::toChar, String::toBigInteger, String::toString)
+
+fun String.parseCharCharBigDecimals() =
+  parse(String::toChar, String::toChar, String::toBigDecimal)
+
+fun String.parseCharCharBigIntegers() =
+  parse(String::toChar, String::toChar, String::toBigInteger)
+
+fun String.parseCharCharChars() =
+  parse(String::toChar, String::toChar, String::toChar)
+
+fun String.parseCharCharDoubles() =
+  parse(String::toChar, String::toChar, String::toDouble)
+
+fun String.parseCharCharInts() =
+  parse(String::toChar, String::toChar, String::toInt)
+
+fun String.parseCharCharLongs() =
+  parse(String::toChar, String::toChar, String::toLong)
+
+fun String.parseCharCharStrings() =
+  parse(String::toChar, String::toChar, String::toString)
+
+fun String.parseCharDoubleBigDecimals() =
+  parse(String::toChar, String::toDouble, String::toBigDecimal)
+
+fun String.parseCharDoubleBigIntegers() =
+  parse(String::toChar, String::toDouble, String::toBigInteger)
+
+fun String.parseCharDoubleChars() =
+  parse(String::toChar, String::toDouble, String::toChar)
+
+fun String.parseCharDoubleDoubles() =
+  parse(String::toChar, String::toDouble, String::toDouble)
+
+fun String.parseCharDoubleInts() =
+  parse(String::toChar, String::toDouble, String::toInt)
+
+fun String.parseCharDoubleLongs() =
+  parse(String::toChar, String::toDouble, String::toLong)
+
+fun String.parseCharDoubleStrings() =
+  parse(String::toChar, String::toDouble, String::toString)
+
+fun String.parseCharIntBigDecimals() =
+  parse(String::toChar, String::toInt, String::toBigDecimal)
+
+fun String.parseCharIntBigIntegers() =
+  parse(String::toChar, String::toInt, String::toBigInteger)
+
+fun String.parseCharIntChars() =
+  parse(String::toChar, String::toInt, String::toChar)
+
+fun String.parseCharIntDoubles() =
+  parse(String::toChar, String::toInt, String::toDouble)
+
+fun String.parseCharIntInts() =
+  parse(String::toChar, String::toInt, String::toInt)
+
+fun String.parseCharIntLongs() =
+  parse(String::toChar, String::toInt, String::toLong)
+
+fun String.parseCharIntStrings() =
+  parse(String::toChar, String::toInt, String::toString)
+
+fun String.parseCharLongBigDecimals() =
+  parse(String::toChar, String::toLong, String::toBigDecimal)
+
+fun String.parseCharLongBigIntegers() =
+  parse(String::toChar, String::toLong, String::toBigInteger)
+
+fun String.parseCharLongChars() =
+  parse(String::toChar, String::toLong, String::toChar)
+
+fun String.parseCharLongDoubles() =
+  parse(String::toChar, String::toLong, String::toDouble)
+
+fun String.parseCharLongInts() =
+  parse(String::toChar, String::toLong, String::toInt)
+
+fun String.parseCharLongLongs() =
+  parse(String::toChar, String::toLong, String::toLong)
+
+fun String.parseCharLongStrings() =
+  parse(String::toChar, String::toLong, String::toString)
+
+fun String.parseCharStringBigDecimals() =
+  parse(String::toChar, String::toString, String::toBigDecimal)
+
+fun String.parseCharStringBigIntegers() =
+  parse(String::toChar, String::toString, String::toBigInteger)
+
+fun String.parseCharStringChars() =
+  parse(String::toChar, String::toString, String::toChar)
+
+fun String.parseCharStringDoubles() =
+  parse(String::toChar, String::toString, String::toDouble)
+
+fun String.parseCharStringInts() =
+  parse(String::toChar, String::toString, String::toInt)
+
+fun String.parseCharStringLongs() =
+  parse(String::toChar, String::toString, String::toLong)
+
+fun String.parseCharStringStrings() =
+  parse(String::toChar, String::toString, String::toString)
+
 fun String.parseDoubleBigDecimalBigDecimals() =
   parse(String::toDouble, String::toBigDecimal, String::toBigDecimal)
 
 fun String.parseDoubleBigDecimalBigIntegers() =
   parse(String::toDouble, String::toBigDecimal, String::toBigInteger)
+
+fun String.parseDoubleBigDecimalChars() =
+  parse(String::toDouble, String::toBigDecimal, String::toChar)
 
 fun String.parseDoubleBigDecimalDoubles() =
   parse(String::toDouble, String::toBigDecimal, String::toDouble)
@@ -346,6 +613,9 @@ fun String.parseDoubleBigIntegerBigDecimals() =
 fun String.parseDoubleBigIntegerBigIntegers() =
   parse(String::toDouble, String::toBigInteger, String::toBigInteger)
 
+fun String.parseDoubleBigIntegerChars() =
+  parse(String::toDouble, String::toBigInteger, String::toChar)
+
 fun String.parseDoubleBigIntegerDoubles() =
   parse(String::toDouble, String::toBigInteger, String::toDouble)
 
@@ -358,11 +628,35 @@ fun String.parseDoubleBigIntegerLongs() =
 fun String.parseDoubleBigIntegerStrings() =
   parse(String::toDouble, String::toBigInteger, String::toString)
 
+fun String.parseDoubleCharBigDecimals() =
+  parse(String::toDouble, String::toChar, String::toBigDecimal)
+
+fun String.parseDoubleCharBigIntegers() =
+  parse(String::toDouble, String::toChar, String::toBigInteger)
+
+fun String.parseDoubleCharChars() =
+  parse(String::toDouble, String::toChar, String::toChar)
+
+fun String.parseDoubleCharDoubles() =
+  parse(String::toDouble, String::toChar, String::toDouble)
+
+fun String.parseDoubleCharInts() =
+  parse(String::toDouble, String::toChar, String::toInt)
+
+fun String.parseDoubleCharLongs() =
+  parse(String::toDouble, String::toChar, String::toLong)
+
+fun String.parseDoubleCharStrings() =
+  parse(String::toDouble, String::toChar, String::toString)
+
 fun String.parseDoubleDoubleBigDecimals() =
   parse(String::toDouble, String::toDouble, String::toBigDecimal)
 
 fun String.parseDoubleDoubleBigIntegers() =
   parse(String::toDouble, String::toDouble, String::toBigInteger)
+
+fun String.parseDoubleDoubleChars() =
+  parse(String::toDouble, String::toDouble, String::toChar)
 
 fun String.parseDoubleDoubleDoubles() =
   parse(String::toDouble, String::toDouble, String::toDouble)
@@ -382,6 +676,9 @@ fun String.parseDoubleIntBigDecimals() =
 fun String.parseDoubleIntBigIntegers() =
   parse(String::toDouble, String::toInt, String::toBigInteger)
 
+fun String.parseDoubleIntChars() =
+  parse(String::toDouble, String::toInt, String::toChar)
+
 fun String.parseDoubleIntDoubles() =
   parse(String::toDouble, String::toInt, String::toDouble)
 
@@ -399,6 +696,9 @@ fun String.parseDoubleLongBigDecimals() =
 
 fun String.parseDoubleLongBigIntegers() =
   parse(String::toDouble, String::toLong, String::toBigInteger)
+
+fun String.parseDoubleLongChars() =
+  parse(String::toDouble, String::toLong, String::toChar)
 
 fun String.parseDoubleLongDoubles() =
   parse(String::toDouble, String::toLong, String::toDouble)
@@ -418,6 +718,9 @@ fun String.parseDoubleStringBigDecimals() =
 fun String.parseDoubleStringBigIntegers() =
   parse(String::toDouble, String::toString, String::toBigInteger)
 
+fun String.parseDoubleStringChars() =
+  parse(String::toDouble, String::toString, String::toChar)
+
 fun String.parseDoubleStringDoubles() =
   parse(String::toDouble, String::toString, String::toDouble)
 
@@ -435,6 +738,9 @@ fun String.parseIntBigDecimalBigDecimals() =
 
 fun String.parseIntBigDecimalBigIntegers() =
   parse(String::toInt, String::toBigDecimal, String::toBigInteger)
+
+fun String.parseIntBigDecimalChars() =
+  parse(String::toInt, String::toBigDecimal, String::toChar)
 
 fun String.parseIntBigDecimalDoubles() =
   parse(String::toInt, String::toBigDecimal, String::toDouble)
@@ -454,6 +760,9 @@ fun String.parseIntBigIntegerBigDecimals() =
 fun String.parseIntBigIntegerBigIntegers() =
   parse(String::toInt, String::toBigInteger, String::toBigInteger)
 
+fun String.parseIntBigIntegerChars() =
+  parse(String::toInt, String::toBigInteger, String::toChar)
+
 fun String.parseIntBigIntegerDoubles() =
   parse(String::toInt, String::toBigInteger, String::toDouble)
 
@@ -466,11 +775,35 @@ fun String.parseIntBigIntegerLongs() =
 fun String.parseIntBigIntegerStrings() =
   parse(String::toInt, String::toBigInteger, String::toString)
 
+fun String.parseIntCharBigDecimals() =
+  parse(String::toInt, String::toChar, String::toBigDecimal)
+
+fun String.parseIntCharBigIntegers() =
+  parse(String::toInt, String::toChar, String::toBigInteger)
+
+fun String.parseIntCharChars() =
+  parse(String::toInt, String::toChar, String::toChar)
+
+fun String.parseIntCharDoubles() =
+  parse(String::toInt, String::toChar, String::toDouble)
+
+fun String.parseIntCharInts() =
+  parse(String::toInt, String::toChar, String::toInt)
+
+fun String.parseIntCharLongs() =
+  parse(String::toInt, String::toChar, String::toLong)
+
+fun String.parseIntCharStrings() =
+  parse(String::toInt, String::toChar, String::toString)
+
 fun String.parseIntDoubleBigDecimals() =
   parse(String::toInt, String::toDouble, String::toBigDecimal)
 
 fun String.parseIntDoubleBigIntegers() =
   parse(String::toInt, String::toDouble, String::toBigInteger)
+
+fun String.parseIntDoubleChars() =
+  parse(String::toInt, String::toDouble, String::toChar)
 
 fun String.parseIntDoubleDoubles() =
   parse(String::toInt, String::toDouble, String::toDouble)
@@ -490,6 +823,9 @@ fun String.parseIntIntBigDecimals() =
 fun String.parseIntIntBigIntegers() =
   parse(String::toInt, String::toInt, String::toBigInteger)
 
+fun String.parseIntIntChars() =
+  parse(String::toInt, String::toInt, String::toChar)
+
 fun String.parseIntIntDoubles() =
   parse(String::toInt, String::toInt, String::toDouble)
 
@@ -507,6 +843,9 @@ fun String.parseIntLongBigDecimals() =
 
 fun String.parseIntLongBigIntegers() =
   parse(String::toInt, String::toLong, String::toBigInteger)
+
+fun String.parseIntLongChars() =
+  parse(String::toInt, String::toLong, String::toChar)
 
 fun String.parseIntLongDoubles() =
   parse(String::toInt, String::toLong, String::toDouble)
@@ -526,6 +865,9 @@ fun String.parseIntStringBigDecimals() =
 fun String.parseIntStringBigIntegers() =
   parse(String::toInt, String::toString, String::toBigInteger)
 
+fun String.parseIntStringChars() =
+  parse(String::toInt, String::toString, String::toChar)
+
 fun String.parseIntStringDoubles() =
   parse(String::toInt, String::toString, String::toDouble)
 
@@ -543,6 +885,9 @@ fun String.parseLongBigDecimalBigDecimals() =
 
 fun String.parseLongBigDecimalBigIntegers() =
   parse(String::toLong, String::toBigDecimal, String::toBigInteger)
+
+fun String.parseLongBigDecimalChars() =
+  parse(String::toLong, String::toBigDecimal, String::toChar)
 
 fun String.parseLongBigDecimalDoubles() =
   parse(String::toLong, String::toBigDecimal, String::toDouble)
@@ -562,6 +907,9 @@ fun String.parseLongBigIntegerBigDecimals() =
 fun String.parseLongBigIntegerBigIntegers() =
   parse(String::toLong, String::toBigInteger, String::toBigInteger)
 
+fun String.parseLongBigIntegerChars() =
+  parse(String::toLong, String::toBigInteger, String::toChar)
+
 fun String.parseLongBigIntegerDoubles() =
   parse(String::toLong, String::toBigInteger, String::toDouble)
 
@@ -574,11 +922,35 @@ fun String.parseLongBigIntegerLongs() =
 fun String.parseLongBigIntegerStrings() =
   parse(String::toLong, String::toBigInteger, String::toString)
 
+fun String.parseLongCharBigDecimals() =
+  parse(String::toLong, String::toChar, String::toBigDecimal)
+
+fun String.parseLongCharBigIntegers() =
+  parse(String::toLong, String::toChar, String::toBigInteger)
+
+fun String.parseLongCharChars() =
+  parse(String::toLong, String::toChar, String::toChar)
+
+fun String.parseLongCharDoubles() =
+  parse(String::toLong, String::toChar, String::toDouble)
+
+fun String.parseLongCharInts() =
+  parse(String::toLong, String::toChar, String::toInt)
+
+fun String.parseLongCharLongs() =
+  parse(String::toLong, String::toChar, String::toLong)
+
+fun String.parseLongCharStrings() =
+  parse(String::toLong, String::toChar, String::toString)
+
 fun String.parseLongDoubleBigDecimals() =
   parse(String::toLong, String::toDouble, String::toBigDecimal)
 
 fun String.parseLongDoubleBigIntegers() =
   parse(String::toLong, String::toDouble, String::toBigInteger)
+
+fun String.parseLongDoubleChars() =
+  parse(String::toLong, String::toDouble, String::toChar)
 
 fun String.parseLongDoubleDoubles() =
   parse(String::toLong, String::toDouble, String::toDouble)
@@ -598,6 +970,9 @@ fun String.parseLongIntBigDecimals() =
 fun String.parseLongIntBigIntegers() =
   parse(String::toLong, String::toInt, String::toBigInteger)
 
+fun String.parseLongIntChars() =
+  parse(String::toLong, String::toInt, String::toChar)
+
 fun String.parseLongIntDoubles() =
   parse(String::toLong, String::toInt, String::toDouble)
 
@@ -615,6 +990,9 @@ fun String.parseLongLongBigDecimals() =
 
 fun String.parseLongLongBigIntegers() =
   parse(String::toLong, String::toLong, String::toBigInteger)
+
+fun String.parseLongLongChars() =
+  parse(String::toLong, String::toLong, String::toChar)
 
 fun String.parseLongLongDoubles() =
   parse(String::toLong, String::toLong, String::toDouble)
@@ -634,6 +1012,9 @@ fun String.parseLongStringBigDecimals() =
 fun String.parseLongStringBigIntegers() =
   parse(String::toLong, String::toString, String::toBigInteger)
 
+fun String.parseLongStringChars() =
+  parse(String::toLong, String::toString, String::toChar)
+
 fun String.parseLongStringDoubles() =
   parse(String::toLong, String::toString, String::toDouble)
 
@@ -651,6 +1032,9 @@ fun String.parseStringBigDecimalBigDecimals() =
 
 fun String.parseStringBigDecimalBigIntegers() =
   parse(String::toString, String::toBigDecimal, String::toBigInteger)
+
+fun String.parseStringBigDecimalChars() =
+  parse(String::toString, String::toBigDecimal, String::toChar)
 
 fun String.parseStringBigDecimalDoubles() =
   parse(String::toString, String::toBigDecimal, String::toDouble)
@@ -670,6 +1054,9 @@ fun String.parseStringBigIntegerBigDecimals() =
 fun String.parseStringBigIntegerBigIntegers() =
   parse(String::toString, String::toBigInteger, String::toBigInteger)
 
+fun String.parseStringBigIntegerChars() =
+  parse(String::toString, String::toBigInteger, String::toChar)
+
 fun String.parseStringBigIntegerDoubles() =
   parse(String::toString, String::toBigInteger, String::toDouble)
 
@@ -682,11 +1069,35 @@ fun String.parseStringBigIntegerLongs() =
 fun String.parseStringBigIntegerStrings() =
   parse(String::toString, String::toBigInteger, String::toString)
 
+fun String.parseStringCharBigDecimals() =
+  parse(String::toString, String::toChar, String::toBigDecimal)
+
+fun String.parseStringCharBigIntegers() =
+  parse(String::toString, String::toChar, String::toBigInteger)
+
+fun String.parseStringCharChars() =
+  parse(String::toString, String::toChar, String::toChar)
+
+fun String.parseStringCharDoubles() =
+  parse(String::toString, String::toChar, String::toDouble)
+
+fun String.parseStringCharInts() =
+  parse(String::toString, String::toChar, String::toInt)
+
+fun String.parseStringCharLongs() =
+  parse(String::toString, String::toChar, String::toLong)
+
+fun String.parseStringCharStrings() =
+  parse(String::toString, String::toChar, String::toString)
+
 fun String.parseStringDoubleBigDecimals() =
   parse(String::toString, String::toDouble, String::toBigDecimal)
 
 fun String.parseStringDoubleBigIntegers() =
   parse(String::toString, String::toDouble, String::toBigInteger)
+
+fun String.parseStringDoubleChars() =
+  parse(String::toString, String::toDouble, String::toChar)
 
 fun String.parseStringDoubleDoubles() =
   parse(String::toString, String::toDouble, String::toDouble)
@@ -706,6 +1117,9 @@ fun String.parseStringIntBigDecimals() =
 fun String.parseStringIntBigIntegers() =
   parse(String::toString, String::toInt, String::toBigInteger)
 
+fun String.parseStringIntChars() =
+  parse(String::toString, String::toInt, String::toChar)
+
 fun String.parseStringIntDoubles() =
   parse(String::toString, String::toInt, String::toDouble)
 
@@ -723,6 +1137,9 @@ fun String.parseStringLongBigDecimals() =
 
 fun String.parseStringLongBigIntegers() =
   parse(String::toString, String::toLong, String::toBigInteger)
+
+fun String.parseStringLongChars() =
+  parse(String::toString, String::toLong, String::toChar)
 
 fun String.parseStringLongDoubles() =
   parse(String::toString, String::toLong, String::toDouble)
@@ -742,6 +1159,9 @@ fun String.parseStringStringBigDecimals() =
 fun String.parseStringStringBigIntegers() =
   parse(String::toString, String::toString, String::toBigInteger)
 
+fun String.parseStringStringChars() =
+  parse(String::toString, String::toString, String::toChar)
+
 fun String.parseStringStringDoubles() =
   parse(String::toString, String::toString, String::toDouble)
 
@@ -759,6 +1179,9 @@ fun Iterable<String>.parseBigDecimalBigDecimalBigDecimals() =
 
 fun Iterable<String>.parseBigDecimalBigDecimalBigIntegers() =
   parse(String::toBigDecimal, String::toBigDecimal, String::toBigInteger)
+
+fun Iterable<String>.parseBigDecimalBigDecimalChars() =
+  parse(String::toBigDecimal, String::toBigDecimal, String::toChar)
 
 fun Iterable<String>.parseBigDecimalBigDecimalDoubles() =
   parse(String::toBigDecimal, String::toBigDecimal, String::toDouble)
@@ -778,6 +1201,9 @@ fun Iterable<String>.parseBigDecimalBigIntegerBigDecimals() =
 fun Iterable<String>.parseBigDecimalBigIntegerBigIntegers() =
   parse(String::toBigDecimal, String::toBigInteger, String::toBigInteger)
 
+fun Iterable<String>.parseBigDecimalBigIntegerChars() =
+  parse(String::toBigDecimal, String::toBigInteger, String::toChar)
+
 fun Iterable<String>.parseBigDecimalBigIntegerDoubles() =
   parse(String::toBigDecimal, String::toBigInteger, String::toDouble)
 
@@ -790,11 +1216,35 @@ fun Iterable<String>.parseBigDecimalBigIntegerLongs() =
 fun Iterable<String>.parseBigDecimalBigIntegerStrings() =
   parse(String::toBigDecimal, String::toBigInteger, String::toString)
 
+fun Iterable<String>.parseBigDecimalCharBigDecimals() =
+  parse(String::toBigDecimal, String::toChar, String::toBigDecimal)
+
+fun Iterable<String>.parseBigDecimalCharBigIntegers() =
+  parse(String::toBigDecimal, String::toChar, String::toBigInteger)
+
+fun Iterable<String>.parseBigDecimalCharChars() =
+  parse(String::toBigDecimal, String::toChar, String::toChar)
+
+fun Iterable<String>.parseBigDecimalCharDoubles() =
+  parse(String::toBigDecimal, String::toChar, String::toDouble)
+
+fun Iterable<String>.parseBigDecimalCharInts() =
+  parse(String::toBigDecimal, String::toChar, String::toInt)
+
+fun Iterable<String>.parseBigDecimalCharLongs() =
+  parse(String::toBigDecimal, String::toChar, String::toLong)
+
+fun Iterable<String>.parseBigDecimalCharStrings() =
+  parse(String::toBigDecimal, String::toChar, String::toString)
+
 fun Iterable<String>.parseBigDecimalDoubleBigDecimals() =
   parse(String::toBigDecimal, String::toDouble, String::toBigDecimal)
 
 fun Iterable<String>.parseBigDecimalDoubleBigIntegers() =
   parse(String::toBigDecimal, String::toDouble, String::toBigInteger)
+
+fun Iterable<String>.parseBigDecimalDoubleChars() =
+  parse(String::toBigDecimal, String::toDouble, String::toChar)
 
 fun Iterable<String>.parseBigDecimalDoubleDoubles() =
   parse(String::toBigDecimal, String::toDouble, String::toDouble)
@@ -814,6 +1264,9 @@ fun Iterable<String>.parseBigDecimalIntBigDecimals() =
 fun Iterable<String>.parseBigDecimalIntBigIntegers() =
   parse(String::toBigDecimal, String::toInt, String::toBigInteger)
 
+fun Iterable<String>.parseBigDecimalIntChars() =
+  parse(String::toBigDecimal, String::toInt, String::toChar)
+
 fun Iterable<String>.parseBigDecimalIntDoubles() =
   parse(String::toBigDecimal, String::toInt, String::toDouble)
 
@@ -831,6 +1284,9 @@ fun Iterable<String>.parseBigDecimalLongBigDecimals() =
 
 fun Iterable<String>.parseBigDecimalLongBigIntegers() =
   parse(String::toBigDecimal, String::toLong, String::toBigInteger)
+
+fun Iterable<String>.parseBigDecimalLongChars() =
+  parse(String::toBigDecimal, String::toLong, String::toChar)
 
 fun Iterable<String>.parseBigDecimalLongDoubles() =
   parse(String::toBigDecimal, String::toLong, String::toDouble)
@@ -850,6 +1306,9 @@ fun Iterable<String>.parseBigDecimalStringBigDecimals() =
 fun Iterable<String>.parseBigDecimalStringBigIntegers() =
   parse(String::toBigDecimal, String::toString, String::toBigInteger)
 
+fun Iterable<String>.parseBigDecimalStringChars() =
+  parse(String::toBigDecimal, String::toString, String::toChar)
+
 fun Iterable<String>.parseBigDecimalStringDoubles() =
   parse(String::toBigDecimal, String::toString, String::toDouble)
 
@@ -867,6 +1326,9 @@ fun Iterable<String>.parseBigIntegerBigDecimalBigDecimals() =
 
 fun Iterable<String>.parseBigIntegerBigDecimalBigIntegers() =
   parse(String::toBigInteger, String::toBigDecimal, String::toBigInteger)
+
+fun Iterable<String>.parseBigIntegerBigDecimalChars() =
+  parse(String::toBigInteger, String::toBigDecimal, String::toChar)
 
 fun Iterable<String>.parseBigIntegerBigDecimalDoubles() =
   parse(String::toBigInteger, String::toBigDecimal, String::toDouble)
@@ -886,6 +1348,9 @@ fun Iterable<String>.parseBigIntegerBigIntegerBigDecimals() =
 fun Iterable<String>.parseBigIntegerBigIntegerBigIntegers() =
   parse(String::toBigInteger, String::toBigInteger, String::toBigInteger)
 
+fun Iterable<String>.parseBigIntegerBigIntegerChars() =
+  parse(String::toBigInteger, String::toBigInteger, String::toChar)
+
 fun Iterable<String>.parseBigIntegerBigIntegerDoubles() =
   parse(String::toBigInteger, String::toBigInteger, String::toDouble)
 
@@ -898,11 +1363,35 @@ fun Iterable<String>.parseBigIntegerBigIntegerLongs() =
 fun Iterable<String>.parseBigIntegerBigIntegerStrings() =
   parse(String::toBigInteger, String::toBigInteger, String::toString)
 
+fun Iterable<String>.parseBigIntegerCharBigDecimals() =
+  parse(String::toBigInteger, String::toChar, String::toBigDecimal)
+
+fun Iterable<String>.parseBigIntegerCharBigIntegers() =
+  parse(String::toBigInteger, String::toChar, String::toBigInteger)
+
+fun Iterable<String>.parseBigIntegerCharChars() =
+  parse(String::toBigInteger, String::toChar, String::toChar)
+
+fun Iterable<String>.parseBigIntegerCharDoubles() =
+  parse(String::toBigInteger, String::toChar, String::toDouble)
+
+fun Iterable<String>.parseBigIntegerCharInts() =
+  parse(String::toBigInteger, String::toChar, String::toInt)
+
+fun Iterable<String>.parseBigIntegerCharLongs() =
+  parse(String::toBigInteger, String::toChar, String::toLong)
+
+fun Iterable<String>.parseBigIntegerCharStrings() =
+  parse(String::toBigInteger, String::toChar, String::toString)
+
 fun Iterable<String>.parseBigIntegerDoubleBigDecimals() =
   parse(String::toBigInteger, String::toDouble, String::toBigDecimal)
 
 fun Iterable<String>.parseBigIntegerDoubleBigIntegers() =
   parse(String::toBigInteger, String::toDouble, String::toBigInteger)
+
+fun Iterable<String>.parseBigIntegerDoubleChars() =
+  parse(String::toBigInteger, String::toDouble, String::toChar)
 
 fun Iterable<String>.parseBigIntegerDoubleDoubles() =
   parse(String::toBigInteger, String::toDouble, String::toDouble)
@@ -922,6 +1411,9 @@ fun Iterable<String>.parseBigIntegerIntBigDecimals() =
 fun Iterable<String>.parseBigIntegerIntBigIntegers() =
   parse(String::toBigInteger, String::toInt, String::toBigInteger)
 
+fun Iterable<String>.parseBigIntegerIntChars() =
+  parse(String::toBigInteger, String::toInt, String::toChar)
+
 fun Iterable<String>.parseBigIntegerIntDoubles() =
   parse(String::toBigInteger, String::toInt, String::toDouble)
 
@@ -939,6 +1431,9 @@ fun Iterable<String>.parseBigIntegerLongBigDecimals() =
 
 fun Iterable<String>.parseBigIntegerLongBigIntegers() =
   parse(String::toBigInteger, String::toLong, String::toBigInteger)
+
+fun Iterable<String>.parseBigIntegerLongChars() =
+  parse(String::toBigInteger, String::toLong, String::toChar)
 
 fun Iterable<String>.parseBigIntegerLongDoubles() =
   parse(String::toBigInteger, String::toLong, String::toDouble)
@@ -958,6 +1453,9 @@ fun Iterable<String>.parseBigIntegerStringBigDecimals() =
 fun Iterable<String>.parseBigIntegerStringBigIntegers() =
   parse(String::toBigInteger, String::toString, String::toBigInteger)
 
+fun Iterable<String>.parseBigIntegerStringChars() =
+  parse(String::toBigInteger, String::toString, String::toChar)
+
 fun Iterable<String>.parseBigIntegerStringDoubles() =
   parse(String::toBigInteger, String::toString, String::toDouble)
 
@@ -970,11 +1468,161 @@ fun Iterable<String>.parseBigIntegerStringLongs() =
 fun Iterable<String>.parseBigIntegerStringStrings() =
   parse(String::toBigInteger, String::toString, String::toString)
 
+fun Iterable<String>.parseCharBigDecimalBigDecimals() =
+  parse(String::toChar, String::toBigDecimal, String::toBigDecimal)
+
+fun Iterable<String>.parseCharBigDecimalBigIntegers() =
+  parse(String::toChar, String::toBigDecimal, String::toBigInteger)
+
+fun Iterable<String>.parseCharBigDecimalChars() =
+  parse(String::toChar, String::toBigDecimal, String::toChar)
+
+fun Iterable<String>.parseCharBigDecimalDoubles() =
+  parse(String::toChar, String::toBigDecimal, String::toDouble)
+
+fun Iterable<String>.parseCharBigDecimalInts() =
+  parse(String::toChar, String::toBigDecimal, String::toInt)
+
+fun Iterable<String>.parseCharBigDecimalLongs() =
+  parse(String::toChar, String::toBigDecimal, String::toLong)
+
+fun Iterable<String>.parseCharBigDecimalStrings() =
+  parse(String::toChar, String::toBigDecimal, String::toString)
+
+fun Iterable<String>.parseCharBigIntegerBigDecimals() =
+  parse(String::toChar, String::toBigInteger, String::toBigDecimal)
+
+fun Iterable<String>.parseCharBigIntegerBigIntegers() =
+  parse(String::toChar, String::toBigInteger, String::toBigInteger)
+
+fun Iterable<String>.parseCharBigIntegerChars() =
+  parse(String::toChar, String::toBigInteger, String::toChar)
+
+fun Iterable<String>.parseCharBigIntegerDoubles() =
+  parse(String::toChar, String::toBigInteger, String::toDouble)
+
+fun Iterable<String>.parseCharBigIntegerInts() =
+  parse(String::toChar, String::toBigInteger, String::toInt)
+
+fun Iterable<String>.parseCharBigIntegerLongs() =
+  parse(String::toChar, String::toBigInteger, String::toLong)
+
+fun Iterable<String>.parseCharBigIntegerStrings() =
+  parse(String::toChar, String::toBigInteger, String::toString)
+
+fun Iterable<String>.parseCharCharBigDecimals() =
+  parse(String::toChar, String::toChar, String::toBigDecimal)
+
+fun Iterable<String>.parseCharCharBigIntegers() =
+  parse(String::toChar, String::toChar, String::toBigInteger)
+
+fun Iterable<String>.parseCharCharChars() =
+  parse(String::toChar, String::toChar, String::toChar)
+
+fun Iterable<String>.parseCharCharDoubles() =
+  parse(String::toChar, String::toChar, String::toDouble)
+
+fun Iterable<String>.parseCharCharInts() =
+  parse(String::toChar, String::toChar, String::toInt)
+
+fun Iterable<String>.parseCharCharLongs() =
+  parse(String::toChar, String::toChar, String::toLong)
+
+fun Iterable<String>.parseCharCharStrings() =
+  parse(String::toChar, String::toChar, String::toString)
+
+fun Iterable<String>.parseCharDoubleBigDecimals() =
+  parse(String::toChar, String::toDouble, String::toBigDecimal)
+
+fun Iterable<String>.parseCharDoubleBigIntegers() =
+  parse(String::toChar, String::toDouble, String::toBigInteger)
+
+fun Iterable<String>.parseCharDoubleChars() =
+  parse(String::toChar, String::toDouble, String::toChar)
+
+fun Iterable<String>.parseCharDoubleDoubles() =
+  parse(String::toChar, String::toDouble, String::toDouble)
+
+fun Iterable<String>.parseCharDoubleInts() =
+  parse(String::toChar, String::toDouble, String::toInt)
+
+fun Iterable<String>.parseCharDoubleLongs() =
+  parse(String::toChar, String::toDouble, String::toLong)
+
+fun Iterable<String>.parseCharDoubleStrings() =
+  parse(String::toChar, String::toDouble, String::toString)
+
+fun Iterable<String>.parseCharIntBigDecimals() =
+  parse(String::toChar, String::toInt, String::toBigDecimal)
+
+fun Iterable<String>.parseCharIntBigIntegers() =
+  parse(String::toChar, String::toInt, String::toBigInteger)
+
+fun Iterable<String>.parseCharIntChars() =
+  parse(String::toChar, String::toInt, String::toChar)
+
+fun Iterable<String>.parseCharIntDoubles() =
+  parse(String::toChar, String::toInt, String::toDouble)
+
+fun Iterable<String>.parseCharIntInts() =
+  parse(String::toChar, String::toInt, String::toInt)
+
+fun Iterable<String>.parseCharIntLongs() =
+  parse(String::toChar, String::toInt, String::toLong)
+
+fun Iterable<String>.parseCharIntStrings() =
+  parse(String::toChar, String::toInt, String::toString)
+
+fun Iterable<String>.parseCharLongBigDecimals() =
+  parse(String::toChar, String::toLong, String::toBigDecimal)
+
+fun Iterable<String>.parseCharLongBigIntegers() =
+  parse(String::toChar, String::toLong, String::toBigInteger)
+
+fun Iterable<String>.parseCharLongChars() =
+  parse(String::toChar, String::toLong, String::toChar)
+
+fun Iterable<String>.parseCharLongDoubles() =
+  parse(String::toChar, String::toLong, String::toDouble)
+
+fun Iterable<String>.parseCharLongInts() =
+  parse(String::toChar, String::toLong, String::toInt)
+
+fun Iterable<String>.parseCharLongLongs() =
+  parse(String::toChar, String::toLong, String::toLong)
+
+fun Iterable<String>.parseCharLongStrings() =
+  parse(String::toChar, String::toLong, String::toString)
+
+fun Iterable<String>.parseCharStringBigDecimals() =
+  parse(String::toChar, String::toString, String::toBigDecimal)
+
+fun Iterable<String>.parseCharStringBigIntegers() =
+  parse(String::toChar, String::toString, String::toBigInteger)
+
+fun Iterable<String>.parseCharStringChars() =
+  parse(String::toChar, String::toString, String::toChar)
+
+fun Iterable<String>.parseCharStringDoubles() =
+  parse(String::toChar, String::toString, String::toDouble)
+
+fun Iterable<String>.parseCharStringInts() =
+  parse(String::toChar, String::toString, String::toInt)
+
+fun Iterable<String>.parseCharStringLongs() =
+  parse(String::toChar, String::toString, String::toLong)
+
+fun Iterable<String>.parseCharStringStrings() =
+  parse(String::toChar, String::toString, String::toString)
+
 fun Iterable<String>.parseDoubleBigDecimalBigDecimals() =
   parse(String::toDouble, String::toBigDecimal, String::toBigDecimal)
 
 fun Iterable<String>.parseDoubleBigDecimalBigIntegers() =
   parse(String::toDouble, String::toBigDecimal, String::toBigInteger)
+
+fun Iterable<String>.parseDoubleBigDecimalChars() =
+  parse(String::toDouble, String::toBigDecimal, String::toChar)
 
 fun Iterable<String>.parseDoubleBigDecimalDoubles() =
   parse(String::toDouble, String::toBigDecimal, String::toDouble)
@@ -994,6 +1642,9 @@ fun Iterable<String>.parseDoubleBigIntegerBigDecimals() =
 fun Iterable<String>.parseDoubleBigIntegerBigIntegers() =
   parse(String::toDouble, String::toBigInteger, String::toBigInteger)
 
+fun Iterable<String>.parseDoubleBigIntegerChars() =
+  parse(String::toDouble, String::toBigInteger, String::toChar)
+
 fun Iterable<String>.parseDoubleBigIntegerDoubles() =
   parse(String::toDouble, String::toBigInteger, String::toDouble)
 
@@ -1006,11 +1657,35 @@ fun Iterable<String>.parseDoubleBigIntegerLongs() =
 fun Iterable<String>.parseDoubleBigIntegerStrings() =
   parse(String::toDouble, String::toBigInteger, String::toString)
 
+fun Iterable<String>.parseDoubleCharBigDecimals() =
+  parse(String::toDouble, String::toChar, String::toBigDecimal)
+
+fun Iterable<String>.parseDoubleCharBigIntegers() =
+  parse(String::toDouble, String::toChar, String::toBigInteger)
+
+fun Iterable<String>.parseDoubleCharChars() =
+  parse(String::toDouble, String::toChar, String::toChar)
+
+fun Iterable<String>.parseDoubleCharDoubles() =
+  parse(String::toDouble, String::toChar, String::toDouble)
+
+fun Iterable<String>.parseDoubleCharInts() =
+  parse(String::toDouble, String::toChar, String::toInt)
+
+fun Iterable<String>.parseDoubleCharLongs() =
+  parse(String::toDouble, String::toChar, String::toLong)
+
+fun Iterable<String>.parseDoubleCharStrings() =
+  parse(String::toDouble, String::toChar, String::toString)
+
 fun Iterable<String>.parseDoubleDoubleBigDecimals() =
   parse(String::toDouble, String::toDouble, String::toBigDecimal)
 
 fun Iterable<String>.parseDoubleDoubleBigIntegers() =
   parse(String::toDouble, String::toDouble, String::toBigInteger)
+
+fun Iterable<String>.parseDoubleDoubleChars() =
+  parse(String::toDouble, String::toDouble, String::toChar)
 
 fun Iterable<String>.parseDoubleDoubleDoubles() =
   parse(String::toDouble, String::toDouble, String::toDouble)
@@ -1030,6 +1705,9 @@ fun Iterable<String>.parseDoubleIntBigDecimals() =
 fun Iterable<String>.parseDoubleIntBigIntegers() =
   parse(String::toDouble, String::toInt, String::toBigInteger)
 
+fun Iterable<String>.parseDoubleIntChars() =
+  parse(String::toDouble, String::toInt, String::toChar)
+
 fun Iterable<String>.parseDoubleIntDoubles() =
   parse(String::toDouble, String::toInt, String::toDouble)
 
@@ -1047,6 +1725,9 @@ fun Iterable<String>.parseDoubleLongBigDecimals() =
 
 fun Iterable<String>.parseDoubleLongBigIntegers() =
   parse(String::toDouble, String::toLong, String::toBigInteger)
+
+fun Iterable<String>.parseDoubleLongChars() =
+  parse(String::toDouble, String::toLong, String::toChar)
 
 fun Iterable<String>.parseDoubleLongDoubles() =
   parse(String::toDouble, String::toLong, String::toDouble)
@@ -1066,6 +1747,9 @@ fun Iterable<String>.parseDoubleStringBigDecimals() =
 fun Iterable<String>.parseDoubleStringBigIntegers() =
   parse(String::toDouble, String::toString, String::toBigInteger)
 
+fun Iterable<String>.parseDoubleStringChars() =
+  parse(String::toDouble, String::toString, String::toChar)
+
 fun Iterable<String>.parseDoubleStringDoubles() =
   parse(String::toDouble, String::toString, String::toDouble)
 
@@ -1083,6 +1767,9 @@ fun Iterable<String>.parseIntBigDecimalBigDecimals() =
 
 fun Iterable<String>.parseIntBigDecimalBigIntegers() =
   parse(String::toInt, String::toBigDecimal, String::toBigInteger)
+
+fun Iterable<String>.parseIntBigDecimalChars() =
+  parse(String::toInt, String::toBigDecimal, String::toChar)
 
 fun Iterable<String>.parseIntBigDecimalDoubles() =
   parse(String::toInt, String::toBigDecimal, String::toDouble)
@@ -1102,6 +1789,9 @@ fun Iterable<String>.parseIntBigIntegerBigDecimals() =
 fun Iterable<String>.parseIntBigIntegerBigIntegers() =
   parse(String::toInt, String::toBigInteger, String::toBigInteger)
 
+fun Iterable<String>.parseIntBigIntegerChars() =
+  parse(String::toInt, String::toBigInteger, String::toChar)
+
 fun Iterable<String>.parseIntBigIntegerDoubles() =
   parse(String::toInt, String::toBigInteger, String::toDouble)
 
@@ -1114,11 +1804,35 @@ fun Iterable<String>.parseIntBigIntegerLongs() =
 fun Iterable<String>.parseIntBigIntegerStrings() =
   parse(String::toInt, String::toBigInteger, String::toString)
 
+fun Iterable<String>.parseIntCharBigDecimals() =
+  parse(String::toInt, String::toChar, String::toBigDecimal)
+
+fun Iterable<String>.parseIntCharBigIntegers() =
+  parse(String::toInt, String::toChar, String::toBigInteger)
+
+fun Iterable<String>.parseIntCharChars() =
+  parse(String::toInt, String::toChar, String::toChar)
+
+fun Iterable<String>.parseIntCharDoubles() =
+  parse(String::toInt, String::toChar, String::toDouble)
+
+fun Iterable<String>.parseIntCharInts() =
+  parse(String::toInt, String::toChar, String::toInt)
+
+fun Iterable<String>.parseIntCharLongs() =
+  parse(String::toInt, String::toChar, String::toLong)
+
+fun Iterable<String>.parseIntCharStrings() =
+  parse(String::toInt, String::toChar, String::toString)
+
 fun Iterable<String>.parseIntDoubleBigDecimals() =
   parse(String::toInt, String::toDouble, String::toBigDecimal)
 
 fun Iterable<String>.parseIntDoubleBigIntegers() =
   parse(String::toInt, String::toDouble, String::toBigInteger)
+
+fun Iterable<String>.parseIntDoubleChars() =
+  parse(String::toInt, String::toDouble, String::toChar)
 
 fun Iterable<String>.parseIntDoubleDoubles() =
   parse(String::toInt, String::toDouble, String::toDouble)
@@ -1138,6 +1852,9 @@ fun Iterable<String>.parseIntIntBigDecimals() =
 fun Iterable<String>.parseIntIntBigIntegers() =
   parse(String::toInt, String::toInt, String::toBigInteger)
 
+fun Iterable<String>.parseIntIntChars() =
+  parse(String::toInt, String::toInt, String::toChar)
+
 fun Iterable<String>.parseIntIntDoubles() =
   parse(String::toInt, String::toInt, String::toDouble)
 
@@ -1155,6 +1872,9 @@ fun Iterable<String>.parseIntLongBigDecimals() =
 
 fun Iterable<String>.parseIntLongBigIntegers() =
   parse(String::toInt, String::toLong, String::toBigInteger)
+
+fun Iterable<String>.parseIntLongChars() =
+  parse(String::toInt, String::toLong, String::toChar)
 
 fun Iterable<String>.parseIntLongDoubles() =
   parse(String::toInt, String::toLong, String::toDouble)
@@ -1174,6 +1894,9 @@ fun Iterable<String>.parseIntStringBigDecimals() =
 fun Iterable<String>.parseIntStringBigIntegers() =
   parse(String::toInt, String::toString, String::toBigInteger)
 
+fun Iterable<String>.parseIntStringChars() =
+  parse(String::toInt, String::toString, String::toChar)
+
 fun Iterable<String>.parseIntStringDoubles() =
   parse(String::toInt, String::toString, String::toDouble)
 
@@ -1191,6 +1914,9 @@ fun Iterable<String>.parseLongBigDecimalBigDecimals() =
 
 fun Iterable<String>.parseLongBigDecimalBigIntegers() =
   parse(String::toLong, String::toBigDecimal, String::toBigInteger)
+
+fun Iterable<String>.parseLongBigDecimalChars() =
+  parse(String::toLong, String::toBigDecimal, String::toChar)
 
 fun Iterable<String>.parseLongBigDecimalDoubles() =
   parse(String::toLong, String::toBigDecimal, String::toDouble)
@@ -1210,6 +1936,9 @@ fun Iterable<String>.parseLongBigIntegerBigDecimals() =
 fun Iterable<String>.parseLongBigIntegerBigIntegers() =
   parse(String::toLong, String::toBigInteger, String::toBigInteger)
 
+fun Iterable<String>.parseLongBigIntegerChars() =
+  parse(String::toLong, String::toBigInteger, String::toChar)
+
 fun Iterable<String>.parseLongBigIntegerDoubles() =
   parse(String::toLong, String::toBigInteger, String::toDouble)
 
@@ -1222,11 +1951,35 @@ fun Iterable<String>.parseLongBigIntegerLongs() =
 fun Iterable<String>.parseLongBigIntegerStrings() =
   parse(String::toLong, String::toBigInteger, String::toString)
 
+fun Iterable<String>.parseLongCharBigDecimals() =
+  parse(String::toLong, String::toChar, String::toBigDecimal)
+
+fun Iterable<String>.parseLongCharBigIntegers() =
+  parse(String::toLong, String::toChar, String::toBigInteger)
+
+fun Iterable<String>.parseLongCharChars() =
+  parse(String::toLong, String::toChar, String::toChar)
+
+fun Iterable<String>.parseLongCharDoubles() =
+  parse(String::toLong, String::toChar, String::toDouble)
+
+fun Iterable<String>.parseLongCharInts() =
+  parse(String::toLong, String::toChar, String::toInt)
+
+fun Iterable<String>.parseLongCharLongs() =
+  parse(String::toLong, String::toChar, String::toLong)
+
+fun Iterable<String>.parseLongCharStrings() =
+  parse(String::toLong, String::toChar, String::toString)
+
 fun Iterable<String>.parseLongDoubleBigDecimals() =
   parse(String::toLong, String::toDouble, String::toBigDecimal)
 
 fun Iterable<String>.parseLongDoubleBigIntegers() =
   parse(String::toLong, String::toDouble, String::toBigInteger)
+
+fun Iterable<String>.parseLongDoubleChars() =
+  parse(String::toLong, String::toDouble, String::toChar)
 
 fun Iterable<String>.parseLongDoubleDoubles() =
   parse(String::toLong, String::toDouble, String::toDouble)
@@ -1246,6 +1999,9 @@ fun Iterable<String>.parseLongIntBigDecimals() =
 fun Iterable<String>.parseLongIntBigIntegers() =
   parse(String::toLong, String::toInt, String::toBigInteger)
 
+fun Iterable<String>.parseLongIntChars() =
+  parse(String::toLong, String::toInt, String::toChar)
+
 fun Iterable<String>.parseLongIntDoubles() =
   parse(String::toLong, String::toInt, String::toDouble)
 
@@ -1263,6 +2019,9 @@ fun Iterable<String>.parseLongLongBigDecimals() =
 
 fun Iterable<String>.parseLongLongBigIntegers() =
   parse(String::toLong, String::toLong, String::toBigInteger)
+
+fun Iterable<String>.parseLongLongChars() =
+  parse(String::toLong, String::toLong, String::toChar)
 
 fun Iterable<String>.parseLongLongDoubles() =
   parse(String::toLong, String::toLong, String::toDouble)
@@ -1282,6 +2041,9 @@ fun Iterable<String>.parseLongStringBigDecimals() =
 fun Iterable<String>.parseLongStringBigIntegers() =
   parse(String::toLong, String::toString, String::toBigInteger)
 
+fun Iterable<String>.parseLongStringChars() =
+  parse(String::toLong, String::toString, String::toChar)
+
 fun Iterable<String>.parseLongStringDoubles() =
   parse(String::toLong, String::toString, String::toDouble)
 
@@ -1299,6 +2061,9 @@ fun Iterable<String>.parseStringBigDecimalBigDecimals() =
 
 fun Iterable<String>.parseStringBigDecimalBigIntegers() =
   parse(String::toString, String::toBigDecimal, String::toBigInteger)
+
+fun Iterable<String>.parseStringBigDecimalChars() =
+  parse(String::toString, String::toBigDecimal, String::toChar)
 
 fun Iterable<String>.parseStringBigDecimalDoubles() =
   parse(String::toString, String::toBigDecimal, String::toDouble)
@@ -1318,6 +2083,9 @@ fun Iterable<String>.parseStringBigIntegerBigDecimals() =
 fun Iterable<String>.parseStringBigIntegerBigIntegers() =
   parse(String::toString, String::toBigInteger, String::toBigInteger)
 
+fun Iterable<String>.parseStringBigIntegerChars() =
+  parse(String::toString, String::toBigInteger, String::toChar)
+
 fun Iterable<String>.parseStringBigIntegerDoubles() =
   parse(String::toString, String::toBigInteger, String::toDouble)
 
@@ -1330,11 +2098,35 @@ fun Iterable<String>.parseStringBigIntegerLongs() =
 fun Iterable<String>.parseStringBigIntegerStrings() =
   parse(String::toString, String::toBigInteger, String::toString)
 
+fun Iterable<String>.parseStringCharBigDecimals() =
+  parse(String::toString, String::toChar, String::toBigDecimal)
+
+fun Iterable<String>.parseStringCharBigIntegers() =
+  parse(String::toString, String::toChar, String::toBigInteger)
+
+fun Iterable<String>.parseStringCharChars() =
+  parse(String::toString, String::toChar, String::toChar)
+
+fun Iterable<String>.parseStringCharDoubles() =
+  parse(String::toString, String::toChar, String::toDouble)
+
+fun Iterable<String>.parseStringCharInts() =
+  parse(String::toString, String::toChar, String::toInt)
+
+fun Iterable<String>.parseStringCharLongs() =
+  parse(String::toString, String::toChar, String::toLong)
+
+fun Iterable<String>.parseStringCharStrings() =
+  parse(String::toString, String::toChar, String::toString)
+
 fun Iterable<String>.parseStringDoubleBigDecimals() =
   parse(String::toString, String::toDouble, String::toBigDecimal)
 
 fun Iterable<String>.parseStringDoubleBigIntegers() =
   parse(String::toString, String::toDouble, String::toBigInteger)
+
+fun Iterable<String>.parseStringDoubleChars() =
+  parse(String::toString, String::toDouble, String::toChar)
 
 fun Iterable<String>.parseStringDoubleDoubles() =
   parse(String::toString, String::toDouble, String::toDouble)
@@ -1354,6 +2146,9 @@ fun Iterable<String>.parseStringIntBigDecimals() =
 fun Iterable<String>.parseStringIntBigIntegers() =
   parse(String::toString, String::toInt, String::toBigInteger)
 
+fun Iterable<String>.parseStringIntChars() =
+  parse(String::toString, String::toInt, String::toChar)
+
 fun Iterable<String>.parseStringIntDoubles() =
   parse(String::toString, String::toInt, String::toDouble)
 
@@ -1371,6 +2166,9 @@ fun Iterable<String>.parseStringLongBigDecimals() =
 
 fun Iterable<String>.parseStringLongBigIntegers() =
   parse(String::toString, String::toLong, String::toBigInteger)
+
+fun Iterable<String>.parseStringLongChars() =
+  parse(String::toString, String::toLong, String::toChar)
 
 fun Iterable<String>.parseStringLongDoubles() =
   parse(String::toString, String::toLong, String::toDouble)
@@ -1390,6 +2188,9 @@ fun Iterable<String>.parseStringStringBigDecimals() =
 fun Iterable<String>.parseStringStringBigIntegers() =
   parse(String::toString, String::toString, String::toBigInteger)
 
+fun Iterable<String>.parseStringStringChars() =
+  parse(String::toString, String::toString, String::toChar)
+
 fun Iterable<String>.parseStringStringDoubles() =
   parse(String::toString, String::toString, String::toDouble)
 
@@ -1404,6 +2205,7 @@ fun Iterable<String>.parseStringStringStrings() =
 
 fun String.parseBigDecimalLists() = parseLists(String::toBigDecimal)
 fun String.parseBigIntegerLists() = parseLists(String::toBigInteger)
+fun String.parseCharLists() = parseLists(String::toChar)
 fun String.parseDoubleLists() = parseLists(String::toDouble)
 fun String.parseIntLists() = parseLists(String::toInt)
 fun String.parseLongLists() = parseLists(String::toLong)
@@ -1411,6 +2213,7 @@ fun String.parseStringLists() = parseLists(String::toString)
 
 fun Iterable<String>.parseBigDecimalLists() = parseLists(String::toBigDecimal)
 fun Iterable<String>.parseBigIntegerLists() = parseLists(String::toBigInteger)
+fun Iterable<String>.parseCharLists() = parseLists(String::toChar)
 fun Iterable<String>.parseDoubleLists() = parseLists(String::toDouble)
 fun Iterable<String>.parseIntLists() = parseLists(String::toInt)
 fun Iterable<String>.parseLongLists() = parseLists(String::toLong)

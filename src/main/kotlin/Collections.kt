@@ -1,3 +1,8 @@
+fun <T> Iterable<T>.only(): T {
+  require(count() == 1) { "Must contain exactly one element." }
+  return first()
+}
+
 fun Iterable<String>.splitByBlank() = split { it.isBlank() }
 
 fun <T> Iterable<T>.splitByNull() = split { it == null }
