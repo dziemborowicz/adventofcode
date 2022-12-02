@@ -1,9 +1,9 @@
 class PuzzleY2021D25 : Puzzle {
 
-  private lateinit var seafloor: List<MutableList<Char>>
+  private lateinit var seafloor: Grid<Char>
 
   override fun parse(input: String) {
-    seafloor = input.parse { it.toMutableList() }
+    seafloor = input.parseDenseCharGrid()
   }
 
   override fun solve1(): Int {
@@ -19,24 +19,20 @@ class PuzzleY2021D25 : Puzzle {
   }
 
   private fun move(c: Char, x: Int, y: Int): Boolean {
-    val willMove = List(seafloor.size) { MutableList(seafloor[0].size) { false } }
+    val willMove = Grid(seafloor.numRows, seafloor.numColumns, false)
 
-    for (row in seafloor.indices) {
-      for (col in seafloor[row].indices) {
-        if (seafloor[row][col] == c && seafloor.getWrapped(row + y).getWrapped(col + x) == '.') {
-          willMove[row][col] = true
-        }
+    for (index in seafloor.indices) {
+      if (seafloor[index] == c && seafloor.getWrapped(index.row + y, index.column + x) == '.') {
+        willMove[index] = true
       }
     }
 
     var moved = false
-    for (row in seafloor.indices) {
-      for (col in seafloor[row].indices) {
-        if (willMove[row][col]) {
-          seafloor[row][col] = '.'
-          seafloor.getWrapped(row + y).setWrapped(col + x, c)
-          moved = true
-        }
+    for (index in seafloor.indices) {
+      if (willMove[index]) {
+        seafloor[index] = '.'
+        seafloor.setWrapped(index.row + y, index.column + x, c)
+        moved = true
       }
     }
     return moved

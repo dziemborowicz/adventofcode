@@ -1,17 +1,16 @@
 class PuzzleY2021D4 : Puzzle {
 
-  private lateinit var parts: List<List<String>>
   private lateinit var draw: List<Int>
+  private lateinit var boards: List<Grid<Int?>>
 
   override fun parse(input: String) {
-    parts = input.lines().splitByBlank()
+    val parts = input.lines().splitByBlank()
     draw = parts.first().parseIntLists().first()
+    boards = parts.drop(1).map { it.parseNullableIntGrid() }
   }
 
   override fun solve1(): Int {
-    val boards: List<List<MutableList<Int?>>> =
-      parts.drop(1).map { it.parseIntLists().map { it.toMutableList() } }
-
+    val boards = boards.copy()
     for (number in draw) {
       for (board in boards) {
         strike(board, number)
@@ -24,12 +23,7 @@ class PuzzleY2021D4 : Puzzle {
   }
 
   override fun solve2(): Int {
-    @Suppress("UNCHECKED_CAST")
-    val boards: MutableList<List<MutableList<Int?>>> =
-      parts.drop(1)
-        .map { it.parseIntLists().map { it.toMutableList() as MutableList<Int?> } }
-        .toMutableList()
-
+    val boards = boards.copy().toMutableList()
     for (number in draw) {
       val it = boards.iterator()
       while (it.hasNext()) {
@@ -46,34 +40,22 @@ class PuzzleY2021D4 : Puzzle {
     throw AssertionError()
   }
 
-  private fun strike(board: List<MutableList<Int?>>, number: Int) {
-    for (row in board.indices) {
-      for (col in board[row].indices) {
-        if (board[row][col] == number) {
-          board[row][col] = null
-        }
+  private fun strike(board: Grid<Int?>, number: Int) {
+    for (index in board.indices) {
+      if (board[index] == number) {
+        board[index] = null
       }
     }
   }
 
-  private fun isWon(board: List<MutableList<Int?>>): Boolean {
-    for (row in board) {
-      if (row.all { it == null }) {
-        return true
-      }
-    }
-
-    for (col in board.first().indices) {
-      if (board.all { it[col] == null }) {
-        return true
-      }
-    }
-
+  private fun isWon(board: Grid<Int?>): Boolean {
+    if (board.anyRowAll { it == null }) return true
+    if (board.anyColumnAll { it == null }) return true
     return false
   }
 
-  private fun score(board: List<MutableList<Int?>>): Int {
-    return board.sumOf { it.filterNotNull().sum() }
+  private fun score(board: Grid<Int?>): Int {
+    return board.flatten().filterNotNull().sum()
   }
 
   companion object {

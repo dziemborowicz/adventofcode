@@ -1,3 +1,8 @@
+@file:Suppress("UNCHECKED_CAST")
+
+import java.math.BigDecimal
+import java.math.BigInteger
+
 fun String.toChar(): Char {
   require(length == 1) { "Must contain exactly one character." }
   return first()
@@ -2218,3 +2223,67 @@ fun Iterable<String>.parseDoubleLists() = parseLists(String::toDouble)
 fun Iterable<String>.parseIntLists() = parseLists(String::toInt)
 fun Iterable<String>.parseLongLists() = parseLists(String::toLong)
 fun Iterable<String>.parseStringLists() = parseLists(String::toString)
+
+fun String.parseBigDecimalGrid() = Grid(parseLists(String::toBigDecimal))
+fun String.parseBigIntegerGrid() = Grid(parseLists(String::toBigInteger))
+fun String.parseCharGrid() = Grid(parseLists(String::toChar))
+fun String.parseDoubleGrid() = Grid(parseLists(String::toDouble))
+fun String.parseIntGrid() = Grid(parseLists(String::toInt))
+fun String.parseLongGrid() = Grid(parseLists(String::toLong))
+fun String.parseStringGrid() = Grid(parseLists(String::toString))
+
+fun Iterable<String>.parseBigDecimalGrid() = Grid(parseLists(String::toBigDecimal))
+fun Iterable<String>.parseBigIntegerGrid() = Grid(parseLists(String::toBigInteger))
+fun Iterable<String>.parseCharGrid() = Grid(parseLists(String::toChar))
+fun Iterable<String>.parseDoubleGrid() = Grid(parseLists(String::toDouble))
+fun Iterable<String>.parseIntGrid() = Grid(parseLists(String::toInt))
+fun Iterable<String>.parseLongGrid() = Grid(parseLists(String::toLong))
+fun Iterable<String>.parseStringGrid() = Grid(parseLists(String::toString))
+
+fun String.parseDenseBigDecimalGrid() = lines().parseDenseBigDecimalGrid()
+fun String.parseDenseBigIntegerGrid() = lines().parseDenseBigIntegerGrid()
+fun String.parseDenseCharGrid() = lines().parseDenseCharGrid()
+fun String.parseDenseDoubleGrid() = lines().parseDenseDoubleGrid()
+fun String.parseDenseIntGrid() = lines().parseDenseIntGrid()
+fun String.parseDenseLongGrid() = lines().parseDenseLongGrid()
+fun String.parseDenseStringGrid() = lines().parseDenseStringGrid()
+
+fun Iterable<String>.parseDenseBigDecimalGrid() = Grid(map { it.toList().map(Char::toString).map(String::toBigDecimal) })
+fun Iterable<String>.parseDenseBigIntegerGrid() = Grid(map { it.toList().map(Char::toString).map(String::toBigInteger) })
+fun Iterable<String>.parseDenseCharGrid() = Grid(map { it.toList() })
+fun Iterable<String>.parseDenseDoubleGrid() = Grid(map { it.toList().map(Char::toString).map(String::toDouble) })
+fun Iterable<String>.parseDenseIntGrid() = Grid(map { it.toList().map(Char::toString).map(String::toInt) })
+fun Iterable<String>.parseDenseLongGrid() = Grid(map { it.toList().map(Char::toString).map(String::toLong) })
+fun Iterable<String>.parseDenseStringGrid() = Grid(map { it.toList().map(Char::toString).map(String::toString) })
+
+fun String.parseNullableBigDecimalGrid() = parseBigDecimalGrid() as Grid<BigDecimal?>
+fun String.parseNullableBigIntegerGrid() = parseBigIntegerGrid() as Grid<BigInteger?>
+fun String.parseNullableCharGrid() = parseCharGrid() as Grid<Char?>
+fun String.parseNullableDoubleGrid() = parseDoubleGrid() as Grid<Double?>
+fun String.parseNullableIntGrid() = parseIntGrid() as Grid<Int?>
+fun String.parseNullableLongGrid() = parseLongGrid() as Grid<Long?>
+fun String.parseNullableStringGrid() = parseStringGrid() as Grid<String?>
+
+fun Iterable<String>.parseNullableBigDecimalGrid() = parseBigDecimalGrid() as Grid<BigDecimal?>
+fun Iterable<String>.parseNullableBigIntegerGrid() = parseBigIntegerGrid() as Grid<BigInteger?>
+fun Iterable<String>.parseNullableCharGrid() = parseCharGrid() as Grid<Char?>
+fun Iterable<String>.parseNullableDoubleGrid() = parseDoubleGrid() as Grid<Double?>
+fun Iterable<String>.parseNullableIntGrid() = parseIntGrid() as Grid<Int?>
+fun Iterable<String>.parseNullableLongGrid() = parseLongGrid() as Grid<Long?>
+fun Iterable<String>.parseNullableStringGrid() = parseStringGrid() as Grid<String?>
+
+fun String.parseNullableDenseBigDecimalGrid() = parseDenseBigDecimalGrid() as Grid<BigDecimal?>
+fun String.parseNullableDenseBigIntegerGrid() = parseDenseBigIntegerGrid() as Grid<BigInteger?>
+fun String.parseNullableDenseCharGrid() = parseDenseCharGrid() as Grid<Char?>
+fun String.parseNullableDenseDoubleGrid() = parseDenseDoubleGrid() as Grid<Double?>
+fun String.parseNullableDenseIntGrid() = parseDenseIntGrid() as Grid<Int?>
+fun String.parseNullableDenseLongGrid() = parseDenseLongGrid() as Grid<Long?>
+fun String.parseNullableDenseStringGrid() = parseDenseStringGrid() as Grid<String?>
+
+fun Iterable<String>.parseNullableDenseBigDecimalGrid() = parseDenseBigDecimalGrid() as Grid<BigDecimal?>
+fun Iterable<String>.parseNullableDenseBigIntegerGrid() = parseDenseBigIntegerGrid() as Grid<BigInteger?>
+fun Iterable<String>.parseNullableDenseCharGrid() = parseDenseCharGrid() as Grid<Char?>
+fun Iterable<String>.parseNullableDenseDoubleGrid() = parseDenseDoubleGrid() as Grid<Double?>
+fun Iterable<String>.parseNullableDenseIntGrid() = parseDenseIntGrid() as Grid<Int?>
+fun Iterable<String>.parseNullableDenseLongGrid() = parseDenseLongGrid() as Grid<Long?>
+fun Iterable<String>.parseNullableDenseStringGrid() = parseDenseStringGrid() as Grid<String?>
