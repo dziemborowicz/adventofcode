@@ -18,6 +18,13 @@ fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
 
 fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)
 
+fun <T> List<T>.middle(): T = this[middleIndex()]
+
+fun List<*>.middleIndex(): Int {
+  require(size % 2 == 1) { "List must have an odd number of elements." }
+  return size / 2
+}
+
 fun <T> Iterable<T>.only(): T {
   require(count() == 1) { "Must contain exactly one element." }
   return first()
