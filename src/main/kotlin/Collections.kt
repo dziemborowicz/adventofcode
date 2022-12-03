@@ -25,6 +25,18 @@ fun List<*>.middleIndex(): Int {
   return size / 2
 }
 
+fun <T> Iterable<T>.asPair(): Pair<T, T> {
+  require(count() == 2) { "Must contain exactly two elements." }
+  val iterator = iterator()
+  return Pair(iterator.next(), iterator.next())
+}
+
+fun <T> Iterable<T>.asTriple(): Triple<T, T, T> {
+  require(count() == 3) { "Must contain exactly three elements." }
+  val iterator = iterator()
+  return Triple(iterator.next(), iterator.next(), iterator.next())
+}
+
 fun <T> Iterable<T>.only(): T {
   require(count() == 1) { "Must contain exactly one element." }
   return first()
