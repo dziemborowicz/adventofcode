@@ -31,6 +31,10 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   override fun iterator(): Iterator<T> =
     flatten().iterator()
 
+  override fun toString(): String {
+    return data.joinToString(",\n", "[\n", "\n]") { "  $it" }
+  }
+
   operator fun get(index: Index): T =
     get(index.row, index.column)
 
@@ -93,6 +97,9 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   fun flatten(): List<T> =
     data.flatten()
 
+  fun <R> map(transform: (T) -> R): Grid<R> =
+    Grid(numRows, numColumns) { row, column -> transform(this[row, column]) }
+
   fun columns(): List<List<T>> =
     columnIndices.map { column(it) }
 
@@ -150,6 +157,8 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
 
   fun copy(): Grid<T> = Grid(this)
 
+  fun transpose(): Grid<T> = Grid(numColumns, numRows) { row, column -> this[column, row] }
+
   data class Index(val row: Int, val column: Int) {
     fun upLeft() = Index(row - 1, column - 1)
     fun up() = Index(row - 1, column)
@@ -189,3 +198,9 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
 }
 
 fun <T> List<Grid<T>>.copy(): List<Grid<T>> = map { it.copy() }
+
+fun Grid<Boolean>.asImage(dot: Char = '#', empty: Char = '.'): String =
+  map { if (it) dot else empty }.asImage()
+
+fun Grid<Char>.asImage(): String =
+  rows().joinToString("\n") { row -> row.joinToString("") }
