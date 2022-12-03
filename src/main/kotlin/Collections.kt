@@ -1,5 +1,6 @@
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.experimental.ExperimentalTypeInference
 
 infix fun Set<*>.equivalent(other: Set<*>): Boolean =
   this.containsAll(other) && other.containsAll(this)
@@ -28,6 +29,8 @@ fun List<*>.middleIndex(): Int {
 fun <T> Iterable<T>.asDeque() = ArrayDeque<T>().also { it.addAll(this) }
 
 fun <T> List<T>.asDeque() = ArrayDeque(this)
+
+fun String.asDeque() = ArrayDeque(toList())
 
 fun <T> Iterable<T>.asPair(): Pair<T, T> {
   require(count() == 2) { "Must contain exactly two elements." }
@@ -176,6 +179,31 @@ fun Iterable<Double>.product(): Double = reduce { a, b -> a * b }
 fun Iterable<Int>.product(): Int = reduce { a, b -> a * b }
 
 fun Iterable<Long>.product(): Long = reduce { a, b -> a * b }
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+fun <T> Iterable<T>.productOf(selector: (T) -> BigDecimal): BigDecimal =
+  map(selector).reduce { a, b -> a * b }
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+fun <T> Iterable<T>.productOf(selector: (T) -> BigInteger): BigInteger =
+  map(selector).reduce { a, b -> a * b }
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+fun <T> Iterable<T>.productOf(selector: (T) -> Double): Double =
+  map(selector).reduce { a, b -> a * b }
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+fun <T> Iterable<T>.productOf(selector: (T) -> Int): Int =
+  map(selector).reduce { a, b -> a * b }
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long =
+  map(selector).reduce { a, b -> a * b }
 
 fun Iterable<String>.splitByBlank() = split { it.isBlank() }
 
