@@ -25,6 +25,10 @@ fun List<*>.middleIndex(): Int {
   return size / 2
 }
 
+fun <T> Iterable<T>.asDeque() = ArrayDeque<T>().also { it.addAll(this) }
+
+fun <T> List<T>.asDeque() = ArrayDeque(this)
+
 fun <T> Iterable<T>.asPair(): Pair<T, T> {
   require(count() == 2) { "Must contain exactly two elements." }
   val iterator = iterator()
@@ -71,6 +75,42 @@ inline fun <T> MutableList<T>.removeLastIf(predicate: (T) -> Boolean): T {
   val index = indexOfLast(predicate)
   if (index < 0) throw NoSuchElementException()
   return removeAt(index)
+}
+
+fun <T> ArrayDeque<T>.takeAndRemove(n: Int): List<T> {
+  return mutableListOf<T>().also { result ->
+    repeat(n) { result.add(removeFirst()) }
+  }
+}
+
+fun <T> ArrayDeque<T>.takeAndRemoveWhile(predicate: (T) -> Boolean): List<T> {
+  return mutableListOf<T>().also { result ->
+    while (isNotEmpty()) {
+      val element = first()
+      if (!predicate(element)) break
+      result.add(element)
+      removeFirst()
+    }
+  }
+}
+
+fun <T> ArrayDeque<T>.takeAndRemoveLast(n: Int): List<T> {
+  return mutableListOf<T>().also { result ->
+    repeat(n) { result.add(removeLast()) }
+    result.reverse()
+  }
+}
+
+fun <T> ArrayDeque<T>.takeAndRemoveLastWhile(predicate: (T) -> Boolean): List<T> {
+  return mutableListOf<T>().also { result ->
+    while (isNotEmpty()) {
+      val element = last()
+      if (!predicate(element)) break
+      result.add(element)
+      removeLast()
+    }
+    result.reverse()
+  }
 }
 
 fun <K> Map<K, Int>.getCount(key: K) = getOrDefault(key, 0)
