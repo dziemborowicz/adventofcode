@@ -82,6 +82,114 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   fun getAdjacentWithDiagonalsWrapped(row: Int, column: Int): List<T> =
     getAdjacentWithDiagonalsWrapped(Index(row, column))
 
+  inline fun forEachAdjacent(index: Index, action: (T) -> Unit) =
+    forEachAdjacent(index.row, index.column, action)
+
+  inline fun forEachAdjacent(row: Int, column: Int, action: (T) -> Unit) {
+    if (row - 1 >= 0) action(this[row - 1, column])
+    if (column + 1 < numColumns) action(this[row, column + 1])
+    if (row + 1 < numRows) action(this[row + 1, column])
+    if (column - 1 >= 0) action(this[row, column - 1])
+  }
+
+  inline fun forEachAdjacentWrapped(index: Index, action: (T) -> Unit) =
+    forEachAdjacentWrapped(index.row, index.column, action)
+
+  inline fun forEachAdjacentWrapped(row: Int, column: Int, action: (T) -> Unit) {
+    action(getWrapped(row - 1, column))
+    action(getWrapped(row, column + 1))
+    action(getWrapped(row + 1, column))
+    action(getWrapped(row, column - 1))
+  }
+
+  inline fun forEachAdjacentWithDiagonals(index: Index, action: (T) -> Unit) =
+    forEachAdjacentWithDiagonals(index.row, index.column, action)
+
+  inline fun forEachAdjacentWithDiagonals(row: Int, column: Int, action: (T) -> Unit) {
+    if (row - 1 >= 0 && column - 1 >= 0) action(this[row - 1, column - 1])
+    if (row - 1 >= 0) action(this[row - 1, column])
+    if (row - 1 >= 0 && column + 1 < numColumns) action(this[row - 1, column + 1])
+    if (column + 1 < numColumns) action(this[row, column + 1])
+    if (row + 1 < numRows && column + 1 < numColumns) action(this[row + 1, column + 1])
+    if (row + 1 < numRows) action(this[row + 1, column])
+    if (row + 1 < numRows && column - 1 >= 0) action(this[row + 1, column - 1])
+    if (column - 1 >= 0) action(this[row, column - 1])
+  }
+
+  inline fun forEachAdjacentWithDiagonalsWrapped(index: Index, action: (T) -> Unit) =
+    forEachAdjacentWithDiagonalsWrapped(index.row, index.column, action)
+
+  inline fun forEachAdjacentWithDiagonalsWrapped(row: Int, column: Int, action: (T) -> Unit) {
+    action(getWrapped(row - 1, column - 1))
+    action(getWrapped(row - 1, column))
+    action(getWrapped(row - 1, column + 1))
+    action(getWrapped(row, column + 1))
+    action(getWrapped(row + 1, column + 1))
+    action(getWrapped(row + 1, column))
+    action(getWrapped(row + 1, column - 1))
+    action(getWrapped(row, column - 1))
+  }
+
+  inline fun forEachAdjacentIndexed(index: Index, action: (Int, Int, T) -> Unit) =
+    forEachAdjacentIndexed(index.row, index.column, action)
+
+  inline fun forEachAdjacentIndexed(row: Int, column: Int, action: (Int, Int, T) -> Unit) {
+    if (row - 1 >= 0) action(row - 1, column, this[row - 1, column])
+    if (column + 1 < numColumns) action(row, column + 1, this[row, column + 1])
+    if (row + 1 < numRows) action(row + 1, column, this[row + 1, column])
+    if (column - 1 >= 0) action(row, column - 1, this[row, column - 1])
+  }
+
+  inline fun forEachAdjacentWrappedIndexed(index: Index, action: (Int, Int, T) -> Unit) =
+    forEachAdjacentWrappedIndexed(index.row, index.column, action)
+
+  inline fun forEachAdjacentWrappedIndexed(row: Int, column: Int, action: (Int, Int, T) -> Unit) {
+    action(row - 1, column, getWrapped(row - 1, column))
+    action(row, column + 1, getWrapped(row, column + 1))
+    action(row + 1, column, getWrapped(row + 1, column))
+    action(row, column - 1, getWrapped(row, column - 1))
+  }
+
+  inline fun forEachAdjacentWithDiagonalsIndexed(index: Index, action: (Int, Int, T) -> Unit) =
+    forEachAdjacentWithDiagonalsIndexed(index.row, index.column, action)
+
+  inline fun forEachAdjacentWithDiagonalsIndexed(row: Int, column: Int, action: (Int, Int, T) -> Unit) {
+    if (row - 1 >= 0 && column - 1 >= 0)
+      action(row - 1, column - 1, this[row - 1, column - 1])
+    if (row - 1 >= 0)
+      action(row - 1, column, this[row - 1, column])
+    if (row - 1 >= 0 && column + 1 < numColumns)
+      action(row - 1, column + 1, this[row - 1, column + 1])
+    if (column + 1 < numColumns)
+      action(row, column + 1, this[row, column + 1])
+    if (row + 1 < numRows && column + 1 < numColumns)
+      action(row + 1, column + 1, this[row + 1, column + 1])
+    if (row + 1 < numRows)
+      action(row + 1, column, this[row + 1, column])
+    if (row + 1 < numRows && column - 1 >= 0)
+      action(row + 1, column - 1, this[row + 1, column - 1])
+    if (column - 1 >= 0)
+      action(row, column - 1, this[row, column - 1])
+  }
+
+  inline fun forEachAdjacentWithDiagonalsWrappedIndexed(index: Index, action: (Int, Int, T) -> Unit) =
+    forEachAdjacentWithDiagonalsWrappedIndexed(index.row, index.column, action)
+
+  inline fun forEachAdjacentWithDiagonalsWrappedIndexed(
+    row: Int,
+    column: Int,
+    action: (Int, Int, T) -> Unit,
+  ) {
+    action(row - 1, column - 1, getWrapped(row - 1, column - 1))
+    action(row - 1, column, getWrapped(row - 1, column))
+    action(row - 1, column + 1, getWrapped(row - 1, column + 1))
+    action(row, column + 1, getWrapped(row, column + 1))
+    action(row + 1, column + 1, getWrapped(row + 1, column + 1))
+    action(row + 1, column, getWrapped(row + 1, column))
+    action(row + 1, column - 1, getWrapped(row + 1, column - 1))
+    action(row, column - 1, getWrapped(row, column - 1))
+  }
+
   operator fun set(index: Index, element: T): T =
     set(index.row, index.column, element)
 
@@ -109,16 +217,16 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   fun columnWrapped(column: Int): List<T> =
     data.map { it.getWrapped(column) }
 
-  fun anyColumnAll(predicate: (T) -> Boolean) =
+  inline fun anyColumnAll(predicate: (T) -> Boolean) =
     columns().any { it.all(predicate) }
 
-  fun anyColumnNone(predicate: (T) -> Boolean) =
+  inline fun anyColumnNone(predicate: (T) -> Boolean) =
     columns().any { it.none(predicate) }
 
-  fun noColumnAll(predicate: (T) -> Boolean) =
+  inline fun noColumnAll(predicate: (T) -> Boolean) =
     columns().none { it.all(predicate) }
 
-  fun noColumnNone(predicate: (T) -> Boolean) =
+  inline fun noColumnNone(predicate: (T) -> Boolean) =
     columns().none { it.none(predicate) }
 
   fun rows(): List<List<T>> =
@@ -130,16 +238,16 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   fun rowWrapped(row: Int): List<T> =
     data.getWrapped(row).toList()
 
-  fun anyRowAll(predicate: (T) -> Boolean) =
+  inline fun anyRowAll(predicate: (T) -> Boolean) =
     rows().any { it.all(predicate) }
 
-  fun anyRowNone(predicate: (T) -> Boolean) =
+  inline fun anyRowNone(predicate: (T) -> Boolean) =
     rows().any { it.none(predicate) }
 
-  fun noRowAll(predicate: (T) -> Boolean) =
+  inline fun noRowAll(predicate: (T) -> Boolean) =
     rows().none { it.all(predicate) }
 
-  fun noRowNone(predicate: (T) -> Boolean) =
+  inline fun noRowNone(predicate: (T) -> Boolean) =
     rows().none { it.none(predicate) }
 
   fun diagonals(): List<List<T>> =
