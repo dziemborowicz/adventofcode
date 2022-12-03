@@ -28,17 +28,52 @@ class Grid<T>(data: List<List<T>>) {
     initialValue: T,
   ) : this(numRows, numColumns, { _, _ -> initialValue })
 
-  operator fun get(index: Index) =
+  operator fun get(index: Index): T =
     get(index.row, index.column)
 
   operator fun get(row: Int, column: Int): T =
     data[row][column]
+
+  fun getOrNull(index: Index): T? =
+    getOrNull(index.row, index.column)
+
+  fun getOrNull(row: Int, column: Int): T? {
+    return if (row !in rowIndices || column !in columnIndices) {
+      null
+    } else {
+      get(row, column)
+    }
+  }
 
   fun getWrapped(index: Index): T =
     getWrapped(index.row, index.column)
 
   fun getWrapped(row: Int, column: Int): T =
     data.getWrapped(row).getWrapped(column)
+
+  fun getAdjacent(index: Index): List<T> =
+    index.adjacentIn(this).map { this[it] }
+
+  fun getAdjacent(row: Int, column: Int): List<T> =
+    getAdjacent(Index(row, column))
+
+  fun getAdjacentWrapped(index: Index): List<T> =
+    index.adjacent().map { this.getWrapped(it) }
+
+  fun getAdjacentWrapped(row: Int, column: Int): List<T> =
+    getAdjacentWrapped(Index(row, column))
+
+  fun getAdjacentWithDiagonals(index: Index): List<T> =
+    index.adjacentWithDiagonalsIn(this).map { this[it] }
+
+  fun getAdjacentWithDiagonals(row: Int, column: Int): List<T> =
+    getAdjacentWithDiagonals(Index(row, column))
+
+  fun getAdjacentWithDiagonalsWrapped(index: Index): List<T> =
+    index.adjacentWithDiagonals().map { this.getWrapped(it) }
+
+  fun getAdjacentWithDiagonalsWrapped(row: Int, column: Int): List<T> =
+    getAdjacentWithDiagonalsWrapped(Index(row, column))
 
   operator fun set(index: Index, element: T): T =
     set(index.row, index.column, element)
@@ -112,7 +147,42 @@ class Grid<T>(data: List<List<T>>) {
 
   fun copy(): Grid<T> = Grid(this)
 
-  data class Index(val row: Int, val column: Int)
+  data class Index(val row: Int, val column: Int) {
+    fun upLeft() = Index(row - 1, column - 1)
+    fun up() = Index(row - 1, column)
+    fun upRight() = Index(row - 1, column + 1)
+    fun right() = Index(row, column + 1)
+    fun downRight() = Index(row + 1, column + 1)
+    fun down() = Index(row + 1, column)
+    fun downLeft() = Index(row + 1, column - 1)
+    fun left() = Index(row, column - 1)
+
+    fun adjacent() = listOf(
+      up(),
+      right(),
+      down(),
+      left(),
+    )
+
+    fun adjacentWithDiagonals() = listOf(
+      upLeft(),
+      up(),
+      upRight(),
+      right(),
+      downRight(),
+      down(),
+      downLeft(),
+      left(),
+    )
+
+    fun adjacentIn(grid: Grid<*>) = adjacent().filter {
+      it.row in grid.rowIndices && it.column in grid.columnIndices
+    }
+
+    fun adjacentWithDiagonalsIn(grid: Grid<*>) = adjacent().filter {
+      it.row in grid.rowIndices && it.column in grid.columnIndices
+    }
+  }
 }
 
 fun <T> List<Grid<T>>.copy(): List<Grid<T>> = map { it.copy() }

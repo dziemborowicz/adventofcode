@@ -1,3 +1,6 @@
+import java.math.BigDecimal
+import java.math.BigInteger
+
 infix fun Set<*>.equivalent(other: Set<*>): Boolean =
   this.containsAll(other) && other.containsAll(this)
 
@@ -53,6 +56,16 @@ fun <T> MutableList<T>.removeLastIf(predicate: (T) -> Boolean): T {
   if (index < 0) throw NoSuchElementException()
   return removeAt(index)
 }
+
+fun Iterable<BigDecimal>.product(): BigDecimal = reduce { a, b -> a * b }
+
+fun Iterable<BigInteger>.product(): BigInteger = reduce { a, b -> a * b }
+
+fun Iterable<Double>.product(): Double = reduce { a, b -> a * b }
+
+fun Iterable<Int>.product(): Int = reduce { a, b -> a * b }
+
+fun Iterable<Long>.product(): Long = reduce { a, b -> a * b }
 
 fun Iterable<String>.splitByBlank() = split { it.isBlank() }
 
