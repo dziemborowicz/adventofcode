@@ -21,24 +21,24 @@ class PuzzleY2021D8 : Puzzle {
 
       val candidates = display.first.toMutableList()
 
-      digitsToSegments[1] = candidates.removeOnlyIf { it.size == 2 }
-      digitsToSegments[4] = candidates.removeOnlyIf { it.size == 4 }
-      digitsToSegments[7] = candidates.removeOnlyIf { it.size == 3 }
-      digitsToSegments[8] = candidates.removeOnlyIf { it.size == 7 }
+      digitsToSegments[1] = candidates.removeSingleIf { it.size == 2 }
+      digitsToSegments[4] = candidates.removeSingleIf { it.size == 4 }
+      digitsToSegments[7] = candidates.removeSingleIf { it.size == 3 }
+      digitsToSegments[8] = candidates.removeSingleIf { it.size == 7 }
 
       digitsToSegments[6] =
-        candidates.removeOnlyIf { it.size == 6 && !it.containsAll(digitsToSegments[1]!!) }
+        candidates.removeSingleIf { it.size == 6 && !it.containsAll(digitsToSegments[1]!!) }
       digitsToSegments[9] =
-        candidates.removeOnlyIf { it.size == 6 && it.containsAll(digitsToSegments[4]!!) }
+        candidates.removeSingleIf { it.size == 6 && it.containsAll(digitsToSegments[4]!!) }
       digitsToSegments[0] =
-        candidates.removeOnlyIf { it.size == 6 && !it.containsAll(digitsToSegments[4]!!) }
+        candidates.removeSingleIf { it.size == 6 && !it.containsAll(digitsToSegments[4]!!) }
 
       digitsToSegments[3] =
-        candidates.removeOnlyIf { it.size == 5 && it.containsAll(digitsToSegments[1]!!) }
+        candidates.removeSingleIf { it.size == 5 && it.containsAll(digitsToSegments[1]!!) }
       digitsToSegments[5] =
-        candidates.removeOnlyIf { it.size == 5 && digitsToSegments[9]!!.containsAll(it) }
+        candidates.removeSingleIf { it.size == 5 && digitsToSegments[9]!!.containsAll(it) }
       digitsToSegments[2] =
-        candidates.only()
+        candidates.single()
 
       val digits = display.second.map {
         digitsToSegments.entries.first { (_, segments) -> segments equivalent it }.key

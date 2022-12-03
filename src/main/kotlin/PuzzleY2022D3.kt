@@ -10,12 +10,12 @@ class PuzzleY2022D3 : Puzzle {
   }
 
   override fun solve1(): Int {
-    return rucksacks.sumOf { (it.first intersect it.second).only().priority() }
+    return rucksacks.sumOf { (it.first intersect it.second).single().priority() }
   }
 
   override fun solve2(): Int {
     return rucksacks.chunked(3).sumOf {
-      it.map { it.first union it.second }.reduce { a, b -> a intersect b }.only().priority()
+      it.map { it.first union it.second }.reduce { a, b -> a intersect b }.single().priority()
     }
   }
 

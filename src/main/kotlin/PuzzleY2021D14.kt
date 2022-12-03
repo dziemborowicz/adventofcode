@@ -5,7 +5,7 @@ class PuzzleY2021D14 : Puzzle {
 
   override fun parse(input: String) {
     val parts = input.lines().splitByBlank()
-    polymerTemplate = parts[0].only()
+    polymerTemplate = parts[0].single()
     pairInsertionRules = parts[1].associate { it.split(" -> ").asPair() }
   }
 
@@ -18,10 +18,10 @@ class PuzzleY2021D14 : Puzzle {
   }
 
   private fun solve(steps: Int): Long {
-    val counts = " $polymerTemplate ".windowed(2).toLongCountMap()
+    val pairCounts = " $polymerTemplate ".windowed(2).toLongCountMap()
     repeat(steps) {
-      counts.incrementAll(pairInsertionRules.flatMap { rule ->
-        val prevCount = counts.getCount(rule.key)
+      pairCounts.incrementAll(pairInsertionRules.flatMap { rule ->
+        val prevCount = pairCounts.getCount(rule.key)
         listOf(
           (rule.key.first() + rule.value) to prevCount,
           (rule.value + rule.key.last()) to prevCount,
@@ -29,12 +29,12 @@ class PuzzleY2021D14 : Puzzle {
         )
       })
     }
-    val singleCounts =
-      counts.flatMap { (key, count) -> listOf(key.first() to count, key.last() to count) }
+    val counts =
+      pairCounts.flatMap { (key, count) -> listOf(key.first() to count, key.last() to count) }
         .filter { it.first != ' ' }
         .toLongCountMap()
         .also { it.replaceAll { _, count -> count / 2 } }
-    return singleCounts.values.max() - singleCounts.values.filter { it != 0L }.min()
+    return counts.values.max() - counts.values.filter { it != 0L }.min()
   }
 
   companion object {

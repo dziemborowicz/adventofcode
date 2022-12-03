@@ -39,25 +39,15 @@ fun <T> Iterable<T>.asTriple(): Triple<T, T, T> {
 
 fun Iterable<Char>.asString(): String = joinToString("")
 
-fun <T> Iterable<T>.only(): T {
-  require(count() == 1) { "Must contain exactly one element." }
-  return first()
-}
-
-inline fun <T> Iterable<T>.only(predicate: (T) -> Boolean): T {
-  require(count(predicate) == 1) { "Must contain exactly one matching element." }
-  return first(predicate)
-}
-
-inline fun <T> Iterable<T>.indexOfOnly(predicate: (T) -> Boolean): Int {
+inline fun <T> Iterable<T>.indexOfSingle(predicate: (T) -> Boolean): Int {
   require(count(predicate) == 1) { "Must contain exactly one matching element." }
   return indexOfFirst(predicate)
 }
 
-fun <T> MutableList<T>.removeOnly(element: T): T = removeOnlyIf { it == element }
+fun <T> MutableList<T>.removeSingle(element: T): T = removeSingleIf { it == element }
 
-inline fun <T> MutableList<T>.removeOnlyIf(predicate: (T) -> Boolean): T {
-  val index = indexOfOnly(predicate)
+inline fun <T> MutableList<T>.removeSingleIf(predicate: (T) -> Boolean): T {
+  val index = indexOfSingle(predicate)
   if (index < 0) throw NoSuchElementException()
   return removeAt(index)
 }
