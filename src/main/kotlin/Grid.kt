@@ -1,4 +1,4 @@
-class Grid<T>(data: List<List<T>>) {
+class Grid<T>(data: List<List<T>>) : Iterable<T> {
 
   val data = data.map { it.toMutableList() }
   val numRows = data.size
@@ -27,6 +27,9 @@ class Grid<T>(data: List<List<T>>) {
     numColumns: Int,
     initialValue: T,
   ) : this(numRows, numColumns, { _, _ -> initialValue })
+
+  override fun iterator(): Iterator<T> =
+    flatten().iterator()
 
   operator fun get(index: Index): T =
     get(index.row, index.column)
@@ -179,7 +182,7 @@ class Grid<T>(data: List<List<T>>) {
       it.row in grid.rowIndices && it.column in grid.columnIndices
     }
 
-    fun adjacentWithDiagonalsIn(grid: Grid<*>) = adjacent().filter {
+    fun adjacentWithDiagonalsIn(grid: Grid<*>) = adjacentWithDiagonals().filter {
       it.row in grid.rowIndices && it.column in grid.columnIndices
     }
   }

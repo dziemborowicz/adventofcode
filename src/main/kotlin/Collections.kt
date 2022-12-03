@@ -48,6 +48,11 @@ fun <T> MutableList<T>.removeOnlyIf(predicate: (T) -> Boolean): T {
   return removeAt(index)
 }
 
+fun <T> MutableSet<T>.removeFirst(): T {
+  val iterator = iterator()
+  return iterator.next().also { iterator.remove() }
+}
+
 fun <T> MutableList<T>.removeFirst(element: T): T = removeFirstIf { it == element }
 
 fun <T> MutableList<T>.removeFirstIf(predicate: (T) -> Boolean): T {
