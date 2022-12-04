@@ -1,6 +1,8 @@
+import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.functions
 import kotlin.reflect.full.memberProperties
 
 private fun solve(args: List<String>) {
@@ -14,9 +16,19 @@ private fun solve(args: List<String>) {
 
   val puzzleCompanion = puzzleClass.companionObjectInstance
   if (puzzleCompanion != null) {
+    for (testMethod in puzzleCompanion::class.functions.filter { it.name.startsWith("test") }) {
+      timed(testMethod.name) {
+        try {
+          testMethod.call(puzzleCompanion)
+        } catch (e: InvocationTargetException) {
+          throw e.cause ?: e
+        }
+      }
+    }
+
     for (level in levels) {
       for (inputProperty in puzzleCompanion::class.memberProperties) {
-        val match = Regex("testInput($level(_\\d+)?)").matchEntire(inputProperty.name) ?: continue
+        val match = Regex("testInput($level(_.+)?)").matchEntire(inputProperty.name) ?: continue
         val label = match.groups[1]!!.value
         val answerProperty =
           puzzleCompanion::class.memberProperties.firstOrNull { it.name == "testAnswer$label" }
