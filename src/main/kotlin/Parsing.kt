@@ -32,7 +32,7 @@ fun <A, B, C> Iterable<String>.parse(a: (String) -> A, b: (String) -> B, c: (Str
 fun <T> String.parseLists(transform: (String) -> T) = lines().parseLists(transform)
 
 fun <T> Iterable<String>.parseLists(transform: (String) -> T) =
-  map { it.trim().split(Regex("[\\s,]+")) }.map { it.map(transform) }
+  map { it.trim().split(Regex("[\\s,-]+")) }.map { it.map(transform) }
 
 fun String.parseBigDecimals() = parse(String::toBigDecimal)
 fun String.parseBigIntegers() = parse(String::toBigInteger)
