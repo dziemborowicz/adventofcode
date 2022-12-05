@@ -20,7 +20,7 @@ class PuzzleY2021D10 : Puzzle {
           ']' -> 2
           '}' -> 3
           '>' -> 4
-          else -> throw AssertionError()
+          else -> fail()
         }
       }
       score
@@ -38,7 +38,7 @@ class PuzzleY2021D10 : Puzzle {
           ']' -> 57
           '}' -> 1197
           '>' -> 25137
-          else -> throw AssertionError()
+          else -> fail()
         }
       }
     }
@@ -64,7 +64,7 @@ class PuzzleY2021D10 : Puzzle {
     '[' -> ']'
     '{' -> '}'
     '<' -> '>'
-    else -> throw AssertionError()
+    else -> fail()
   }
 
   companion object {

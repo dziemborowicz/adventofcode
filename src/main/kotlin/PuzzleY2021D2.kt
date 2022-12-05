@@ -14,7 +14,7 @@ class PuzzleY2021D2 : Puzzle {
         "forward" -> horizontalPosition += it.second
         "down" -> depth += it.second
         "up" -> depth -= it.second
-        else -> throw AssertionError()
+        else -> fail()
       }
     }
     return horizontalPosition * depth
@@ -32,7 +32,7 @@ class PuzzleY2021D2 : Puzzle {
         }
         "down" -> aim += it.second
         "up" -> aim -= it.second
-        else -> throw AssertionError()
+        else -> fail()
       }
     }
     return horizontalPosition * depth

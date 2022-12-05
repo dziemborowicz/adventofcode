@@ -71,7 +71,7 @@ class PuzzleY2021D16 : Puzzle {
       5 -> GreaterThan(version, params)
       6 -> LessThan(version, params)
       7 -> EqualTo(version, params)
-      else -> throw AssertionError()
+      else -> fail()
     }
   }
 

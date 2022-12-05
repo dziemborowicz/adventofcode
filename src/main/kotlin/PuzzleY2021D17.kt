@@ -6,7 +6,7 @@ class PuzzleY2021D17 : Puzzle {
 
   override fun parse(input: String) {
     val regex = Regex("target area: x=(-?\\d+..-?\\d+), y=(-?\\d+..-?\\d+)")
-    val result = regex.matchEntire(input) ?: throw AssertionError()
+    val result = regex.matchEntire(input) ?: fail()
     xRange = result.groupValues[1].toIntRange()
     yRange = result.groupValues[2].toIntRange()
     validVelocityStarts = (0..xRange.last + 1).flatMap { xVelocityStart ->

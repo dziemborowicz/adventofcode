@@ -19,7 +19,7 @@ class PuzzleY2021D4 : Puzzle {
         }
       }
     }
-    throw AssertionError()
+    fail()
   }
 
   override fun solve2(): Int {
@@ -37,7 +37,7 @@ class PuzzleY2021D4 : Puzzle {
         }
       }
     }
-    throw AssertionError()
+    fail()
   }
 
   private fun strike(board: Grid<Int?>, number: Int) {

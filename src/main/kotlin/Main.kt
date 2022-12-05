@@ -32,7 +32,7 @@ private fun solve(args: List<String>) {
         val label = match.groups[1]!!.value
         val answerProperty =
           puzzleCompanion::class.memberProperties.firstOrNull { it.name == "testAnswer$label" }
-            ?: throw AssertionError("No testAnswer$label found.")
+            ?: fail("No testAnswer$label found.")
 
         val input = inputProperty.call(puzzleCompanion) as String
         val expectedAnswer = answerProperty.call(puzzleCompanion)
@@ -44,12 +44,12 @@ private fun solve(args: List<String>) {
             when (level) {
               1 -> puzzle.solve1()
               2 -> puzzle.solve2()
-              else -> throw AssertionError()
+              else -> fail()
             }
           println("Expected Answer: $expectedAnswer")
           println("Actual Answer  : $actualAnswer")
           if (actualAnswer.toString() != expectedAnswer.toString()) {
-            throw AssertionError("Test $label failed.")
+            fail("Test $label failed.")
           }
         }
       }
@@ -82,7 +82,7 @@ private fun solve(args: List<String>) {
       when (level) {
         1 -> puzzle.solve1()
         2 -> puzzle.solve2()
-        else -> throw AssertionError()
+        else -> fail()
       }.also {
         println("Answer: $it")
       }
