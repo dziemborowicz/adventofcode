@@ -80,7 +80,7 @@ class PuzzleY2022D1 : Puzzle {
 `testAnswer2` are used with `solve2`.
 
 If you want to provide multiple inputs for one `solveN` function, you can provide
-numbered inputs with matching expected answers:
+numbered or labeled inputs with matching expected answers:
 
 ```
 class PuzzleY2022D1 : Puzzle {
@@ -96,6 +96,9 @@ class PuzzleY2022D1 : Puzzle {
     
     val testInput1_3 = "hij"
     val testAnswer1_3 = 789
+    
+    val testInput1_large = "klmnop"
+    val testAnswer1_large = 789123
 
     val testInput2 = "zyx"
     val testAnswer2 = 987
@@ -105,6 +108,31 @@ class PuzzleY2022D1 : Puzzle {
 
 The tests are run automatically before attempting to solve the real input. Solving
 the real input is not attempted unless all tests pass.
+
+You can also include arbitrary test cases that also block submission if they fail
+by adding arbitrary methods prefixed with `test`:
+
+```
+class PuzzleY2022D1 : Puzzle {
+
+  // ...
+
+  companion object {
+    fun testSomething() {
+      assertThat(mySum(1, 2)).isEqualTo(2)
+    }
+
+    fun testSomethingElse() {
+      assertThat(myProduct(2, 3)).isEqualTo(6)
+    }
+
+    // ...
+  }
+}
+```
+
+This is a quick-and-dirty runner, so the first failure stops execution. But it can
+be useful nonetheless.
 
 ## Clearing the Cache
 
