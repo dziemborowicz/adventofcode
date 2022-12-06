@@ -205,13 +205,13 @@ fun <T> Iterable<T>.productOf(selector: (T) -> Int): Int =
 fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long =
   map(selector).reduce { a, b -> a * b }
 
-fun Iterable<String>.splitByBlank() = split { it.isBlank() }
+fun <T> Iterable<T>.split(vararg delimiters: T): List<List<T>> = splitBy { it in delimiters }
 
-fun <T> Iterable<T>.splitByNull() = split { it == null }
+fun Iterable<String>.splitByBlank() = splitBy { it.isBlank() }
 
-fun <T> Iterable<T>.split(vararg delimiters: T): List<List<T>> = split { it in delimiters }
+fun <T> Iterable<T>.splitByNull() = splitBy { it == null }
 
-fun <T> Iterable<T>.split(predicate: (T) -> Boolean): List<List<T>> {
+fun <T> Iterable<T>.splitBy(predicate: (T) -> Boolean): List<List<T>> {
   val result = mutableListOf<List<T>>()
   var current = mutableListOf<T>()
   forEach {
