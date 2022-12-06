@@ -52,6 +52,17 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
     }
   }
 
+  fun getOrElse(index: Index, defaultValue: (Index) -> T): T =
+    getOrElse(index.row, index.column, defaultValue)
+
+  fun getOrElse(row: Int, column: Int, defaultValue: (Index) -> T): T {
+    return if (row !in rowIndices || column !in columnIndices) {
+      defaultValue(Index(row, column))
+    } else {
+      get(row, column)
+    }
+  }
+
   fun getWrapped(index: Index): T =
     getWrapped(index.row, index.column)
 
@@ -153,7 +164,11 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   inline fun forEachAdjacentWithDiagonalsIndexed(index: Index, action: (Int, Int, T) -> Unit) =
     forEachAdjacentWithDiagonalsIndexed(index.row, index.column, action)
 
-  inline fun forEachAdjacentWithDiagonalsIndexed(row: Int, column: Int, action: (Int, Int, T) -> Unit) {
+  inline fun forEachAdjacentWithDiagonalsIndexed(
+    row: Int,
+    column: Int,
+    action: (Int, Int, T) -> Unit,
+  ) {
     if (row - 1 >= 0 && column - 1 >= 0)
       action(row - 1, column - 1, this[row - 1, column - 1])
     if (row - 1 >= 0)
@@ -172,7 +187,10 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
       action(row, column - 1, this[row, column - 1])
   }
 
-  inline fun forEachAdjacentWithDiagonalsWrappedIndexed(index: Index, action: (Int, Int, T) -> Unit) =
+  inline fun forEachAdjacentWithDiagonalsWrappedIndexed(
+    index: Index,
+    action: (Int, Int, T) -> Unit,
+  ) =
     forEachAdjacentWithDiagonalsWrappedIndexed(index.row, index.column, action)
 
   inline fun forEachAdjacentWithDiagonalsWrappedIndexed(
@@ -205,8 +223,16 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   fun flatten(): List<T> =
     data.flatten()
 
+  fun count(predicate: (T) -> Boolean): Int = indices.count { predicate(this[it]) }
+
   fun <R> map(transform: (T) -> R): Grid<R> =
     Grid(numRows, numColumns) { row, column -> transform(this[row, column]) }
+
+  fun subGrid(rows: IntRange, columns: IntRange): Grid<T> {
+    return Grid(rows.size, columns.size) { row, column ->
+      this[row + rows.first, column + columns.first]
+    }
+  }
 
   fun columns(): List<List<T>> =
     columnIndices.map { column(it) }
