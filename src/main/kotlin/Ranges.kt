@@ -1,19 +1,16 @@
 fun String.toIntRange(): IntRange {
-  val parts = split(Regex("""(\.\.|,|\s+)"""))
-  require(parts.size == 2) { "Invalid format for range: $this" }
-  return parts[0].toInt()..parts[1].toInt()
+  val (from, to) = Regex("""(-?\d+)(?:\.\.|,|-|\s+)(-?\d+)""").matchEntire(this)!!.destructured
+  return from.toInt()..to.toInt()
 }
 
 fun String.toLongRange(): LongRange {
-  val parts = split(Regex("""(\.\.|,|\s+)"""))
-  require(parts.size == 2) { "Invalid format for range: $this" }
-  return parts[0].toLong()..parts[1].toLong()
+  val (from, to) = Regex("""(-?\d+)(?:\.\.|,|-|\s+)(-?\d+)""").matchEntire(this)!!.destructured
+  return from.toLong()..to.toLong()
 }
 
 fun String.toDoubleRange(): ClosedFloatingPointRange<Double> {
-  val parts = split(Regex("""(\.\.|,|\s+)"""))
-  require(parts.size == 2) { "Invalid format for range: $this" }
-  return parts[0].toDouble()..parts[1].toDouble()
+  val (from, to) = Regex("""(.+?)(?:\.\.|,|-|\s+)(.+?)""").matchEntire(this)!!.destructured
+  return from.toDouble()..to.toDouble()
 }
 
 val IntRange.size: Int

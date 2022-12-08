@@ -118,7 +118,7 @@ class PuzzleY2021D16 : Puzzle {
     val testInput1_3 = "C0015000016115A2E0802F182340"
     val testAnswer1_3 = 23
 
-    val testInput1_4_ = "A0016C880162017C3686B18A3D4780"
+    val testInput1_4 = "A0016C880162017C3686B18A3D4780"
     val testAnswer1_4 = 31
 
     val testInput2_1 = "C200B40A82"

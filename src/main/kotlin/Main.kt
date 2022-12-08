@@ -1,3 +1,4 @@
+import Client.AnswerResult
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
@@ -10,14 +11,19 @@ private fun solve(args: List<String>) {
   val year = args[0].toInt()
   val day = args[1].toInt()
   val levels = if (args.size > 2) (args[2].toInt()..args[2].toInt()) else (1..2)
+  return solve(year, day, levels)
+}
+
+private fun solve(year: Int, day: Int, levels: IntRange = (1..2)) {
+  val puzzleName = "Y${year}D${day}"
 
   @Suppress("UNCHECKED_CAST")
-  val puzzleClass = Class.forName("PuzzleY${year}D${day}").kotlin as KClass<out Puzzle>
+  val puzzleClass = Class.forName("Puzzle$puzzleName").kotlin as KClass<out Puzzle>
 
   val puzzleCompanion = puzzleClass.companionObjectInstance
   if (puzzleCompanion != null) {
     for (testMethod in puzzleCompanion::class.functions.filter { it.name.startsWith("test") }) {
-      timed(testMethod.name) {
+      timed("$puzzleName ${testMethod.name}") {
         try {
           testMethod.call(puzzleCompanion)
         } catch (e: InvocationTargetException) {
@@ -37,7 +43,7 @@ private fun solve(args: List<String>) {
         val input = inputProperty.call(puzzleCompanion) as String
         val expectedAnswer = answerProperty.call(puzzleCompanion)
 
-        timed("Test $label") {
+        timed("$puzzleName testInput$label") {
           val puzzle = puzzleClass.createInstance()
           puzzle.parse(input)
           val actualAnswer =
@@ -60,13 +66,15 @@ private fun solve(args: List<String>) {
   require(session != null && session.isNotBlank()) { "ADVENT_OF_CODE_SESSION not set." }
 
   val client = Client(session)
-  val input = timed("Download Input") {
+  val input = timed("$puzzleName  Download Input") {
     client.downloadInput(year, day).let {
-      if (it.contents.length > 32) {
-        println("${it.contents.take(32)}...")
-      } else {
-        println(it)
+      val lines = it.contents.lines()
+      lines.take(10).forEach { line ->
+        print(line.take(100))
+        if (line.length > 100) print("...")
+        println()
       }
+      if (lines.size > 10) println("...")
       println("${it.contents.length} character(s)")
       println("${it.contents.count { c -> c == '\n' }} line(s)")
       println("Saved to ${it.file.absolutePath}")
@@ -75,10 +83,10 @@ private fun solve(args: List<String>) {
   }
 
   val puzzle = puzzleClass.createInstance()
-  timed("Parse Input") { puzzle.parse(input) }
+  timed("$puzzleName Parse Input") { puzzle.parse(input) }
 
   for (level in levels) {
-    val answer = timed("Solve $level") {
+    val answer = timed("$puzzleName Solve $level") {
       when (level) {
         1 -> puzzle.solve1()
         2 -> puzzle.solve2()
@@ -87,8 +95,29 @@ private fun solve(args: List<String>) {
         println("Answer: $it")
       }
     }
-    timed("Upload Answer $level") {
-      client.uploadAnswer(year, day, level, answer).also { println(it) }
+    timed("$puzzleName Upload Answer $level") {
+      when (val result = client.uploadAnswer(year, day, level, answer).also { println(it) }) {
+        is AnswerResult.Correct -> {}
+        is AnswerResult.AlreadyAnswered -> check(result.answer.toString() == result.correctAnswer.toString())
+        is AnswerResult.Incorrect -> fail(result)
+        is AnswerResult.IncorrectTooLow -> fail(result)
+        is AnswerResult.IncorrectTooHigh -> fail(result)
+        is AnswerResult.AnsweredTooRecently -> fail(result)
+        is AnswerResult.Unknown -> fail(result)
+      }
+    }
+  }
+}
+
+private fun solveAll(args: List<String>) {
+  require(args.isEmpty()) { "Too many args for `solveAll` command." }
+  for (year in 2015..2022) {
+    for (day in 1..25) {
+      try {
+        solve(year, day)
+      } catch (e: ClassNotFoundException) {
+        // Ignore puzzles with no solutions.
+      }
     }
   }
 }
@@ -105,6 +134,7 @@ fun main(args: Array<String>) {
 
   when (val command = args[0]) {
     "solve" -> solve(args.drop(1))
+    "solveAll" -> solveAll(args.drop(1))
     "clearCache" -> clearCache(args.drop(1))
     else -> throw IllegalArgumentException("Invalid command: $command")
   }

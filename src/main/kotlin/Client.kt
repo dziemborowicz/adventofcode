@@ -23,6 +23,21 @@ class Client(private val session: String) {
     }
   }
 
+  fun downloadAnswer(year: Int, day: Int, level: Int, useCache: Boolean = true): String {
+    val regex = Regex("""Your puzzle answer was <code>(.*?)</code>""")
+    val file = Path.of(cacheDirectory.toString(), "Question-$year-$day.txt").toFile()
+    return if (useCache && file.exists()) {
+      val contents = file.readText()
+      regex.findAll(contents).toList().map { it.groupValues[1] }.drop(level - 1).firstOrNull()
+        ?: downloadAnswer(year, day, level, useCache = false)
+    } else {
+      val contents = download("https://adventofcode.com/$year/day/$day")
+      file.parentFile.mkdirs()
+      file.writeText(contents)
+      regex.findAll(contents).toList().map { it.groupValues[1] }.drop(level - 1).first()
+    }
+  }
+
   fun uploadAnswer(year: Int, day: Int, level: Int, answer: Any?): AnswerResult {
     val url = "https://adventofcode.com/$year/day/$day/answer"
     val formData = mapOf("level" to level.toString(), "answer" to answer.toString())
@@ -41,7 +56,7 @@ class Client(private val session: String) {
       response.contains("You gave an answer too recently") ->
         AnswerResult.AnsweredTooRecently(year, day, level, answer)
       response.contains("You don't seem to be solving the right level.") ->
-        AnswerResult.AlreadyAnswered(year, day, level, answer)
+        AnswerResult.AlreadyAnswered(year, day, level, answer, downloadAnswer(year, day, level))
       else ->
         AnswerResult.Unknown(year, day, level, answer, response)
     }
@@ -131,6 +146,7 @@ class Client(private val session: String) {
       override val day: Int,
       override val level: Int,
       override val answer: Any?,
+      val correctAnswer: Any?,
     ) : AnswerResult
 
     data class Unknown(

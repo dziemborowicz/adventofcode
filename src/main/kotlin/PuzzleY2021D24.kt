@@ -52,6 +52,9 @@ class PuzzleY2021D24 : Puzzle {
         // x and y are always reinitialized before being read after inp instructions, so we don't
         // need to track them in the visited set. And np always has w as its param.
         if (visited.add(Pair(index, state.z))) {
+          if (modelNumber.length == 2) {
+            println("Searching (${modelNumber.padEnd(14, 'x')})...")
+          }
           for (input in digits) {
             val nextState = state.copy()
             nextState[a] = input
