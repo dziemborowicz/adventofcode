@@ -30,6 +30,8 @@ class Client(private val session: String) {
     return when {
       response.contains("That's the right answer!") ->
         AnswerResult.Correct(year, day, level, answer)
+      response.contains("Congratulations!  You've finished every puzzle in Advent of Code") ->
+        AnswerResult.Correct(year, day, level, answer)
       response.contains("That's not the right answer.") ->
         AnswerResult.Incorrect(year, day, level, answer)
       response.contains("That's not the right answer; your answer is too high.") ->

@@ -1,3 +1,7 @@
+fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
+
+fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)
+
 fun <T> Iterable<T>.only(): T {
   require(count() == 1) { "Must contain exactly one element." }
   return first()
