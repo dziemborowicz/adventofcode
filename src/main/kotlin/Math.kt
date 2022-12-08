@@ -1,3 +1,5 @@
+import java.math.BigInteger
+
 fun Int.pow(exponent: Int): Int {
   if (exponent == 0) return 1
   var result = this
@@ -51,3 +53,15 @@ fun sumOfConsecutiveNumbers(firstInclusive: Double, lastInclusive: Double): Doub
 }
 
 fun sumOfConsecutiveNumbersUpTo(lastInclusive: Double) = sumOfConsecutiveNumbers(0.0, lastInclusive)
+
+fun Boolean.toInt(): Int = if (this) 1 else 0
+
+fun Boolean.toLong(): Long = if (this) 1L else 0L
+
+fun Boolean.toBigInteger(): BigInteger = if (this) BigInteger.ONE else BigInteger.ZERO
+
+fun Int.toBoolean(): Boolean = this != 0
+
+fun Long.toBoolean(): Boolean = this != 0L
+
+fun BigInteger.toBoolean(): Boolean = this != BigInteger.ZERO
