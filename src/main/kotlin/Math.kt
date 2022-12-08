@@ -1,16 +1,34 @@
 import java.math.BigInteger
 
 fun Int.pow(exponent: Int): Int {
-  if (exponent == 0) return 1
-  var result = this
-  repeat(exponent - 1) { result *= this }
+  var base = this
+  var exponentLeft = exponent
+  var result = 1
+  while (exponentLeft > 0) {
+    if (exponentLeft % 2 == 0) {
+      exponentLeft /= 2
+      base *= base
+    } else {
+      exponentLeft -= 1
+      result *= base
+    }
+  }
   return result
 }
 
 fun Long.pow(exponent: Int): Long {
-  if (exponent == 0) return 1
-  var result = this
-  repeat(exponent - 1) { result *= this }
+  var base = this
+  var exponentLeft = exponent
+  var result = 1L
+  while (exponentLeft > 0) {
+    if (exponentLeft % 2 == 0) {
+      exponentLeft /= 2
+      base *= base
+    } else {
+      exponentLeft -= 1
+      result *= base
+    }
+  }
   return result
 }
 

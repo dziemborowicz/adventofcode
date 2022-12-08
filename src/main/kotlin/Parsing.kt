@@ -2250,7 +2250,10 @@ fun String.parseDenseStringGrid() = lines().parseDenseStringGrid()
 
 fun Iterable<String>.parseDenseBigDecimalGrid() = Grid(map { it.toList().map(Char::toString).map(String::toBigDecimal) })
 fun Iterable<String>.parseDenseBigIntegerGrid() = Grid(map { it.toList().map(Char::toString).map(String::toBigInteger) })
-fun Iterable<String>.parseDenseCharGrid() = Grid(map { it.toList() })
+fun Iterable<String>.parseDenseCharGrid(): Grid<Char> {
+  val numColumns = maxOf { it.length }
+  return Grid(map { it.padEnd(numColumns, ' ').toList() })
+}
 fun Iterable<String>.parseDenseDoubleGrid() = Grid(map { it.toList().map(Char::toString).map(String::toDouble) })
 fun Iterable<String>.parseDenseIntGrid() = Grid(map { it.toList().map(Char::toString).map(String::toInt) })
 fun Iterable<String>.parseDenseLongGrid() = Grid(map { it.toList().map(Char::toString).map(String::toLong) })

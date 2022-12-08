@@ -1,3 +1,7 @@
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
+
 class Grid<T>(data: List<List<T>>) : Iterable<T> {
 
   val data = data.map { it.toMutableList() }
@@ -27,6 +31,21 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
     numColumns: Int,
     initialValue: T,
   ) : this(numRows, numColumns, { _, _ -> initialValue })
+
+  override fun equals(other: Any?): Boolean {
+    if (other !is Grid<*>) return false
+    if (other.numRows != numRows) return false
+    if (other.numColumns != numColumns) return false
+    return indices.all { this[it] == other[it] }
+  }
+
+  override fun hashCode(): Int {
+    var result = 1
+    result = (result * 31) + numRows
+    result = (result * 31) + numColumns
+    indices.forEach { result = (result * 31) + this[it].hashCode() }
+    return result
+  }
 
   override fun iterator(): Iterator<T> =
     flatten().iterator()
@@ -92,6 +111,9 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
 
   fun getAdjacentWithDiagonalsWrapped(row: Int, column: Int): List<T> =
     getAdjacentWithDiagonalsWrapped(Index(row, column))
+
+  inline fun forEachIndexed(action: (Int, Int, T) -> Unit) =
+    indices.forEach { index -> action(index.row, index.column, this[index]) }
 
   inline fun forEachAdjacent(index: Index, action: (T) -> Unit) =
     forEachAdjacent(index.row, index.column, action)
@@ -220,6 +242,12 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   fun setWrapped(row: Int, column: Int, element: T): T =
     data.getWrapped(row).setWrapped(column, element)
 
+  fun swap(a: Index, b: Index) = swap(a.row, a.column, b.row, b.column)
+
+  fun swap(aRow: Int, aColumn: Int, bRow: Int, bColumn: Int) {
+    this[aRow, aColumn] = this[bRow, bColumn].also { this[bRow, bColumn] = this[aRow, aColumn] }
+  }
+
   fun flatten(): List<T> =
     data.flatten()
 
@@ -294,6 +322,8 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   fun transpose(): Grid<T> = Grid(numColumns, numRows) { row, column -> this[column, row] }
 
   data class Index(val row: Int, val column: Int) {
+    fun transpose() = Index(column, row)
+
     fun upLeft() = Index(row - 1, column - 1)
     fun up() = Index(row - 1, column)
     fun upRight() = Index(row - 1, column + 1)
@@ -328,6 +358,20 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
     fun adjacentWithDiagonalsIn(grid: Grid<*>) = adjacentWithDiagonals().filter {
       it.row in grid.rowIndices && it.column in grid.columnIndices
     }
+
+    fun offset(amount: Index) = offset(amount.row, amount.column)
+
+    fun offset(row: Int, column: Int) = Index(this.row + row, this.column + column)
+
+    fun distance(other: Index): Double =
+      sqrt((row.toDouble() - other.row.toDouble()).pow(2) +
+             (column.toDouble() - other.column.toDouble()).pow(2))
+
+    fun intDistance(other: Index): Int = distance(other).toInt()
+
+    fun longDistance(other: Index): Long = distance(other).toLong()
+
+    fun manhattanDistance(other: Index): Int = abs(row - other.row) + abs(column - other.column)
   }
 }
 
