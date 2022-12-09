@@ -12,7 +12,7 @@ class PuzzleY2021D12 : Puzzle {
 
   override fun parse(input: String) {
     caves = mutableMapOf<String, Cave>()
-    for (edge in input.lines().map { it.split('-').asPair() }) {
+    for (edge in input.lines().map { it.split('-').toPair() }) {
       val first = caves.computeIfAbsent(edge.first) { Cave(edge.first) }
       val second = caves.computeIfAbsent(edge.second) { Cave(edge.second) }
       first.neighbors.add(second)

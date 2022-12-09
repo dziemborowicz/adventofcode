@@ -1,155 +1,126 @@
-fun String.toIntRange(): IntRange {
-  val (from, to) = Regex("""(-?\d+)(?:\.\.|,|-|\s+)(-?\d+)""").matchEntire(this)!!.destructured
-  return from.toInt()..to.toInt()
-}
+typealias DoubleRange = ClosedFloatingPointRange<Double>
 
-fun String.toLongRange(): LongRange {
-  val (from, to) = Regex("""(-?\d+)(?:\.\.|,|-|\s+)(-?\d+)""").matchEntire(this)!!.destructured
-  return from.toLong()..to.toLong()
-}
-
-fun String.toDoubleRange(): ClosedFloatingPointRange<Double> {
-  val (from, to) = Regex("""(.+?)(?:\.\.|,|-|\s+)(.+?)""").matchEntire(this)!!.destructured
-  return from.toDouble()..to.toDouble()
-}
-
-val IntRange.size: Int
+val CharRange.count: Int
   get() = if (isEmpty()) 0 else last - first + 1
+
+val DoubleRange.length: Double
+  get() = if (isEmpty()) 0.0 else endInclusive - start
+
+val IntRange.count: Int
+  get() = if (isEmpty()) 0 else last - first + 1
+
+val LongRange.count: Long
+  get() = if (isEmpty()) 0 else last - first + 1
+
+fun CharRange.containsAny(other: CharRange): Boolean = !(this intersect other).isEmpty()
+
+fun DoubleRange.containsAny(other: DoubleRange): Boolean = !(this intersect other).isEmpty()
+
+fun IntRange.containsAny(other: IntRange): Boolean = !(this intersect other).isEmpty()
+
+fun LongRange.containsAny(other: LongRange): Boolean = !(this intersect other).isEmpty()
+
+fun CharRange.containsAny(elements: Iterable<Char>): Boolean = elements.any { it in this }
+
+fun DoubleRange.containsAny(elements: Iterable<Double>): Boolean = elements.any { it in this }
+
+fun IntRange.containsAny(elements: Iterable<Int>): Boolean = elements.any { it in this }
+
+fun LongRange.containsAny(elements: Iterable<Long>): Boolean = elements.any { it in this }
+
+fun CharRange.containsAll(other: CharRange): Boolean = (this intersect other).count == other.count
+
+fun DoubleRange.containsAll(other: DoubleRange): Boolean =
+  (this intersect other).length == other.length
+
+fun IntRange.containsAll(other: IntRange): Boolean = (this intersect other).count == other.count
+
+fun LongRange.containsAll(other: LongRange): Boolean = (this intersect other).count == other.count
+
+fun CharRange.containsAll(elements: Iterable<Char>): Boolean = elements.all { it in this }
+
+fun DoubleRange.containsAll(elements: Iterable<Double>): Boolean = elements.all { it in this }
+
+fun IntRange.containsAll(elements: Iterable<Int>): Boolean = elements.all { it in this }
+
+fun LongRange.containsAll(elements: Iterable<Long>): Boolean = elements.all { it in this }
+
+infix fun CharRange.intersect(other: CharRange): CharRange =
+  maxOf(first, other.first)..minOf(last, other.last)
+
+infix fun DoubleRange.intersect(other: DoubleRange): DoubleRange =
+  maxOf(start, other.start)..minOf(endInclusive, other.endInclusive)
 
 infix fun IntRange.intersect(other: IntRange): IntRange =
   maxOf(first, other.first)..minOf(last, other.last)
 
-infix fun IntRange.union(other: IntRange): IntRange =
-  (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
-
-infix fun IntRange.unionOrNull(other: IntRange): IntRange? {
-  val joined = minOf(first, other.first)..maxOf(last, other.last)
-  return if (joined.size <= size + other.size) {
-    joined
-  } else {
-    null
-  }
-}
-
-fun IntRange.containsAny(other: IntRange): Boolean =
-  !(this intersect other).isEmpty()
-
-fun IntRange.containsAny(other: Iterable<Int>): Boolean =
-  other.any { it in this }
-
-fun IntRange.containsAll(other: IntRange): Boolean =
-  (this intersect other).size == other.size
-
-fun IntRange.containsAll(other: Iterable<Int>): Boolean =
-  other.all { it in this }
-
-infix fun Int.upOrDownTo(other: Int): IntProgression =
-  if (other >= this) {
-    this..other
-  } else {
-    other downTo this
-  }
-
-val LongRange.size: Long
-  get() = if (isEmpty()) 0 else last - first + 1
-
 infix fun LongRange.intersect(other: LongRange): LongRange =
-  maxOf(first, other.first)..minOf(last, other.last)
-
-infix fun LongRange.union(other: LongRange): LongRange =
-  (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
-
-infix fun LongRange.unionOrNull(other: LongRange): LongRange? {
-  val joined = minOf(first, other.first)..maxOf(last, other.last)
-  return if (joined.size <= size + other.size) {
-    joined
-  } else {
-    null
-  }
-}
-
-fun LongRange.containsAny(other: LongRange): Boolean =
-  !(this intersect other).isEmpty()
-
-fun LongRange.containsAny(other: Iterable<Long>): Boolean =
-  other.any { it in this }
-
-fun LongRange.containsAll(other: LongRange): Boolean =
-  (this intersect other).size == other.size
-
-fun LongRange.containsAll(other: Iterable<Long>): Boolean =
-  other.all { it in this }
-
-infix fun Long.upOrDownTo(other: Long): LongProgression =
-  if (other >= this) {
-    this..other
-  } else {
-    other downTo this
-  }
-
-val CharRange.size: Int
-  get() = if (isEmpty()) 0 else last - first + 1
-
-infix fun CharRange.intersect(other: CharRange): CharRange =
   maxOf(first, other.first)..minOf(last, other.last)
 
 infix fun CharRange.union(other: CharRange): CharRange =
   (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
 
-infix fun CharRange.unionOrNull(other: CharRange): CharRange? {
-  val joined = minOf(first, other.first)..maxOf(last, other.last)
-  return if (joined.size <= size + other.size) {
-    joined
-  } else {
-    null
-  }
-}
-
-fun CharRange.containsAny(other: CharRange): Boolean =
-  !(this intersect other).isEmpty()
-
-fun CharRange.containsAny(other: Iterable<Char>): Boolean =
-  other.any { it in this }
-
-fun CharRange.containsAll(other: CharRange): Boolean =
-  (this intersect other).size == other.size
-
-fun CharRange.containsAll(other: Iterable<Char>): Boolean =
-  other.all { it in this }
-
-infix fun Char.upOrDownTo(other: Char): CharProgression =
-  if (other >= this) {
-    this..other
-  } else {
-    other downTo this
-  }
-
-val ClosedFloatingPointRange<Double>.length: Double
-  get() = if (isEmpty()) 0.0 else endInclusive - start
-
-infix fun ClosedFloatingPointRange<Double>.intersect(other: ClosedFloatingPointRange<Double>): ClosedFloatingPointRange<Double> =
-  maxOf(start, other.start)..minOf(endInclusive, other.endInclusive)
-
-infix fun ClosedFloatingPointRange<Double>.union(other: ClosedFloatingPointRange<Double>): ClosedFloatingPointRange<Double> =
+infix fun DoubleRange.union(other: DoubleRange): DoubleRange =
   (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
 
-infix fun ClosedFloatingPointRange<Double>.unionOrNull(other: ClosedFloatingPointRange<Double>): ClosedFloatingPointRange<Double>? {
-  val joined = minOf(start, other.start)..maxOf(endInclusive, other.endInclusive)
-  return if (joined.length <= length + other.length) {
-    joined
-  } else {
-    null
-  }
+infix fun IntRange.union(other: IntRange): IntRange =
+  (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
+
+infix fun LongRange.union(other: LongRange): LongRange =
+  (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
+
+infix fun CharRange.unionOrNull(other: CharRange): CharRange? {
+  val joined = minOf(first, other.first)..maxOf(last, other.last)
+  return if (joined.count <= count + other.count) joined else null
 }
 
-fun ClosedFloatingPointRange<Double>.containsAny(other: ClosedFloatingPointRange<Double>): Boolean =
-  !(this intersect other).isEmpty()
+infix fun DoubleRange.unionOrNull(other: DoubleRange): DoubleRange? {
+  val joined = minOf(start, other.start)..maxOf(endInclusive, other.endInclusive)
+  return if (joined.length <= length + other.length) joined else null
+}
 
-fun ClosedFloatingPointRange<Double>.containsAny(other: Iterable<Double>): Boolean =
-  other.any { it in this }
+infix fun IntRange.unionOrNull(other: IntRange): IntRange? {
+  val joined = minOf(first, other.first)..maxOf(last, other.last)
+  return if (joined.count <= count + other.count) joined else null
+}
 
-fun ClosedFloatingPointRange<Double>.containsAll(other: ClosedFloatingPointRange<Double>): Boolean =
-  (this intersect other).length == other.length
+infix fun LongRange.unionOrNull(other: LongRange): LongRange? {
+  val joined = minOf(first, other.first)..maxOf(last, other.last)
+  return if (joined.count <= count + other.count) joined else null
+}
 
-fun ClosedFloatingPointRange<Double>.containsAll(other: Iterable<Double>): Boolean =
-  other.all { it in this }
+infix fun Char.upOrDownTo(other: Char): CharProgression =
+  if (other >= this) this..other else other downTo this
+
+infix fun Int.upOrDownTo(other: Int): IntProgression =
+  if (other >= this) this..other else other downTo this
+
+infix fun Long.upOrDownTo(other: Long): LongProgression =
+  if (other >= this) this..other else other downTo this
+
+fun String.toCharRange(): CharRange {
+  val (from, to) = Regex("""([a-zA-Z])(?:\.\.|,|-|\s+)([a-zA-Z])""").matchEntire(this)?.destructured
+    ?: throw IllegalArgumentException("Invalid format for range: $this")
+  require(from.single().isUpperCase() == to.single().isUpperCase()) {
+    "Invalid format for range: $this"
+  }
+  return from.single()..to.single()
+}
+
+fun String.toIntRange(): IntRange {
+  val (from, to) = Regex("""(-?\d+)(?:\.\.|,|-|\s+)(-?\d+)""").matchEntire(this)?.destructured
+    ?: throw IllegalArgumentException("Invalid format for range: $this")
+  return from.toInt()..to.toInt()
+}
+
+fun String.toDoubleRange(): ClosedFloatingPointRange<Double> {
+  val (from, to) = Regex("""(.+?)(?:\.\.|,|-|\s+)(.+?)""").matchEntire(this)?.destructured
+    ?: throw IllegalArgumentException("Invalid format for range: $this")
+  return from.toDouble()..to.toDouble()
+}
+
+fun String.toLongRange(): LongRange {
+  val (from, to) = Regex("""(-?\d+)(?:\.\.|,|-|\s+)(-?\d+)""").matchEntire(this)?.destructured
+    ?: throw IllegalArgumentException("Invalid format for range: $this")
+  return from.toLong()..to.toLong()
+}

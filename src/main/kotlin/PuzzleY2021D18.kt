@@ -37,7 +37,7 @@ class PuzzleY2021D18 : Puzzle {
 
     private fun String.toSnailfishNumber(): SnailfishNumber {
       fun parseInternal(chars: ArrayDeque<Char>): SnailfishNumber {
-        val digits = chars.takeAndRemoveWhile { it.isDigit() }
+        val digits = chars.removeWhile { it.isDigit() }
         return if (digits.isNotEmpty()) {
           SnailfishLiteral(digits.asString().toLong())
         } else {
@@ -49,7 +49,7 @@ class PuzzleY2021D18 : Puzzle {
           SnailfishPair(left, right)
         }
       }
-      return parseInternal(asDeque())
+      return parseInternal(toDeque())
     }
 
     private operator fun SnailfishNumber.plus(other: SnailfishNumber): SnailfishNumber {

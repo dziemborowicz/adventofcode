@@ -1,11 +1,30 @@
 import java.math.BigInteger
 
+val BigInteger.isEven: Boolean
+  get() = !testBit(0)
+
+val Int.isEven: Boolean
+  get() = this % 2 == 0
+
+val Long.isEven: Boolean
+  get() = this % 2 == 0L
+
+val BigInteger.isOdd: Boolean
+  get() = testBit(0)
+
+val Int.isOdd: Boolean
+  get() = this % 2 == 1
+
+val Long.isOdd: Boolean
+  get() = this % 2 == 1L
+
 fun Int.pow(exponent: Int): Int {
+  if (exponent < 0) throw ArithmeticException("Negative exponent")
   var base = this
   var exponentLeft = exponent
   var result = 1
   while (exponentLeft > 0) {
-    if (exponentLeft % 2 == 0) {
+    if (exponentLeft.isEven) {
       exponentLeft /= 2
       base *= base
     } else {
@@ -17,11 +36,12 @@ fun Int.pow(exponent: Int): Int {
 }
 
 fun Long.pow(exponent: Int): Long {
+  if (exponent < 0) throw ArithmeticException("Negative exponent")
   var base = this
   var exponentLeft = exponent
   var result = 1L
   while (exponentLeft > 0) {
-    if (exponentLeft % 2 == 0) {
+    if (exponentLeft.isEven) {
       exponentLeft /= 2
       base *= base
     } else {
@@ -32,54 +52,20 @@ fun Long.pow(exponent: Int): Long {
   return result
 }
 
-val Int.isOdd: Boolean
-  get() = this % 2 == 1
+fun IntRange.sum(): Int = sumOfRange(first, last)
 
-val Int.isEven: Boolean
-  get() = this % 2 == 0
+fun LongRange.sum(): Long = sumOfRange(first, last)
 
-val Long.isOdd: Boolean
-  get() = this % 2 == 1L
-
-val Long.isEven: Boolean
-  get() = this % 2 == 0L
-
-fun sumOfConsecutiveNumbers(range: IntRange) = sumOfConsecutiveNumbers(range.first, range.last)
-
-fun sumOfConsecutiveNumbers(firstInclusive: Int, lastInclusive: Int): Int {
-  require(firstInclusive <= lastInclusive)
+fun sumOfRange(firstInclusive: Int, lastInclusive: Int): Int {
+  if (firstInclusive > lastInclusive) return 0
   return ((lastInclusive - firstInclusive + 1) * (firstInclusive + lastInclusive)) / 2
 }
 
-fun sumOfConsecutiveNumbersUpTo(lastInclusive: Int) = sumOfConsecutiveNumbers(0, lastInclusive)
-
-fun sumOfConsecutiveNumbers(range: LongRange) = sumOfConsecutiveNumbers(range.first, range.last)
-
-fun sumOfConsecutiveNumbers(firstInclusive: Long, lastInclusive: Long): Long {
-  require(firstInclusive <= lastInclusive)
+fun sumOfRange(firstInclusive: Long, lastInclusive: Long): Long {
+  if (firstInclusive > lastInclusive) return 0
   return ((lastInclusive - firstInclusive + 1) * (firstInclusive + lastInclusive)) / 2
 }
 
-fun sumOfConsecutiveNumbersUpTo(lastInclusive: Long) = sumOfConsecutiveNumbers(0, lastInclusive)
+fun sumOfRangeUpTo(lastInclusive: Int) = sumOfRange(0, lastInclusive)
 
-fun sumOfConsecutiveNumbers(range: ClosedFloatingPointRange<Double>) =
-  sumOfConsecutiveNumbers(range.start, range.endInclusive)
-
-fun sumOfConsecutiveNumbers(firstInclusive: Double, lastInclusive: Double): Double {
-  require(firstInclusive <= lastInclusive)
-  return ((lastInclusive - firstInclusive + 1) * (firstInclusive + lastInclusive)) / 2
-}
-
-fun sumOfConsecutiveNumbersUpTo(lastInclusive: Double) = sumOfConsecutiveNumbers(0.0, lastInclusive)
-
-fun Boolean.toInt(): Int = if (this) 1 else 0
-
-fun Boolean.toLong(): Long = if (this) 1L else 0L
-
-fun Boolean.toBigInteger(): BigInteger = if (this) BigInteger.ONE else BigInteger.ZERO
-
-fun Int.toBoolean(): Boolean = this != 0
-
-fun Long.toBoolean(): Boolean = this != 0L
-
-fun BigInteger.toBoolean(): Boolean = this != BigInteger.ZERO
+fun sumOfRangeUpTo(lastInclusive: Long) = sumOfRange(0L, lastInclusive)

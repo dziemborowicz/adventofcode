@@ -2,22 +2,26 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.experimental.ExperimentalTypeInference
 
-infix fun Set<*>.equivalent(other: Set<*>): Boolean =
-  this.containsAll(other) && other.containsAll(this)
-
-infix fun List<*>.equivalent(other: List<*>): Boolean {
-  if (this.size != other.size) return false
-  for (i in this.indices) {
-    if (this[i] != other[i]) return false
-  }
-  return true
-}
-
-infix fun List<*>.equivalentUnordered(other: List<*>) = this.toSet() equivalent other.toSet()
-
 fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
 
 fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)
+
+inline fun <T> Iterable<T>.indexOfFirstOrThrow(predicate: (T) -> Boolean): Int =
+  indexOfFirst(predicate).also { if (it == -1) throw NoSuchElementException() }
+
+inline fun <T> Iterable<T>.indexOfLastOrThrow(predicate: (T) -> Boolean): Int =
+  indexOfLast(predicate).also { if (it == -1) throw NoSuchElementException() }
+
+inline fun <T> Iterable<T>.indexOfSingle(predicate: (T) -> Boolean): Int {
+  val firstIndex = indexOfFirst(predicate)
+  if (firstIndex == -1) return -1
+  val lastIndex = indexOfLast(predicate)
+  if (firstIndex != lastIndex) error("Must contain exactly one matching element.")
+  return firstIndex
+}
+
+inline fun <T> Iterable<T>.indexOfSingleOrThrow(predicate: (T) -> Boolean): Int =
+  indexOfSingle(predicate).also { if (it == -1) throw NoSuchElementException() }
 
 fun <T> List<T>.middle(): T = this[middleIndex()]
 
@@ -26,184 +30,285 @@ fun List<*>.middleIndex(): Int {
   return size / 2
 }
 
-fun <T> Iterable<T>.asDeque() = ArrayDeque<T>().also { it.addAll(this) }
+fun Iterable<BigDecimal>.product(): BigDecimal = fold(BigDecimal.ONE) { a, b -> a * b }
 
-fun <T> List<T>.asDeque() = ArrayDeque(this)
+fun Iterable<BigInteger>.product(): BigInteger = fold(BigInteger.ONE) { a, b -> a * b }
 
-fun String.asDeque() = ArrayDeque(toList())
+fun Iterable<Double>.product(): Double = fold(1.0) { a, b -> a * b }
 
-fun <T> Iterable<T>.asPair(): Pair<T, T> {
-  require(count() == 2) { "Must contain exactly two elements." }
-  val iterator = iterator()
-  return Pair(iterator.next(), iterator.next())
-}
+fun Iterable<Int>.product(): Int = fold(1) { a, b -> a * b }
 
-fun <T> Iterable<T>.asTriple(): Triple<T, T, T> {
-  require(count() == 3) { "Must contain exactly three elements." }
-  val iterator = iterator()
-  return Triple(iterator.next(), iterator.next(), iterator.next())
-}
+fun Iterable<Long>.product(): Long = fold(1L) { a, b -> a * b }
 
-fun Iterable<Char>.asString(): String = joinToString("")
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOf(selector: (T) -> BigDecimal): BigDecimal =
+  map(selector).product()
 
-inline fun <T> Iterable<T>.indexOfSingle(predicate: (T) -> Boolean): Int {
-  require(count(predicate) == 1) { "Must contain exactly one matching element." }
-  return indexOfFirst(predicate)
-}
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOf(selector: (T) -> BigInteger): BigInteger =
+  map(selector).product()
 
-fun <T> MutableList<T>.removeSingle(element: T): T = removeSingleIf { it == element }
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOf(selector: (T) -> Double): Double =
+  map(selector).product()
 
-inline fun <T> MutableList<T>.removeSingleIf(predicate: (T) -> Boolean): T {
-  val index = indexOfSingle(predicate)
-  if (index < 0) throw NoSuchElementException()
-  return removeAt(index)
-}
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOf(selector: (T) -> Int): Int =
+  map(selector).product()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long =
+  map(selector).product()
 
 fun <T> MutableSet<T>.removeFirst(): T {
   val iterator = iterator()
   return iterator.next().also { iterator.remove() }
 }
 
-fun <T> MutableList<T>.removeFirst(element: T): T = removeFirstIf { it == element }
-
-inline fun <T> MutableList<T>.removeFirstIf(predicate: (T) -> Boolean): T {
-  val index = indexOfFirst(predicate)
-  if (index < 0) throw NoSuchElementException()
-  return removeAt(index)
-}
-
-fun <T> MutableList<T>.removeLast(element: T): T = removeLastIf { it == element }
-
-inline fun <T> MutableList<T>.removeLastIf(predicate: (T) -> Boolean): T {
-  val index = indexOfLast(predicate)
-  if (index < 0) throw NoSuchElementException()
-  return removeAt(index)
-}
-
-fun <T> ArrayDeque<T>.takeAndRemove(n: Int): List<T> {
-  return mutableListOf<T>().also { result ->
-    repeat(n) { result.add(removeFirst()) }
+fun <T> MutableSet<T>.removeFirstOrNull(): T? {
+  val iterator = iterator()
+  return if (iterator.hasNext()) {
+    return iterator.next().also { iterator.remove() }
+  } else {
+    null
   }
 }
 
-fun <T> ArrayDeque<T>.takeAndRemoveWhile(predicate: (T) -> Boolean): List<T> {
-  return mutableListOf<T>().also { result ->
-    while (isNotEmpty()) {
-      val element = first()
-      if (!predicate(element)) break
-      result.add(element)
-      removeFirst()
+fun <T> MutableSet<T>.removeFirst(element: T): T = removeFirstThat { it == element }
+
+fun <T> MutableSet<T>.removeFirstOrNull(element: T): T? =
+  removeFirstOrNullThat { it == element }
+
+inline fun <T> MutableSet<T>.removeFirstThat(predicate: (T) -> Boolean): T {
+  val iterator = iterator()
+  while (iterator.hasNext()) {
+    val element = iterator.next()
+    if (predicate(element)) {
+      iterator.remove()
+      return element
+    }
+  }
+  throw NoSuchElementException()
+}
+
+inline fun <T> MutableSet<T>.removeFirstOrNullThat(predicate: (T) -> Boolean): T? {
+  val iterator = iterator()
+  while (iterator.hasNext()) {
+    val element = iterator.next()
+    if (predicate(element)) {
+      iterator.remove()
+      return element
+    }
+  }
+  return null
+}
+
+fun <T> MutableSet<T>.removeLast(): T {
+  val iterator = iterator()
+  var element: T
+  do {
+    element = iterator.next()
+  } while (iterator.hasNext())
+  iterator.remove()
+  return element
+}
+
+fun <T> MutableSet<T>.removeLastOrNull(): T? {
+  val iterator = iterator()
+  if (!iterator.hasNext()) return null
+  var element: T
+  do {
+    element = iterator.next()
+  } while (iterator.hasNext())
+  iterator.remove()
+  return element
+}
+
+fun <T> MutableSet<T>.removeSingle(): T {
+  val iterator = iterator()
+  val result = iterator.next()
+  if (iterator.hasNext()) error("Must contain exactly one element.")
+  return result
+}
+
+fun <T> MutableSet<T>.removeSingleOrNull(): T? = if (isNotEmpty()) removeSingle() else null
+
+inline fun <reified T> MutableSet<T>.removeSingle(element: T): T =
+  removeSingleThat { it == element }
+
+inline fun <reified T> MutableSet<T>.removeSingleOrNull(element: T): T? =
+  removeSingleOrNullThat { it == element }
+
+inline fun <reified T> MutableSet<T>.removeSingleThat(predicate: (T) -> Boolean): T {
+  var result: T? = null
+  var found = false
+  val iterator = iterator()
+  while (iterator.hasNext()) {
+    val element = iterator.next()
+    if (predicate(element)) {
+      if (found) error("Must contain exactly one matching element.")
+      result = element
+      found = true
+    }
+  }
+  return if (found) result as T else throw NoSuchElementException()
+}
+
+inline fun <reified T> MutableSet<T>.removeSingleOrNullThat(predicate: (T) -> Boolean): T? {
+  var result: T? = null
+  var found = false
+  val iterator = iterator()
+  while (iterator.hasNext()) {
+    val element = iterator.next()
+    if (predicate(element)) {
+      if (found) error("Must contain exactly one matching element.")
+      result = element
+      found = true
+    }
+  }
+  return if (found) result as T else null
+}
+
+fun <T> MutableSet<T>.removeMany(n: Int): List<T> {
+  val iterator = iterator()
+  return buildList {
+    while (size < n) {
+      add(iterator.next())
+      iterator.remove()
     }
   }
 }
 
-fun <T> ArrayDeque<T>.takeAndRemoveLast(n: Int): List<T> {
-  return mutableListOf<T>().also { result ->
-    repeat(n) { result.add(removeLast()) }
-    result.reverse()
-  }
-}
-
-fun <T> ArrayDeque<T>.takeAndRemoveLastWhile(predicate: (T) -> Boolean): List<T> {
-  return mutableListOf<T>().also { result ->
-    while (isNotEmpty()) {
-      val element = last()
-      if (!predicate(element)) break
-      result.add(element)
-      removeLast()
+fun <T> MutableSet<T>.removeUpTo(n: Int): List<T> {
+  val iterator = iterator()
+  return buildList {
+    while (size < n && iterator.hasNext()) {
+      add(iterator.next())
+      iterator.remove()
     }
-    result.reverse()
   }
 }
 
-fun <K> Map<K, Int>.getCount(key: K) = getOrDefault(key, 0)
-
-fun <K> MutableMap<K, Int>.increment(key: K, amount: Int = 1) =
-  compute(key) { _, prev -> (prev ?: 0) + amount }
-
-fun <K> MutableMap<K, Int>.decrement(key: K, amount: Int = 1) = increment(key, -amount)
-
-fun <K> MutableMap<K, Int>.incrementAll(other: MutableMap<K, Int>) =
-  other.forEach { (key, count) -> increment(key, count) }
-
-fun <K> MutableMap<K, Int>.incrementAll(other: Iterable<Pair<K, Int>>) =
-  other.forEach { (key, count) -> increment(key, count) }
-
-fun <K> Map<K, Long>.getCount(key: K) = getOrDefault(key, 0)
-
-fun <K> MutableMap<K, Long>.increment(key: K, amount: Long = 1) =
-  compute(key) { _, prev -> (prev ?: 0) + amount }
-
-fun <K> MutableMap<K, Long>.decrement(key: K, amount: Long = 1) = increment(key, -amount)
-
-@JvmName("incrementAllLong")
-fun <K> MutableMap<K, Long>.incrementAll(other: MutableMap<K, Long>) =
-  other.forEach { (key, count) -> increment(key, count) }
-
-@JvmName("incrementAllLong")
-fun <K> MutableMap<K, Long>.incrementAll(other: Iterable<Pair<K, Long>>) =
-  other.forEach { (key, count) -> increment(key, count) }
-
-fun <T> Iterable<T>.toCountMap(): MutableMap<T, Int> {
-  val result = mutableMapOf<T, Int>()
-  forEach { result.increment(it) }
-  return result
+inline fun <T> MutableSet<T>.removeWhile(predicate: (T) -> Boolean): List<T> {
+  val iterator = iterator()
+  return buildList {
+    while (iterator.hasNext()) {
+      val element = iterator.next()
+      if (!predicate(element)) break
+      add(element)
+      iterator.remove()
+    }
+  }
 }
 
-@JvmName("pairsToCountMap")
-fun <T> Iterable<Pair<T, Int>>.toCountMap(): MutableMap<T, Int> {
-  val result = mutableMapOf<T, Int>()
-  forEach { result.increment(it.first, it.second) }
-  return result
+fun <T> MutableList<T>.removeFirst(element: T): T = removeFirstThat { it == element }
+
+fun <T> MutableList<T>.removeFirstOrNull(element: T): T? = removeFirstOrNullThat { it == element }
+
+inline fun <T> MutableList<T>.removeFirstThat(predicate: (T) -> Boolean): T {
+  for (i in indices) {
+    val element = this[i]
+    if (predicate(element)) {
+      removeAt(i)
+      return element
+    }
+  }
+  throw NoSuchElementException()
 }
 
-fun <T> Iterable<T>.toLongCountMap(): MutableMap<T, Long> {
-  val result = mutableMapOf<T, Long>()
-  forEach { result.increment(it) }
-  return result
+inline fun <T> MutableList<T>.removeFirstOrNullThat(predicate: (T) -> Boolean): T? {
+  for (i in indices) {
+    val element = this[i]
+    if (predicate(element)) {
+      removeAt(i)
+      return element
+    }
+  }
+  return null
 }
 
-@JvmName("pairsToLongCountMap")
-fun <T> Iterable<Pair<T, Long>>.toLongCountMap(): MutableMap<T, Long> {
-  val result = mutableMapOf<T, Long>()
-  forEach { result.increment(it.first, it.second) }
-  return result
+fun <T> MutableList<T>.removeLast(element: T): T = removeLastThat { it == element }
+
+fun <T> MutableList<T>.removeLastOrNull(element: T): T? = removeLastOrNullThat { it == element }
+
+inline fun <T> MutableList<T>.removeLastThat(predicate: (T) -> Boolean): T {
+  for (i in lastIndex downTo 0) {
+    val element = this[i]
+    if (predicate(element)) {
+      removeAt(i)
+      return element
+    }
+  }
+  throw NoSuchElementException()
 }
 
-fun Iterable<BigDecimal>.product(): BigDecimal = reduce { a, b -> a * b }
+inline fun <T> MutableList<T>.removeLastOrNullThat(predicate: (T) -> Boolean): T? {
+  for (i in lastIndex downTo 0) {
+    val element = this[i]
+    if (predicate(element)) {
+      removeAt(i)
+      return element
+    }
+  }
+  return null
+}
 
-fun Iterable<BigInteger>.product(): BigInteger = reduce { a, b -> a * b }
+fun <T> MutableList<T>.removeSingle(): T {
+  if (size != 1) error("Must contain exactly one element.")
+  return removeFirst()
+}
 
-fun Iterable<Double>.product(): Double = reduce { a, b -> a * b }
+fun <T> MutableList<T>.removeSingleOrNull(): T? = if (isNotEmpty()) removeSingle() else null
 
-fun Iterable<Int>.product(): Int = reduce { a, b -> a * b }
+fun <T> MutableList<T>.removeSingle(element: T): T = removeSingleThat { it == element }
 
-fun Iterable<Long>.product(): Long = reduce { a, b -> a * b }
+fun <T> MutableList<T>.removeSingleOrNull(element: T): T? = removeSingleOrNullThat { it == element }
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-fun <T> Iterable<T>.productOf(selector: (T) -> BigDecimal): BigDecimal =
-  map(selector).reduce { a, b -> a * b }
+inline fun <T> MutableList<T>.removeSingleThat(predicate: (T) -> Boolean): T {
+  val index = indexOfSingleOrThrow(predicate)
+  return this[index].also { removeAt(index) }
+}
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-fun <T> Iterable<T>.productOf(selector: (T) -> BigInteger): BigInteger =
-  map(selector).reduce { a, b -> a * b }
+inline fun <T> MutableList<T>.removeSingleOrNullThat(predicate: (T) -> Boolean): T? {
+  val index = indexOfSingle(predicate)
+  if (index == -1) return null
+  return this[index].also { removeAt(index) }
+}
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-fun <T> Iterable<T>.productOf(selector: (T) -> Double): Double =
-  map(selector).reduce { a, b -> a * b }
+fun <T> MutableList<T>.removeMany(n: Int): List<T> {
+  if (size < n) throw NoSuchElementException()
+  return removeUpTo(n)
+}
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-fun <T> Iterable<T>.productOf(selector: (T) -> Int): Int =
-  map(selector).reduce { a, b -> a * b }
+fun <T> MutableList<T>.removeManyLast(n: Int): List<T> {
+  if (size < n) throw NoSuchElementException()
+  return removeUpToLast(n)
+}
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long =
-  map(selector).reduce { a, b -> a * b }
+fun <T> MutableList<T>.removeUpTo(n: Int): List<T> {
+  return take(n).also { subList(0, minOf(n, size)).clear() }
+}
+
+fun <T> MutableList<T>.removeUpToLast(n: Int): List<T> {
+  return takeLast(n).also { subList(maxOf(0, size - n), size).clear() }
+}
+
+inline fun <T> MutableList<T>.removeWhile(predicate: (T) -> Boolean): List<T> {
+  val index = indexOfFirst { !predicate(it) }
+  if (index == -1) return toList().also { clear() }
+  return removeMany(index)
+}
+
+inline fun <T> MutableList<T>.removeLastWhile(predicate: (T) -> Boolean): List<T> {
+  val index = indexOfLast { !predicate(it) }
+  if (index == -1) return toList().also { clear() }
+  return removeManyLast(size - index - 1)
+}
 
 fun <T> Iterable<T>.split(vararg delimiters: T): List<List<T>> = splitBy { it in delimiters }
 
@@ -211,7 +316,7 @@ fun Iterable<String>.splitByBlank() = splitBy { it.isBlank() }
 
 fun <T> Iterable<T>.splitByNull() = splitBy { it == null }
 
-fun <T> Iterable<T>.splitBy(predicate: (T) -> Boolean): List<List<T>> {
+inline fun <T> Iterable<T>.splitBy(predicate: (T) -> Boolean): List<List<T>> {
   val result = mutableListOf<List<T>>()
   var current = mutableListOf<T>()
   forEach {
@@ -225,3 +330,9 @@ fun <T> Iterable<T>.splitBy(predicate: (T) -> Boolean): List<List<T>> {
   result.add(current)
   return result
 }
+
+fun <T> Iterable<T>.toDeque(): ArrayDeque<T> = ArrayDeque<T>().also { it.addAll(this) }
+
+fun <T> List<T>.toDeque(): ArrayDeque<T> = ArrayDeque(this)
+
+fun String.toDeque(): ArrayDeque<Char> = ArrayDeque(toList())

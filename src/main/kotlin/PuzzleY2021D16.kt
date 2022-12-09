@@ -22,13 +22,13 @@ class PuzzleY2021D16 : Puzzle {
   private lateinit var packet: Packet
 
   override fun parse(input: String) {
-    val bits = BigInteger(input, 16).toString(2).padStart(input.length * 4, '0').asDeque()
+    val bits = BigInteger(input, 16).toString(2).padStart(input.length * 4, '0').toDeque()
     packet = parse(bits)
   }
 
   private fun parse(bits: ArrayDeque<Char>): Packet {
-    val version = bits.takeAndRemove(3).toInt()
-    val typeId = bits.takeAndRemove(3).toInt()
+    val version = bits.removeMany(3).toInt()
+    val typeId = bits.removeMany(3).toInt()
     return when (typeId) {
       4 -> parseLiteral(bits, version)
       else -> parseOperator(bits, version, typeId)
@@ -38,7 +38,7 @@ class PuzzleY2021D16 : Puzzle {
   private fun parseLiteral(bits: ArrayDeque<Char>, version: Int): Packet {
     val value = mutableListOf<Char>()
     while (true) {
-      val chunk = bits.takeAndRemove(5)
+      val chunk = bits.removeMany(5)
       value += chunk.drop(1)
       if (chunk.first() == '0') break
     }
@@ -46,18 +46,18 @@ class PuzzleY2021D16 : Puzzle {
   }
 
   private fun parseOperator(bits: ArrayDeque<Char>, version: Int, typeId: Int): Packet {
-    val lengthTypeId = bits.takeAndRemove(1).toInt()
+    val lengthTypeId = bits.removeMany(1).toInt()
     val params = mutableListOf<Packet>()
     when (lengthTypeId) {
       0 -> {
-        val subPacketsBitLength = bits.takeAndRemove(15).toInt()
+        val subPacketsBitLength = bits.removeMany(15).toInt()
         val bitsLeftAtStart = bits.size
         while (bitsLeftAtStart - bits.size < subPacketsBitLength) {
           params.add(parse(bits))
         }
       }
       1 -> {
-        val subPacketsCount = bits.takeAndRemove(11).toInt()
+        val subPacketsCount = bits.removeMany(11).toInt()
         repeat(subPacketsCount) {
           params.add(parse(bits))
         }

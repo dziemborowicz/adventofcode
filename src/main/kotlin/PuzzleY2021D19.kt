@@ -34,7 +34,7 @@ class PuzzleY2021D19 : Puzzle {
   override fun parse(input: String) {
     val scannerReadings = input.lines().splitByBlank().map { lines ->
       lines.drop(1).map { it.toPoint3() }
-    }.asDeque()
+    }.toDeque()
 
     beacons = scannerReadings.removeFirst().toMutableSet()
     scanners = mutableSetOf(Point3(0, 0, 0))

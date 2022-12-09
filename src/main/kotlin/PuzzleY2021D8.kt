@@ -21,27 +21,27 @@ class PuzzleY2021D8 : Puzzle {
 
       val candidates = display.first.toMutableList()
 
-      digitsToSegments[1] = candidates.removeSingleIf { it.size == 2 }
-      digitsToSegments[4] = candidates.removeSingleIf { it.size == 4 }
-      digitsToSegments[7] = candidates.removeSingleIf { it.size == 3 }
-      digitsToSegments[8] = candidates.removeSingleIf { it.size == 7 }
+      digitsToSegments[1] = candidates.removeSingleThat { it.size == 2 }
+      digitsToSegments[4] = candidates.removeSingleThat { it.size == 4 }
+      digitsToSegments[7] = candidates.removeSingleThat { it.size == 3 }
+      digitsToSegments[8] = candidates.removeSingleThat { it.size == 7 }
 
       digitsToSegments[6] =
-        candidates.removeSingleIf { it.size == 6 && !it.containsAll(digitsToSegments[1]!!) }
+        candidates.removeSingleThat { it.size == 6 && !it.containsAll(digitsToSegments[1]!!) }
       digitsToSegments[9] =
-        candidates.removeSingleIf { it.size == 6 && it.containsAll(digitsToSegments[4]!!) }
+        candidates.removeSingleThat { it.size == 6 && it.containsAll(digitsToSegments[4]!!) }
       digitsToSegments[0] =
-        candidates.removeSingleIf { it.size == 6 && !it.containsAll(digitsToSegments[4]!!) }
+        candidates.removeSingleThat { it.size == 6 && !it.containsAll(digitsToSegments[4]!!) }
 
       digitsToSegments[3] =
-        candidates.removeSingleIf { it.size == 5 && it.containsAll(digitsToSegments[1]!!) }
+        candidates.removeSingleThat { it.size == 5 && it.containsAll(digitsToSegments[1]!!) }
       digitsToSegments[5] =
-        candidates.removeSingleIf { it.size == 5 && digitsToSegments[9]!!.containsAll(it) }
+        candidates.removeSingleThat { it.size == 5 && digitsToSegments[9]!!.containsAll(it) }
       digitsToSegments[2] =
         candidates.single()
 
       val digits = display.second.map {
-        digitsToSegments.entries.first { (_, segments) -> segments equivalent it }.key
+        digitsToSegments.entries.first { (_, segments) -> segments == it }.key
       }
       digits.reversed().mapIndexed { index, digit -> digit * 10.pow(index) }.sum()
     }

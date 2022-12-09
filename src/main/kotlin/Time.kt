@@ -8,10 +8,9 @@ inline fun <T> timed(label: String, block: () -> T): T {
   val duration = measureTime { result = runCatching { block() } }
   if (result.isSuccess) {
     println("<<< Done: $label ($duration)\n")
-    return result.getOrThrow()
   } else {
     println(result.exceptionOrNull())
     println("<<< FAILED! $label ($duration)\n")
-    throw result.exceptionOrNull()!!
   }
+  return result.getOrThrow()
 }

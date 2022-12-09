@@ -5,7 +5,7 @@ import kotlin.math.sqrt
 data class Point(val x: Int, val y: Int) {
   constructor(point: Pair<Int, Int>) : this(point.first, point.second)
   constructor(index: Grid.Index) : this(index.column, index.row)
-  constructor(str: String) : this(str.split(',').map { it.toInt() }.asPair())
+  constructor(str: String) : this(str.split(',').map { it.toInt() }.toPair())
   fun transpose() = Point(y, x)
   fun upLeft() = Point(x - 1, y + 1)
   fun up() = Point(x, y + 1)
@@ -55,7 +55,7 @@ data class Point(val x: Int, val y: Int) {
 data class LongPoint(val x: Long, val y: Long) {
   constructor(point: Pair<Long, Long>) : this(point.first, point.second)
   constructor(index: Grid.Index) : this(index.column.toLong(), index.row.toLong())
-  constructor(str: String) : this(str.split(',').map { it.toLong() }.asPair())
+  constructor(str: String) : this(str.split(',').map { it.toLong() }.toPair())
   fun transpose() = LongPoint(y, x)
   fun upLeft() = LongPoint(x - 1, y + 1)
   fun up() = LongPoint(x, y + 1)
@@ -105,7 +105,7 @@ data class LongPoint(val x: Long, val y: Long) {
 data class DoublePoint(val x: Double, val y: Double) {
   constructor(point: Pair<Double, Double>) : this(point.first, point.second)
   constructor(index: Grid.Index) : this(index.column.toDouble(), index.row.toDouble())
-  constructor(str: String) : this(str.split(',').map { it.toDouble() }.asPair())
+  constructor(str: String) : this(str.split(',').map { it.toDouble() }.toPair())
   fun transpose() = DoublePoint(y, x)
   fun upLeft() = DoublePoint(x - 1, y + 1)
   fun up() = DoublePoint(x, y + 1)
@@ -153,7 +153,7 @@ data class DoublePoint(val x: Double, val y: Double) {
 
 data class Point3(val x: Int, val y: Int, val z: Int) {
   constructor(point: Triple<Int, Int, Int>) : this(point.first, point.second, point.third)
-  constructor(str: String) : this(str.split(',').map { it.toInt() }.asTriple())
+  constructor(str: String) : this(str.split(',').map { it.toInt() }.toTriple())
   fun offset(amount: Point3): Point3 = offset(amount.x, amount.y, amount.z)
   fun offset(x: Int, y: Int, z: Int): Point3 = Point3(this.x + x, this.y + y, this.z + z)
   fun distanceTo(other: Point3): Double {
@@ -177,7 +177,7 @@ data class Point3(val x: Int, val y: Int, val z: Int) {
 
 data class LongPoint3(val x: Long, val y: Long, val z: Long) {
   constructor(point: Triple<Long, Long, Long>) : this(point.first, point.second, point.third)
-  constructor(str: String) : this(str.split(',').map { it.toLong() }.asTriple())
+  constructor(str: String) : this(str.split(',').map { it.toLong() }.toTriple())
   fun offset(amount: LongPoint3): LongPoint3 = offset(amount.x, amount.y, amount.z)
   fun offset(x: Long, y: Long, z: Long): LongPoint3 = LongPoint3(this.x + x, this.y + y, this.z + z)
   fun distanceTo(other: LongPoint3): Double {
@@ -201,7 +201,7 @@ data class LongPoint3(val x: Long, val y: Long, val z: Long) {
 
 data class DoublePoint3(val x: Double, val y: Double, val z: Double) {
   constructor(point: Triple<Double, Double, Double>) : this(point.first, point.second, point.third)
-  constructor(str: String) : this(str.split(',').map { it.toDouble() }.asTriple())
+  constructor(str: String) : this(str.split(',').map { it.toDouble() }.toTriple())
   fun offset(amount: DoublePoint3): DoublePoint3 = offset(amount.x, amount.y, amount.z)
   fun offset(x: Double, y: Double, z: Double): DoublePoint3 =
     DoublePoint3(this.x + x, this.y + y, this.z + z)

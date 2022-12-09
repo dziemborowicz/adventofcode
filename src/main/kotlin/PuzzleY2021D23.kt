@@ -7,7 +7,7 @@ class PuzzleY2021D23 : Puzzle {
   override fun parse(input: String) {
     val lines = input.lines()
     amphipods = MutableList(11) { i ->
-      lines.map { line -> line.getOrElse(i + 1) { ' ' } }.filter { it.isLetter() }.asDeque()
+      lines.map { line -> line.getOrElse(i + 1) { ' ' } }.filter { it.isLetter() }.toDeque()
     }
   }
 
@@ -163,7 +163,7 @@ class PuzzleY2021D23 : Puzzle {
   }
 
   private fun MutableList<ArrayDeque<Char>>.deepCopy() =
-    MutableList(size) { this[it].asDeque() }
+    MutableList(size) { this[it].toDeque() }
 
   companion object {
     val testInput1_1 = """

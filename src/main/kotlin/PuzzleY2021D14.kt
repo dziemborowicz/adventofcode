@@ -6,7 +6,7 @@ class PuzzleY2021D14 : Puzzle {
   override fun parse(input: String) {
     val parts = input.lines().splitByBlank()
     polymerTemplate = parts[0].single()
-    pairInsertionRules = parts[1].associate { it.split(" -> ").asPair() }
+    pairInsertionRules = parts[1].associate { it.split(" -> ").toPair() }
   }
 
   override fun solve1(): Long {

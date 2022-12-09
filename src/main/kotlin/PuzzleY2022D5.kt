@@ -36,7 +36,7 @@ class PuzzleY2022D5 : Puzzle {
   override fun solve2(): String {
     val stacks = stacks.copy()
     for ((count, from, to) in moves) {
-      val top = stacks[from].takeAndRemoveLast(count)
+      val top = stacks[from].removeManyLast(count)
       stacks[to].addAll(top)
     }
     return stacks.topsAsString()

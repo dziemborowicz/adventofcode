@@ -4,7 +4,7 @@ class PuzzleY2022D4 : Puzzle {
 
   override fun parse(input: String) {
     pairs = input.lines().map { line ->
-      line.split(',').map { it.toIntRange() }.asPair()
+      line.split(',').map { it.toIntRange() }.toPair()
     }
   }
 
