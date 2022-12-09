@@ -74,7 +74,7 @@ class PuzzleY2021D19 : Puzzle {
   }
 
   override fun solve2(): Int {
-    return scanners.maxOf { scanner -> scanners.maxOf { scanner.manhattanDistance(it) } }
+    return scanners.maxOf { scanner -> scanners.maxOf { scanner.manhattanDistanceTo(it) } }
   }
 
   companion object {
