@@ -1,0 +1,105 @@
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
+
+data class LongPoint(val x: Long, val y: Long) {
+
+  operator fun plus(other: LongPoint): LongPoint = translate(other.x, other.y)
+
+  operator fun minus(other: LongPoint): LongPoint = translate(-other.x, -other.y)
+
+  operator fun times(other: LongPoint): LongPoint = LongPoint(x * other.x, y * other.y)
+
+  operator fun div(other: LongPoint): LongPoint = LongPoint(x / other.x, y / other.y)
+
+  fun translate(other: LongPoint): LongPoint = translate(other.x, other.y)
+
+  fun translate(dx: Long, dy: Long): LongPoint = LongPoint(x + dx, y + dy)
+
+  fun transpose(): LongPoint = LongPoint(y, x)
+
+  infix fun distanceTo(other: LongPoint): Double =
+    sqrt((x.toDouble() - other.x.toDouble()).pow(2) + (y.toDouble() - other.y.toDouble()).pow(2))
+
+  infix fun longDistanceTo(other: LongPoint): Long = distanceTo(other).toLong()
+
+  infix fun manhattanDistanceTo(other: LongPoint): Long = abs(x - other.x) + abs(y - other.y)
+
+  infix fun xDistanceTo(other: LongPoint): Long = abs(x - other.x)
+
+  infix fun yDistanceTo(other: LongPoint): Long = abs(y - other.y)
+
+  fun neighbors(): List<LongPoint> = listOf(up(), right(), down(), left())
+
+  fun neighborsIncludingDiagonals(): List<LongPoint> =
+    listOf(up(), upRight(), right(), downRight(), down(), downLeft(), left(), upLeft())
+
+  fun up(n: Long = 1): LongPoint = LongPoint(x, y + n)
+
+  fun upRight(n: Long = 1): LongPoint = LongPoint(x + n, y + n)
+
+  fun right(n: Long = 1): LongPoint = LongPoint(x + n, y)
+
+  fun downRight(n: Long = 1): LongPoint = LongPoint(x + n, y - n)
+
+  fun down(n: Long = 1): LongPoint = LongPoint(x, y - n)
+
+  fun downLeft(n: Long = 1): LongPoint = LongPoint(x - n, y - n)
+
+  fun left(n: Long = 1): LongPoint = LongPoint(x - n, y)
+
+  fun upLeft(n: Long = 1): LongPoint = LongPoint(x - n, y + n)
+
+  infix fun isNeighborOf(other: LongPoint): Boolean = manhattanDistanceTo(other) == 1L
+
+  infix fun isNeighborIncludingDiagonalsOf(other: LongPoint): Boolean =
+    this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
+
+  infix fun isAbove(other: LongPoint): Boolean = (y > other.y)
+
+  infix fun isUpRightOf(other: LongPoint): Boolean = (x > other.x) && (y > other.y)
+
+  infix fun isRightOf(other: LongPoint): Boolean = (x > other.x)
+
+  infix fun isDownRightOf(other: LongPoint): Boolean = (x > other.x) && (y < other.y)
+
+  infix fun isBelow(other: LongPoint): Boolean = (y < other.y)
+
+  infix fun isDownLeftOf(other: LongPoint): Boolean = (x < other.x) && (y < other.y)
+
+  infix fun isLeftOf(other: LongPoint): Boolean = (x < other.x)
+
+  infix fun isUpLeftOf(other: LongPoint): Boolean = (x < other.x) && (y > other.y)
+
+  infix fun isImmediatelyAbove(other: LongPoint): Boolean = (x == other.x) && (y == other.y + 1)
+
+  infix fun isImmediatelyUpRightOf(other: LongPoint): Boolean = (x == other.x + 1) && (y == other.y + 1)
+
+  infix fun isImmediatelyRightOf(other: LongPoint): Boolean = (x == other.x + 1) && (y == other.y)
+
+  infix fun isImmediatelyDownRightOf(other: LongPoint): Boolean =
+    (x == other.x + 1) && (y == other.y - 1)
+
+  infix fun isImmediatelyBelow(other: LongPoint): Boolean = (x == other.x) && (y == other.y - 1)
+
+  infix fun isImmediatelyDownLeftOf(other: LongPoint): Boolean =
+    (x == other.x - 1) && (y == other.y - 1)
+
+  infix fun isImmediatelyLeftOf(other: LongPoint): Boolean = (x == other.x - 1) && (y == other.y)
+
+  infix fun isImmediatelyUpLeftOf(other: LongPoint) = (x == other.x - 1) && (y == other.y + 1)
+
+  override fun toString(): String = "($x,$y)"
+}
+
+fun LongPoint(pair: Pair<Long, Long>): LongPoint = LongPoint(pair.first, pair.second)
+
+fun LongPoint(string: String): LongPoint {
+  val parts = string.removeSurrounding("(", ")").split(',', ' ')
+  require(parts.size == 2) { "Invalid format for point: $string" }
+  return LongPoint(parts[0].toLong(), parts[1].toLong())
+}
+
+fun Pair<Long, Long>.toLongPoint(): LongPoint = LongPoint(this)
+
+fun String.toLongPoint(): LongPoint = LongPoint(this)

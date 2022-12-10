@@ -377,8 +377,8 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
 
 fun <T> List<Grid<T>>.copy(): List<Grid<T>> = map { it.copy() }
 
-fun Grid<Boolean>.asImage(dot: Char = '#', empty: Char = '.'): String =
-  map { if (it) dot else empty }.asImage()
+fun Grid<Boolean>.asImage(on: Char = '█', off: Char = '·'): String =
+  map { if (it) on else off }.asImage()
 
 fun Grid<Char>.asImage(): String =
   rows().joinToString("\n") { row -> row.joinToString("") }

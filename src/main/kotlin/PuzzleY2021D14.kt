@@ -18,10 +18,10 @@ class PuzzleY2021D14 : Puzzle {
   }
 
   private fun solve(steps: Int): Long {
-    val pairCounts = " $polymerTemplate ".windowed(2).toLongCountMap()
+    val pairCounts = " $polymerTemplate ".windowed(2).toLongCounter()
     repeat(steps) {
       pairCounts.incrementAll(pairInsertionRules.flatMap { rule ->
-        val prevCount = pairCounts.getCount(rule.key)
+        val prevCount = pairCounts[rule.key]
         listOf(
           (rule.key.first() + rule.value) to prevCount,
           (rule.value + rule.key.last()) to prevCount,
@@ -30,11 +30,12 @@ class PuzzleY2021D14 : Puzzle {
       })
     }
     val counts =
-      pairCounts.flatMap { (key, count) -> listOf(key.first() to count, key.last() to count) }
+      pairCounts.counts()
+        .flatMap { (key, count) -> listOf(key.first() to count, key.last() to count) }
         .filter { it.first != ' ' }
-        .toLongCountMap()
-        .also { it.replaceAll { _, count -> count / 2 } }
-    return counts.values.max() - counts.values.filter { it != 0L }.min()
+        .toLongCounter()
+        .also { it.divideAllBy(2) }
+    return counts.max().count - counts.min().count
   }
 
   companion object {

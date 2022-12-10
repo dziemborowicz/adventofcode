@@ -46,15 +46,15 @@ class PuzzleY2021D22 : Puzzle {
   }
 
   private fun countCuboidsIn(steps: List<Step>): Long {
-    val cuboidCounts = mutableMapOf<Cuboid, Long>()
+    val cuboidCounts = LongCounter<Cuboid>()
     for (step in steps) {
-      cuboidCounts.entries.toList().forEach { (cuboid, count) ->
+      cuboidCounts.counts().forEach { (cuboid, count) ->
         val intersection = cuboid intersect step.cuboid
         if (intersection.isNotEmpty) cuboidCounts.decrement(intersection, count)
       }
       if (step.on) cuboidCounts.increment(step.cuboid)
     }
-    return cuboidCounts.entries.sumOf { (cuboid, count) -> cuboid.volume * count }
+    return cuboidCounts.counts().sumOf { (cuboid, count) -> cuboid.volume * count }
   }
 
   companion object {

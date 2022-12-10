@@ -56,7 +56,7 @@ class PuzzleY2021D19 : Puzzle {
         }.toSet()
 
         for (offset in possibleOffsets) {
-          val offsetBeacons = rotatedBeacons.map { it.offset(offset) }.toSet()
+          val offsetBeacons = rotatedBeacons.map { it.translate(offset) }.toSet()
           if ((beacons intersect offsetBeacons).size >= 12) {
             beacons.addAll(offsetBeacons)
             scanners.add(offset)
@@ -74,7 +74,7 @@ class PuzzleY2021D19 : Puzzle {
   }
 
   override fun solve2(): Int {
-    return scanners.maxOf { scanner -> scanners.maxOf { scanner.manhattanDistanceTo(it) } }
+    return scanners.maxOf { scanner -> scanners.maxOf { scanner manhattanDistanceTo it } }
   }
 
   companion object {
