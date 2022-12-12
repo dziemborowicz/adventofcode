@@ -1,7 +1,3 @@
-import java.math.BigDecimal
-import java.math.BigInteger
-import kotlin.experimental.ExperimentalTypeInference
-
 fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
 
 fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)
@@ -29,41 +25,6 @@ fun List<*>.middleIndex(): Int {
   require(size % 2 == 1) { "List must have an odd number of elements." }
   return size / 2
 }
-
-fun Iterable<BigDecimal>.product(): BigDecimal = fold(BigDecimal.ONE) { a, b -> a * b }
-
-fun Iterable<BigInteger>.product(): BigInteger = fold(BigInteger.ONE) { a, b -> a * b }
-
-fun Iterable<Double>.product(): Double = fold(1.0) { a, b -> a * b }
-
-fun Iterable<Int>.product(): Int = fold(1) { a, b -> a * b }
-
-fun Iterable<Long>.product(): Long = fold(1L) { a, b -> a * b }
-
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-inline fun <T> Iterable<T>.productOf(selector: (T) -> BigDecimal): BigDecimal =
-  map(selector).product()
-
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-inline fun <T> Iterable<T>.productOf(selector: (T) -> BigInteger): BigInteger =
-  map(selector).product()
-
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-inline fun <T> Iterable<T>.productOf(selector: (T) -> Double): Double =
-  map(selector).product()
-
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-inline fun <T> Iterable<T>.productOf(selector: (T) -> Int): Int =
-  map(selector).product()
-
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-inline fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long =
-  map(selector).product()
 
 fun <T> MutableSet<T>.removeFirst(): T {
   val iterator = iterator()
