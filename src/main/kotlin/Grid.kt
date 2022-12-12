@@ -112,6 +112,14 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
   fun getAdjacentWithDiagonalsWrapped(row: Int, column: Int): List<T> =
     getAdjacentWithDiagonalsWrapped(Index(row, column))
 
+  fun indexOf(element: T): Index = indices.first { this[it] == element }
+
+  fun indexOfOrNull(element: T): Index? = indices.firstOrNull { this[it] == element }
+
+  fun lastIndexOf(element: T): Index = indices.last { this[it] == element }
+
+  fun lastIndexOfOrNull(element: T): Index? = indices.lastOrNull { this[it] == element }
+
   inline fun forEachIndexed(action: (Int, Int, T) -> Unit) =
     indices.forEach { index -> action(index.row, index.column, this[index]) }
 
