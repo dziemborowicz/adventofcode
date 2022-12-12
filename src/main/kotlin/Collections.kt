@@ -12,7 +12,7 @@ inline fun <T> Iterable<T>.indexOfSingle(predicate: (T) -> Boolean): Int {
   val firstIndex = indexOfFirst(predicate)
   if (firstIndex == -1) return -1
   val lastIndex = indexOfLast(predicate)
-  if (firstIndex != lastIndex) error("Must contain exactly one matching element.")
+  if (firstIndex != lastIndex) return -1
   return firstIndex
 }
 
@@ -22,7 +22,7 @@ inline fun <T> Iterable<T>.indexOfSingleOrThrow(predicate: (T) -> Boolean): Int 
 fun <T> List<T>.middle(): T = this[middleIndex()]
 
 fun List<*>.middleIndex(): Int {
-  require(size % 2 == 1) { "List must have an odd number of elements." }
+  require(size.isOdd) { "List must have an odd number of elements." }
   return size / 2
 }
 
@@ -31,19 +31,11 @@ fun <T> MutableSet<T>.removeFirst(): T {
   return iterator.next().also { iterator.remove() }
 }
 
-fun <T> MutableSet<T>.removeFirstOrNull(): T? {
-  val iterator = iterator()
-  return if (iterator.hasNext()) {
-    return iterator.next().also { iterator.remove() }
-  } else {
-    null
-  }
-}
+fun <T> MutableSet<T>.removeFirstOrNull(): T? = if (isNotEmpty()) removeFirst() else null
 
 fun <T> MutableSet<T>.removeFirst(element: T): T = removeFirstThat { it == element }
 
-fun <T> MutableSet<T>.removeFirstOrNull(element: T): T? =
-  removeFirstOrNullThat { it == element }
+fun <T> MutableSet<T>.removeFirstOrNull(element: T): T? = removeFirstOrNullThat { it == element }
 
 inline fun <T> MutableSet<T>.removeFirstThat(predicate: (T) -> Boolean): T {
   val iterator = iterator()
@@ -91,58 +83,30 @@ fun <T> MutableSet<T>.removeLastOrNull(): T? {
 }
 
 fun <T> MutableSet<T>.removeSingle(): T {
-  val iterator = iterator()
-  val result = iterator.next()
-  if (iterator.hasNext()) error("Must contain exactly one element.")
-  return result
-}
-
-fun <T> MutableSet<T>.removeSingleOrNull(): T? = if (isNotEmpty()) removeSingle() else null
-
-inline fun <reified T> MutableSet<T>.removeSingle(element: T): T =
-  removeSingleThat { it == element }
-
-inline fun <reified T> MutableSet<T>.removeSingleOrNull(element: T): T? =
-  removeSingleOrNullThat { it == element }
-
-inline fun <reified T> MutableSet<T>.removeSingleThat(predicate: (T) -> Boolean): T {
-  var result: T? = null
-  var found = false
-  val iterator = iterator()
-  while (iterator.hasNext()) {
-    val element = iterator.next()
-    if (predicate(element)) {
-      if (found) error("Must contain exactly one matching element.")
-      result = element
-      found = true
-    }
+  return if (size == 1) {
+    removeFirst()
+  } else {
+    error("Must contain exactly one element.")
   }
-  return if (found) result as T else throw NoSuchElementException()
 }
 
-inline fun <reified T> MutableSet<T>.removeSingleOrNullThat(predicate: (T) -> Boolean): T? {
-  var result: T? = null
-  var found = false
-  val iterator = iterator()
-  while (iterator.hasNext()) {
-    val element = iterator.next()
-    if (predicate(element)) {
-      if (found) error("Must contain exactly one matching element.")
-      result = element
-      found = true
-    }
+fun <T> MutableSet<T>.removeSingleOrNull(): T? {
+  return if (size == 1) {
+    removeFirst()
+  } else {
+    null
   }
-  return if (found) result as T else null
 }
+
+inline fun <reified T> MutableSet<T>.removeSingleThat(predicate: (T) -> Boolean): T =
+  single(predicate).also { remove(it) }
+
+inline fun <reified T> MutableSet<T>.removeSingleOrNullThat(predicate: (T) -> Boolean): T? =
+  singleOrNull(predicate)?.also { remove(it) }
 
 fun <T> MutableSet<T>.removeMany(n: Int): List<T> {
-  val iterator = iterator()
-  return buildList {
-    while (size < n) {
-      add(iterator.next())
-      iterator.remove()
-    }
-  }
+  if (size < n) throw NoSuchElementException()
+  return removeUpTo(n)
 }
 
 fun <T> MutableSet<T>.removeUpTo(n: Int): List<T> {
@@ -224,7 +188,7 @@ fun <T> MutableList<T>.removeSingle(): T {
   return removeFirst()
 }
 
-fun <T> MutableList<T>.removeSingleOrNull(): T? = if (isNotEmpty()) removeSingle() else null
+fun <T> MutableList<T>.removeSingleOrNull(): T? = if (size == 1) removeSingle() else null
 
 fun <T> MutableList<T>.removeSingle(element: T): T = removeSingleThat { it == element }
 
@@ -291,6 +255,12 @@ inline fun <T> Iterable<T>.splitBy(predicate: (T) -> Boolean): List<List<T>> {
   result.add(current)
   return result
 }
+
+fun <T> dequeOf() = ArrayDeque<T>()
+
+fun <T> dequeOf(element: T) = ArrayDeque<T>().also { it.add(element) }
+
+fun <T> dequeOf(vararg elements: T) = ArrayDeque(elements.toList())
 
 fun <T> Iterable<T>.toDeque(): ArrayDeque<T> = ArrayDeque<T>().also { it.addAll(this) }
 

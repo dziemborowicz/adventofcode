@@ -48,11 +48,6 @@ data class DoublePoint(val x: Double, val y: Double) {
 
   fun upLeft(n: Double = 1.0): DoublePoint = DoublePoint(x - n, y + n)
 
-  infix fun isNeighborOf(other: DoublePoint): Boolean = manhattanDistanceTo(other) == 1.0
-
-  infix fun isNeighborIncludingDiagonalsOf(other: DoublePoint): Boolean =
-    this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
-
   infix fun isAbove(other: DoublePoint): Boolean = (y > other.y)
 
   infix fun isUpRightOf(other: DoublePoint): Boolean = (x > other.x) && (y > other.y)
@@ -69,10 +64,29 @@ data class DoublePoint(val x: Double, val y: Double) {
 
   infix fun isUpLeftOf(other: DoublePoint): Boolean = (x < other.x) && (y > other.y)
 
+  infix fun isDirectlyAbove(other: DoublePoint): Boolean = (x == other.x) && (y > other.y)
+
+  infix fun isDirectlyUpRightOf(other: DoublePoint): Boolean =
+    (x > other.x) && (y > other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyRightOf(other: DoublePoint): Boolean = (x > other.x) && (y == other.y)
+
+  infix fun isDirectlyDownRightOf(other: DoublePoint): Boolean =
+    (x > other.x) && (y < other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyBelow(other: DoublePoint): Boolean = (x == other.x) && (y < other.y)
+
+  infix fun isDirectlyDownLeftOf(other: DoublePoint): Boolean =
+    (x < other.x) && (y < other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyLeftOf(other: DoublePoint): Boolean = (x < other.x) && (y == other.y)
+
+  infix fun isDirectlyUpLeftOf(other: DoublePoint): Boolean =
+    (x < other.x) && (y > other.y) && xDistanceTo(other) == yDistanceTo(other)
+
   infix fun isImmediatelyAbove(other: DoublePoint): Boolean = (x == other.x) && (y == other.y + 1)
 
-  infix fun isImmediatelyUpRightOf(other: DoublePoint): Boolean =
-    (x == other.x + 1) && (y == other.y + 1)
+  infix fun isImmediatelyUpRightOf(other: DoublePoint): Boolean = (x == other.x + 1) && (y == other.y + 1)
 
   infix fun isImmediatelyRightOf(other: DoublePoint): Boolean = (x == other.x + 1) && (y == other.y)
 
@@ -87,6 +101,11 @@ data class DoublePoint(val x: Double, val y: Double) {
   infix fun isImmediatelyLeftOf(other: DoublePoint): Boolean = (x == other.x - 1) && (y == other.y)
 
   infix fun isImmediatelyUpLeftOf(other: DoublePoint) = (x == other.x - 1) && (y == other.y + 1)
+
+  infix fun isNeighborOf(other: DoublePoint): Boolean = manhattanDistanceTo(other) == 1.0
+
+  infix fun isNeighborIncludingDiagonalsOf(other: DoublePoint): Boolean =
+    this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
   override fun toString(): String = "($x,$y)"
 }

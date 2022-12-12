@@ -29,7 +29,7 @@ class PuzzleY2022D11 : Puzzle {
       monkeys.forEach {
         while (it.items.isNotEmpty()) {
           val worryLevel = it.operation(it.items.removeFirst()) / 3
-          if (worryLevel % it.divisor == 0L) {
+          if (worryLevel isDivisibleBy it.divisor) {
             monkeys[it.monkeyIfTrue].items.add(worryLevel)
           } else {
             monkeys[it.monkeyIfFalse].items.add(worryLevel)
@@ -48,7 +48,7 @@ class PuzzleY2022D11 : Puzzle {
       monkeys.forEach {
         while (it.items.isNotEmpty()) {
           val worryLevel = it.operation(it.items.removeFirst()) % divisorProduct
-          if (worryLevel % it.divisor == 0L) {
+          if (worryLevel isDivisibleBy it.divisor) {
             monkeys[it.monkeyIfTrue].items.add(worryLevel)
           } else {
             monkeys[it.monkeyIfFalse].items.add(worryLevel)

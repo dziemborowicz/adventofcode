@@ -2,6 +2,18 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.experimental.ExperimentalTypeInference
 
+infix fun BigInteger.isDivisibleBy(other: BigInteger): Boolean = this % other == BigInteger.ZERO
+
+infix fun Int.isDivisibleBy(other: Int): Boolean = this % other == 0
+
+infix fun Long.isDivisibleBy(other: Long): Boolean = this % other == 0L
+
+infix fun BigInteger.isNotDivisibleBy(other: BigInteger): Boolean = this % other != BigInteger.ZERO
+
+infix fun Int.isNotDivisibleBy(other: Int): Boolean = this % other != 0
+
+infix fun Long.isNotDivisibleBy(other: Long): Boolean = this % other != 0L
+
 val BigInteger.isEven: Boolean
   get() = !testBit(0)
 

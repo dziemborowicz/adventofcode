@@ -50,11 +50,6 @@ data class Point(val x: Int, val y: Int) {
 
   fun upLeft(n: Int = 1): Point = Point(x - n, y + n)
 
-  infix fun isNeighborOf(other: Point): Boolean = manhattanDistanceTo(other) == 1
-
-  infix fun isNeighborIncludingDiagonalsOf(other: Point): Boolean =
-    this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
-
   infix fun isAbove(other: Point): Boolean = (y > other.y)
 
   infix fun isUpRightOf(other: Point): Boolean = (x > other.x) && (y > other.y)
@@ -70,6 +65,26 @@ data class Point(val x: Int, val y: Int) {
   infix fun isLeftOf(other: Point): Boolean = (x < other.x)
 
   infix fun isUpLeftOf(other: Point): Boolean = (x < other.x) && (y > other.y)
+
+  infix fun isDirectlyAbove(other: Point): Boolean = (x == other.x) && (y > other.y)
+
+  infix fun isDirectlyUpRightOf(other: Point): Boolean =
+    (x > other.x) && (y > other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyRightOf(other: Point): Boolean = (x > other.x) && (y == other.y)
+
+  infix fun isDirectlyDownRightOf(other: Point): Boolean =
+    (x > other.x) && (y < other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyBelow(other: Point): Boolean = (x == other.x) && (y < other.y)
+
+  infix fun isDirectlyDownLeftOf(other: Point): Boolean =
+    (x < other.x) && (y < other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyLeftOf(other: Point): Boolean = (x < other.x) && (y == other.y)
+
+  infix fun isDirectlyUpLeftOf(other: Point): Boolean =
+    (x < other.x) && (y > other.y) && xDistanceTo(other) == yDistanceTo(other)
 
   infix fun isImmediatelyAbove(other: Point): Boolean = (x == other.x) && (y == other.y + 1)
 
@@ -88,6 +103,11 @@ data class Point(val x: Int, val y: Int) {
   infix fun isImmediatelyLeftOf(other: Point): Boolean = (x == other.x - 1) && (y == other.y)
 
   infix fun isImmediatelyUpLeftOf(other: Point) = (x == other.x - 1) && (y == other.y + 1)
+
+  infix fun isNeighborOf(other: Point): Boolean = manhattanDistanceTo(other) == 1
+
+  infix fun isNeighborIncludingDiagonalsOf(other: Point): Boolean =
+    this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
   override fun toString(): String = "($x,$y)"
 }

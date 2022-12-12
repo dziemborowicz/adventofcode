@@ -50,11 +50,6 @@ data class LongPoint(val x: Long, val y: Long) {
 
   fun upLeft(n: Long = 1): LongPoint = LongPoint(x - n, y + n)
 
-  infix fun isNeighborOf(other: LongPoint): Boolean = manhattanDistanceTo(other) == 1L
-
-  infix fun isNeighborIncludingDiagonalsOf(other: LongPoint): Boolean =
-    this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
-
   infix fun isAbove(other: LongPoint): Boolean = (y > other.y)
 
   infix fun isUpRightOf(other: LongPoint): Boolean = (x > other.x) && (y > other.y)
@@ -70,6 +65,26 @@ data class LongPoint(val x: Long, val y: Long) {
   infix fun isLeftOf(other: LongPoint): Boolean = (x < other.x)
 
   infix fun isUpLeftOf(other: LongPoint): Boolean = (x < other.x) && (y > other.y)
+
+  infix fun isDirectlyAbove(other: LongPoint): Boolean = (x == other.x) && (y > other.y)
+
+  infix fun isDirectlyUpRightOf(other: LongPoint): Boolean =
+    (x > other.x) && (y > other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyRightOf(other: LongPoint): Boolean = (x > other.x) && (y == other.y)
+
+  infix fun isDirectlyDownRightOf(other: LongPoint): Boolean =
+    (x > other.x) && (y < other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyBelow(other: LongPoint): Boolean = (x == other.x) && (y < other.y)
+
+  infix fun isDirectlyDownLeftOf(other: LongPoint): Boolean =
+    (x < other.x) && (y < other.y) && xDistanceTo(other) == yDistanceTo(other)
+
+  infix fun isDirectlyLeftOf(other: LongPoint): Boolean = (x < other.x) && (y == other.y)
+
+  infix fun isDirectlyUpLeftOf(other: LongPoint): Boolean =
+    (x < other.x) && (y > other.y) && xDistanceTo(other) == yDistanceTo(other)
 
   infix fun isImmediatelyAbove(other: LongPoint): Boolean = (x == other.x) && (y == other.y + 1)
 
@@ -88,6 +103,11 @@ data class LongPoint(val x: Long, val y: Long) {
   infix fun isImmediatelyLeftOf(other: LongPoint): Boolean = (x == other.x - 1) && (y == other.y)
 
   infix fun isImmediatelyUpLeftOf(other: LongPoint) = (x == other.x - 1) && (y == other.y + 1)
+
+  infix fun isNeighborOf(other: LongPoint): Boolean = manhattanDistanceTo(other) == 1L
+
+  infix fun isNeighborIncludingDiagonalsOf(other: LongPoint): Boolean =
+    this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
   override fun toString(): String = "($x,$y)"
 }
