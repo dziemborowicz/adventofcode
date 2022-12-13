@@ -127,15 +127,15 @@ infix fun Long.pow(exponent: Int): Long {
   return result
 }
 
-fun Iterable<BigDecimal>.product(): BigDecimal = fold(BigDecimal.ONE) { a, b -> a * b }
+fun Iterable<BigDecimal>.product(): BigDecimal = reduce { a, b -> a * b }
 
-fun Iterable<BigInteger>.product(): BigInteger = fold(BigInteger.ONE) { a, b -> a * b }
+fun Iterable<BigInteger>.product(): BigInteger = reduce { a, b -> a * b }
 
-fun Iterable<Double>.product(): Double = fold(1.0) { a, b -> a * b }
+fun Iterable<Double>.product(): Double = reduce { a, b -> a * b }
 
-fun Iterable<Int>.product(): Int = fold(1) { a, b -> a * b }
+fun Iterable<Int>.product(): Int = reduce { a, b -> a * b }
 
-fun Iterable<Long>.product(): Long = fold(1L) { a, b -> a * b }
+fun Iterable<Long>.product(): Long = reduce { a, b -> a * b }
 
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
@@ -159,9 +159,121 @@ inline fun <T> Iterable<T>.productOf(selector: (T) -> Int): Int = map(selector).
 @OverloadResolutionByLambdaReturnType
 inline fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long = map(selector).product()
 
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexed(selector: (Int, T) -> BigDecimal): BigDecimal =
+  mapIndexed(selector).product()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexed(selector: (Int, T) -> BigInteger): BigInteger =
+  mapIndexed(selector).product()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexed(selector: (Int, T) -> Double): Double =
+  mapIndexed(selector).product()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexed(selector: (Int, T) -> Int): Int =
+  mapIndexed(selector).product()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexed(selector: (Int, T) -> Long): Long =
+  mapIndexed(selector).product()
+
+fun Iterable<BigDecimal>.productOrOne(): BigDecimal = fold(BigDecimal.ONE) { a, b -> a * b }
+
+fun Iterable<BigInteger>.productOrOne(): BigInteger = fold(BigInteger.ONE) { a, b -> a * b }
+
+fun Iterable<Double>.productOrOne(): Double = fold(1.0) { a, b -> a * b }
+
+fun Iterable<Int>.productOrOne(): Int = fold(1) { a, b -> a * b }
+
+fun Iterable<Long>.productOrOne(): Long = fold(1L) { a, b -> a * b }
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfOrOne(selector: (T) -> BigDecimal): BigDecimal =
+  map(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfOrOne(selector: (T) -> BigInteger): BigInteger =
+  map(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfOrOne(selector: (T) -> Double): Double =
+  map(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfOrOne(selector: (T) -> Int): Int = map(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfOrOne(selector: (T) -> Long): Long =
+  map(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> BigDecimal): BigDecimal =
+  mapIndexed(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> BigInteger): BigInteger =
+  mapIndexed(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Double): Double =
+  mapIndexed(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Int): Int =
+  mapIndexed(selector).productOrOne()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Long): Long =
+  mapIndexed(selector).productOrOne()
+
+fun Iterable<BigDecimal>.sum(): BigDecimal = fold(BigDecimal.ZERO) { a, b -> a + b }
+
+fun Iterable<BigInteger>.sum(): BigInteger = fold(BigInteger.ZERO) { a, b -> a + b }
+
 fun IntRange.sum(): Int = sumOfRange(first, last)
 
 fun LongRange.sum(): Long = sumOfRange(first, last)
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.sumOfIndexed(selector: (Int, T) -> BigDecimal): BigDecimal =
+  mapIndexed(selector).sum()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.sumOfIndexed(selector: (Int, T) -> BigInteger): BigInteger =
+  mapIndexed(selector).sum()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.sumOfIndexed(selector: (Int, T) -> Double): Double =
+  mapIndexed(selector).sum()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.sumOfIndexed(selector: (Int, T) -> Int): Int = mapIndexed(selector).sum()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+inline fun <T> Iterable<T>.sumOfIndexed(selector: (Int, T) -> Long): Long =
+  mapIndexed(selector).sum()
 
 fun sumOfRange(firstInclusive: Int, lastInclusive: Int): Int {
   if (firstInclusive > lastInclusive) return 0

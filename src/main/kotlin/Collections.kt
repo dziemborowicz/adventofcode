@@ -2,6 +2,12 @@ fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
 
 fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)
 
+fun <T> Iterable<T>.indexOfOrThrow(element: T): Int =
+  indexOf(element).also { if (it == -1) throw NoSuchElementException() }
+
+fun <T> Iterable<T>.lastIndexOfOrThrow(element: T): Int =
+  lastIndexOf(element).also { if (it == -1) throw NoSuchElementException() }
+
 inline fun <T> Iterable<T>.indexOfFirstOrThrow(predicate: (T) -> Boolean): Int =
   indexOfFirst(predicate).also { if (it == -1) throw NoSuchElementException() }
 

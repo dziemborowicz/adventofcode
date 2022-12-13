@@ -2290,3 +2290,79 @@ fun Iterable<String>.parseNullableDenseDoubleGrid() = parseDenseDoubleGrid() as 
 fun Iterable<String>.parseNullableDenseIntGrid() = parseDenseIntGrid() as Grid<Int?>
 fun Iterable<String>.parseNullableDenseLongGrid() = parseDenseLongGrid() as Grid<Long?>
 fun Iterable<String>.parseNullableDenseStringGrid() = parseDenseStringGrid() as Grid<String?>
+
+fun String.parseNestedList(
+  start: Char = '[',
+  end: Char = ']',
+  separator: Char = ',',
+  parser: (String) -> Any,
+): List<Any> {
+  val stack = mutableListOf(mutableListOf<Any>())
+  var string = ""
+  for (c in this) {
+    when (c) {
+      start -> {
+        stack.add(mutableListOf())
+      }
+      end -> {
+        if (string.isNotEmpty()) {
+          stack.last().add(parser(string))
+          string = ""
+        }
+        stack.removeLast().also { stack.last().add(it) }
+      }
+      separator -> {
+        if (string.isNotEmpty()) {
+          stack.last().add(parser(string))
+          string = ""
+        }
+      }
+      else -> {
+        string += c
+      }
+    }
+  }
+  return stack.single()
+}
+
+fun String.parseNestedBigDecimalList(
+  start: Char = '[',
+  end: Char = ']',
+  separator: Char = ',',
+): List<Any> = parseNestedList(start, end, separator, String::toBigDecimal)
+
+fun String.parseNestedBigIntegerList(
+  start: Char = '[',
+  end: Char = ']',
+  separator: Char = ',',
+): List<Any> = parseNestedList(start, end, separator, String::toBigInteger)
+
+fun String.parseNestedCharList(
+  start: Char = '[',
+  end: Char = ']',
+  separator: Char = ',',
+): List<Any> = parseNestedList(start, end, separator, String::toChar)
+
+fun String.parseNestedDoubleList(
+  start: Char = '[',
+  end: Char = ']',
+  separator: Char = ',',
+): List<Any> = parseNestedList(start, end, separator, String::toDouble)
+
+fun String.parseNestedIntList(
+  start: Char = '[',
+  end: Char = ']',
+  separator: Char = ',',
+): List<Any> = parseNestedList(start, end, separator, String::toInt)
+
+fun String.parseNestedLongList(
+  start: Char = '[',
+  end: Char = ']',
+  separator: Char = ',',
+): List<Any> = parseNestedList(start, end, separator, String::toLong)
+
+fun String.parseNestedStringList(
+  start: Char = '[',
+  end: Char = ']',
+  separator: Char = ',',
+): List<Any> = parseNestedList(start, end, separator, String::toString)

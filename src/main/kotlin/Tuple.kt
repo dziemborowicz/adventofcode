@@ -19,6 +19,10 @@ data class Quintuple<out A, out B, out C, out D, out E>(
   override fun toString(): String = "($first, $second, $third, $fourth, $fifth)"
 }
 
+fun <T> Quadruple<T, T, T, T>.toList(): List<T> = listOf(first, second, third, fourth)
+
+fun <T> Quintuple<T, T, T, T, T>.toList(): List<T> = listOf(first, second, third, fourth, fifth)
+
 fun <T> Iterable<T>.toPair(): Pair<T, T> {
   require(count() == 2) { "Must contain exactly two elements." }
   val it = iterator()
@@ -42,3 +46,15 @@ fun <T> Iterable<T>.toQuintuple(): Quintuple<T, T, T, T, T> {
   val it = iterator()
   return Quintuple(it.next(), it.next(), it.next(), it.next(), it.next())
 }
+
+@JvmName("flattenIterableOfPair")
+fun <T> Iterable<Pair<T, T>>.flatten(): List<T> = flatMap { it.toList() }
+
+@JvmName("flattenIterableOfTriple")
+fun <T> Iterable<Triple<T, T, T>>.flatten(): List<T> = flatMap { it.toList() }
+
+@JvmName("flattenIterableOfQuadruple")
+fun <T> Iterable<Quadruple<T, T, T, T>>.flatten(): List<T> = flatMap { it.toList() }
+
+@JvmName("flattenIterableOfQuintuple")
+fun <T> Iterable<Quintuple<T, T, T, T, T>>.flatten(): List<T> = flatMap { it.toList() }
