@@ -1,16 +1,23 @@
+import java.math.BigInteger
+
 typealias DoubleRange = ClosedFloatingPointRange<Double>
 
-val CharRange.count: Int
-  get() = if (isEmpty()) 0 else last - first + 1
+val CharRange.count: Long
+  get() = if (isEmpty()) 0 else last.code.toLong() - first.code.toLong() + 1
 
 val DoubleRange.length: Double
   get() = if (isEmpty()) 0.0 else endInclusive - start
 
-val IntRange.count: Int
-  get() = if (isEmpty()) 0 else last - first + 1
+val IntRange.count: Long
+  get() = if (isEmpty()) 0 else last.toLong() - first.toLong() + 1
 
-val LongRange.count: Long
-  get() = if (isEmpty()) 0 else last - first + 1
+val LongRange.count: BigInteger
+  get() =
+    if (isEmpty()) {
+      BigInteger.ZERO
+    } else {
+      last.toBigInteger() - first.toBigInteger() + BigInteger.ONE
+    }
 
 fun CharRange.containsAny(other: CharRange): Boolean = !(this intersect other).isEmpty()
 
@@ -57,36 +64,24 @@ infix fun IntRange.intersect(other: IntRange): IntRange =
 infix fun LongRange.intersect(other: LongRange): LongRange =
   maxOf(first, other.first)..minOf(last, other.last)
 
-infix fun CharRange.union(other: CharRange): CharRange =
-  (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
-
-infix fun DoubleRange.union(other: DoubleRange): DoubleRange =
-  (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
-
-infix fun IntRange.union(other: IntRange): IntRange =
-  (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
-
-infix fun LongRange.union(other: LongRange): LongRange =
-  (this unionOrNull other) ?: throw IllegalArgumentException("Ranges must touch.")
-
 infix fun CharRange.unionOrNull(other: CharRange): CharRange? {
   val joined = minOf(first, other.first)..maxOf(last, other.last)
-  return if (joined.count <= count + other.count) joined else null
+  return if (joined.count - other.count <= count) joined else null
 }
 
 infix fun DoubleRange.unionOrNull(other: DoubleRange): DoubleRange? {
   val joined = minOf(start, other.start)..maxOf(endInclusive, other.endInclusive)
-  return if (joined.length <= length + other.length) joined else null
+  return if (joined.length - other.length <= length) joined else null
 }
 
 infix fun IntRange.unionOrNull(other: IntRange): IntRange? {
   val joined = minOf(first, other.first)..maxOf(last, other.last)
-  return if (joined.count <= count + other.count) joined else null
+  return if (joined.count - other.count <= count) joined else null
 }
 
 infix fun LongRange.unionOrNull(other: LongRange): LongRange? {
   val joined = minOf(first, other.first)..maxOf(last, other.last)
-  return if (joined.count <= count + other.count) joined else null
+  return if (joined.count - other.count <= count) joined else null
 }
 
 infix fun Char.upOrDownTo(other: Char): CharProgression =

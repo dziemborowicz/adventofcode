@@ -5,7 +5,7 @@ class PuzzleY2021D22 : Puzzle {
     val yRange: LongRange,
     val zRange: LongRange,
   ) {
-    val volume = xRange.count * yRange.count * zRange.count
+    val volume = xRange.count.toLong() * yRange.count.toLong() * zRange.count.toLong()
     val isEmpty = volume == 0L
     val isNotEmpty = !isEmpty
 

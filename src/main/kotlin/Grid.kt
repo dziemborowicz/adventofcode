@@ -265,7 +265,7 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
     Grid(numRows, numColumns) { row, column -> transform(this[row, column]) }
 
   fun subGrid(rows: IntRange, columns: IntRange): Grid<T> {
-    return Grid(rows.count, columns.count) { row, column ->
+    return Grid(rows.count.toInt(), columns.count.toInt()) { row, column ->
       this[row + rows.first, column + columns.first]
     }
   }
