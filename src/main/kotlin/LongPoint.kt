@@ -102,7 +102,8 @@ data class LongPoint(val x: Long, val y: Long) {
 
   infix fun isImmediatelyLeftOf(other: LongPoint): Boolean = (x == other.x - 1) && (y == other.y)
 
-  infix fun isImmediatelyUpLeftOf(other: LongPoint) = (x == other.x - 1) && (y == other.y + 1)
+  infix fun isImmediatelyUpLeftOf(other: LongPoint): Boolean =
+    (x == other.x - 1) && (y == other.y + 1)
 
   infix fun isNeighborOf(other: LongPoint): Boolean = manhattanDistanceTo(other) == 1L
 

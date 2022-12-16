@@ -102,7 +102,7 @@ data class Point(val x: Int, val y: Int) {
 
   infix fun isImmediatelyLeftOf(other: Point): Boolean = (x == other.x - 1) && (y == other.y)
 
-  infix fun isImmediatelyUpLeftOf(other: Point) = (x == other.x - 1) && (y == other.y + 1)
+  infix fun isImmediatelyUpLeftOf(other: Point): Boolean = (x == other.x - 1) && (y == other.y + 1)
 
   infix fun isNeighborOf(other: Point): Boolean = manhattanDistanceTo(other) == 1
 
@@ -114,6 +114,8 @@ data class Point(val x: Int, val y: Int) {
 
 fun Point(pair: Pair<Int, Int>): Point = Point(pair.first, pair.second)
 
+fun Point(index: Index2): Point = Point(index.column, index.row)
+
 fun Point(string: String): Point {
   val parts = string.removeSurrounding("(", ")").split(',', ' ')
   require(parts.size == 2) { "Invalid format for point: $string" }
@@ -122,4 +124,8 @@ fun Point(string: String): Point {
 
 fun Pair<Int, Int>.toPoint(): Point = Point(this)
 
+fun Index2.toPoint(): Point = Point(this)
+
 fun String.toPoint(): Point = Point(this)
+
+infix fun Int.xy(y: Int): Point = Point(this, y)
