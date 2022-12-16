@@ -90,13 +90,13 @@ infix fun LongRange.unionOrNull(other: LongRange): LongRange? {
 }
 
 infix fun Char.upOrDownTo(other: Char): CharProgression =
-  if (other >= this) this..other else other downTo this
+  if (other >= this) this..other else this downTo other
 
 infix fun Int.upOrDownTo(other: Int): IntProgression =
-  if (other >= this) this..other else other downTo this
+  if (other >= this) this..other else this downTo other
 
 infix fun Long.upOrDownTo(other: Long): LongProgression =
-  if (other >= this) this..other else other downTo this
+  if (other >= this) this..other else this downTo other
 
 fun String.toCharRange(): CharRange {
   val (from, to) = Regex("""([a-zA-Z])(?:\.\.|,|-|\s+)([a-zA-Z])""").matchEntire(this)?.destructured
