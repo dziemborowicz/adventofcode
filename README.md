@@ -119,7 +119,7 @@ class PuzzleY2022D1 : Puzzle {
 
   companion object {
     fun testSomething() {
-      assertThat(mySum(1, 2)).isEqualTo(2)
+      assertThat(mySum(1, 2)).isEqualTo(3)
     }
 
     fun testSomethingElse() {
