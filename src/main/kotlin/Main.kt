@@ -95,17 +95,17 @@ private fun solve(year: Int, day: Int, levels: IntRange = (1..2)) {
         println("Answer: $it")
       }
     }
-    timed("$puzzleName Upload Answer $level") {
-      when (val result = client.uploadAnswer(year, day, level, answer).also { println(it) }) {
-        is AnswerResult.Correct -> {}
-        is AnswerResult.AlreadyAnswered -> check(result.answer.toString() == result.correctAnswer.toString())
-        is AnswerResult.Incorrect -> fail(result)
-        is AnswerResult.IncorrectTooLow -> fail(result)
-        is AnswerResult.IncorrectTooHigh -> fail(result)
-        is AnswerResult.AnsweredTooRecently -> fail(result)
-        is AnswerResult.Unknown -> fail(result)
-      }
-    }
+   timed("$puzzleName Upload Answer $level") {
+     when (val result = client.uploadAnswer(year, day, level, answer).also { println(it) }) {
+       is AnswerResult.Correct -> {}
+       is AnswerResult.AlreadyAnswered -> check(result.answer.toString() == result.correctAnswer.toString())
+       is AnswerResult.Incorrect -> fail(result)
+       is AnswerResult.IncorrectTooLow -> fail(result)
+       is AnswerResult.IncorrectTooHigh -> fail(result)
+       is AnswerResult.AnsweredTooRecently -> fail(result)
+       is AnswerResult.Unknown -> fail(result)
+     }
+   }
   }
 }
 

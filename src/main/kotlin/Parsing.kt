@@ -8,6 +8,14 @@ fun String.toChar(): Char {
   return first()
 }
 
+fun String.extractInts(): List<Int> {
+  return Regex("""((?<!\d)-)?\d+""").findAll(this).map { it.value.toInt() }.toList()
+}
+
+fun String.extractLongs(): List<Long> {
+  return Regex("""((?<!\d)-)?\d+""").findAll(this).map { it.value.toLong() }.toList()
+}
+
 fun <A> String.parse(a: (String) -> A) = lines().parse(a)
 
 fun <A, B> String.parse(a: (String) -> A, b: (String) -> B) = lines().parse(a, b)
