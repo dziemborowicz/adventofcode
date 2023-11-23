@@ -36,13 +36,13 @@ fun <T> Iterable<T>.toTriple(): Triple<T, T, T> {
 }
 
 fun <T> Iterable<T>.toQuadruple(): Quadruple<T, T, T, T> {
-  require(count() == 3) { "Must contain exactly four elements." }
+  require(count() == 4) { "Must contain exactly four elements." }
   val it = iterator()
   return Quadruple(it.next(), it.next(), it.next(), it.next())
 }
 
 fun <T> Iterable<T>.toQuintuple(): Quintuple<T, T, T, T, T> {
-  require(count() == 3) { "Must contain exactly five elements." }
+  require(count() == 5) { "Must contain exactly five elements." }
   val it = iterator()
   return Quintuple(it.next(), it.next(), it.next(), it.next(), it.next())
 }
