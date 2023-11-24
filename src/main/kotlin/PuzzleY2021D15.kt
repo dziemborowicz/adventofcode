@@ -11,7 +11,7 @@ class PuzzleY2021D15 : Puzzle {
   }
 
   override fun solve2(): Int {
-    val fullCavern = Grid(cavern.numRows * 5, cavern.numColumns * 5) { row, column ->
+    val fullCavern = Grid(cavern.numRows * 5, cavern.numColumns * 5) { (row, column) ->
       val increment = (row / cavern.numRows) + (column / cavern.numColumns)
       (cavern.getWrapped(row, column) + increment - 1).mod(9) + 1
     }
@@ -19,19 +19,17 @@ class PuzzleY2021D15 : Puzzle {
   }
 
   private fun solve(cavern: Grid<Int>): Int {
-    val minRisk = Grid(cavern.numRows, cavern.numColumns) { row, column ->
+    val minRisk = Grid(cavern.numRows, cavern.numColumns) { (row, column) ->
       (row * 9) + (column * 9) + 1
     }
 
-    fun visit(row: Int, column: Int, risk: Int) {
-      if (risk < minRisk[row, column]) {
-        minRisk[row, column] = risk
-        cavern.forEachAdjacentIndexed(row, column) { nextRow, nextColumn, nextRisk ->
-          visit(nextRow, nextColumn, risk + nextRisk)
-        }
+    fun visit(index: Index, risk: Int) {
+      if (risk < minRisk[index]) {
+        minRisk[index] = risk
+        cavern.forEachNeighborIndexed(index) { newIndex, value -> visit(newIndex, risk + value) }
       }
     }
-    visit(0, 0, 0)
+    visit(Index.ZERO, 0)
 
     return minRisk[cavern.numRows - 1, cavern.numColumns - 1]
   }

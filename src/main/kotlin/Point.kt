@@ -31,8 +31,13 @@ data class Point(val x: Int, val y: Int) {
 
   fun neighbors(): List<Point> = listOf(up(), right(), down(), left())
 
-  fun neighborsIncludingDiagonals(): List<Point> =
+  fun neighborsWithDiagonals(): List<Point> =
     listOf(up(), upRight(), right(), downRight(), down(), downLeft(), left(), upLeft())
+
+  fun neighborsIn(grid: Grid<*>): List<Point> = neighbors().filter { it in grid.points }
+
+  fun neighborsWithDiagonalsIn(grid: Grid<*>): List<Point> =
+    neighborsWithDiagonals().filter { it in grid.points }
 
   fun up(n: Int = 1): Point = Point(x, y + n)
 
@@ -102,14 +107,22 @@ data class Point(val x: Int, val y: Int) {
 
   infix fun isImmediatelyLeftOf(other: Point): Boolean = (x == other.x - 1) && (y == other.y)
 
-  infix fun isImmediatelyUpLeftOf(other: Point) = (x == other.x - 1) && (y == other.y + 1)
+  infix fun isImmediatelyUpLeftOf(other: Point): Boolean = (x == other.x - 1) && (y == other.y + 1)
 
   infix fun isNeighborOf(other: Point): Boolean = manhattanDistanceTo(other) == 1
 
-  infix fun isNeighborIncludingDiagonalsOf(other: Point): Boolean =
+  infix fun isNeighborWithDiagonalsOf(other: Point): Boolean =
     this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
+  fun toIndexIn(grid: Grid<*>): Index = Index(x, grid.numRows - 1 - y)
+
   override fun toString(): String = "($x,$y)"
+
+  fun wrappedIn(grid: Grid<*>): Point = Point(x.mod(grid.numColumns), y.mod(grid.numRows))
+
+  companion object {
+    val ZERO = Point(0, 0)
+  }
 }
 
 fun Point(pair: Pair<Int, Int>): Point = Point(pair.first, pair.second)
@@ -123,3 +136,5 @@ fun Point(string: String): Point {
 fun Pair<Int, Int>.toPoint(): Point = Point(this)
 
 fun String.toPoint(): Point = Point(this)
+
+infix fun Int.xy(y: Int): Point = Point(this, y)

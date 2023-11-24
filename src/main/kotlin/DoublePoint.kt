@@ -29,7 +29,7 @@ data class DoublePoint(val x: Double, val y: Double) {
 
   fun neighbors(): List<DoublePoint> = listOf(up(), right(), down(), left())
 
-  fun neighborsIncludingDiagonals(): List<DoublePoint> =
+  fun neighborsWithDiagonals(): List<DoublePoint> =
     listOf(up(), upRight(), right(), downRight(), down(), downLeft(), left(), upLeft())
 
   fun up(n: Double = 1.0): DoublePoint = DoublePoint(x, y + n)
@@ -86,7 +86,8 @@ data class DoublePoint(val x: Double, val y: Double) {
 
   infix fun isImmediatelyAbove(other: DoublePoint): Boolean = (x == other.x) && (y == other.y + 1)
 
-  infix fun isImmediatelyUpRightOf(other: DoublePoint): Boolean = (x == other.x + 1) && (y == other.y + 1)
+  infix fun isImmediatelyUpRightOf(other: DoublePoint): Boolean =
+    (x == other.x + 1) && (y == other.y + 1)
 
   infix fun isImmediatelyRightOf(other: DoublePoint): Boolean = (x == other.x + 1) && (y == other.y)
 
@@ -100,14 +101,19 @@ data class DoublePoint(val x: Double, val y: Double) {
 
   infix fun isImmediatelyLeftOf(other: DoublePoint): Boolean = (x == other.x - 1) && (y == other.y)
 
-  infix fun isImmediatelyUpLeftOf(other: DoublePoint) = (x == other.x - 1) && (y == other.y + 1)
+  infix fun isImmediatelyUpLeftOf(other: DoublePoint): Boolean =
+    (x == other.x - 1) && (y == other.y + 1)
 
   infix fun isNeighborOf(other: DoublePoint): Boolean = manhattanDistanceTo(other) == 1.0
 
-  infix fun isNeighborIncludingDiagonalsOf(other: DoublePoint): Boolean =
+  infix fun isNeighborWithDiagonalsOf(other: DoublePoint): Boolean =
     this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
   override fun toString(): String = "($x,$y)"
+
+  companion object {
+    val ZERO = DoublePoint(0.0, 0.0)
+  }
 }
 
 fun DoublePoint(pair: Pair<Double, Double>): DoublePoint = DoublePoint(pair.first, pair.second)
@@ -121,3 +127,5 @@ fun DoublePoint(string: String): DoublePoint {
 fun Pair<Double, Double>.toDoublePoint(): DoublePoint = DoublePoint(this)
 
 fun String.toDoublePoint(): DoublePoint = DoublePoint(this)
+
+infix fun Double.xy(y: Double): DoublePoint = DoublePoint(this, y)

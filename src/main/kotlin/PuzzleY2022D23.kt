@@ -5,7 +5,7 @@ import PuzzleY2022D23.Movement.NORTH
 import PuzzleY2022D23.Movement.SOUTH
 import PuzzleY2022D23.Movement.WEST
 
-typealias Elf = Grid.Index
+typealias Elf = Index
 
 class PuzzleY2022D23 : Puzzle {
 
@@ -77,7 +77,7 @@ class PuzzleY2022D23 : Puzzle {
 
   private enum class Movement(val checks: (Elf) -> List<Elf>, val move: (Elf) -> Elf) {
     DONE(
-      checks = { it.adjacentWithDiagonals() },
+      checks = { it.neighborsWithDiagonals() },
       move = { it },
     ),
     NORTH(

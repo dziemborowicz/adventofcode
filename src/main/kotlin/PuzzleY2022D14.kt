@@ -1,5 +1,3 @@
-import Grid.Index
-
 class PuzzleY2022D14 : Puzzle {
 
   private lateinit var cave: Grid<Char>

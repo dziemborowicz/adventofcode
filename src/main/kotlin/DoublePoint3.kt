@@ -31,10 +31,9 @@ data class DoublePoint3(val x: Double, val y: Double, val z: Double) {
 
   infix fun zDistanceTo(other: DoublePoint3): Double = abs(z - other.z)
 
-  fun neighbors(): List<DoublePoint3> =
-    neighborsIncludingDiagonals().filter { it isNeighborOf this }
+  fun neighbors(): List<DoublePoint3> = neighborsWithDiagonals().filter { it isNeighborOf this }
 
-  fun neighborsIncludingDiagonals(): List<DoublePoint3> {
+  fun neighborsWithDiagonals(): List<DoublePoint3> {
     return buildList(26) {
       for (dx in -1..1) {
         for (dy in -1..1) {
@@ -49,7 +48,7 @@ data class DoublePoint3(val x: Double, val y: Double, val z: Double) {
 
   infix fun isNeighborOf(other: DoublePoint3): Boolean = manhattanDistanceTo(other) == 1.0
 
-  infix fun isNeighborIncludingDiagonalsOf(other: DoublePoint3): Boolean =
+  infix fun isNeighborWithDiagonalsOf(other: DoublePoint3): Boolean =
     this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2 && zDistanceTo(other) < 2
 
   override fun toString(): String = "($x,$y,$z)"

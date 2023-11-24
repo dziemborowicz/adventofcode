@@ -1,3 +1,11 @@
+fun <T> List<T>.copy(): List<T> = toList()
+
+@JvmName("copyListOfList")
+fun <T> List<List<T>>.copy(): List<List<T>> = map { it.toList() }
+
+@JvmName("copyListOfListOfList")
+fun <T> List<List<List<T>>>.copy(): List<List<List<T>>> = map { it.copy() }
+
 fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
 
 fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)

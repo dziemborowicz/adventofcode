@@ -32,7 +32,7 @@ class PuzzleY2021D20 : Puzzle {
   }
 
   private fun Grid<Char>.enhance(padding: Char): Grid<Char> {
-    return Grid(numRows + 4, numColumns + 4) { row, column ->
+    return Grid(numRows + 4, numColumns + 4) { (row, column) ->
       val index = (row - 3..row - 1).flatMap { r ->
         (column - 3..column - 1).map { c -> getOrElse(r, c) { padding } }
       }.joinToString("") { if (it == '#') "1" else "0" }.toInt(2)

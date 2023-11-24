@@ -32,19 +32,19 @@ class PuzzleY2021D13 : Puzzle {
 
   override fun solve2(): String {
     val grid = folds.fold(grid) { grid, fold -> grid.fold(fold) }
-    println(grid.asImage())
+    println(grid.render())
     return "JZGUAPRB" // Note: The result must be interpreted visually for submission.
   }
 
   private fun Grid<Boolean>.fold(fold: Fold): Grid<Boolean> {
     return when (fold) {
       is FoldLeft -> {
-        Grid(this.numRows, fold.x) { row, column ->
+        Grid(this.numRows, fold.x) { (row, column) ->
           this[row, column] || this.getWrapped(row, -column - 1)
         }
       }
       is FoldUp -> {
-        Grid(fold.y, this.numColumns) { row, column ->
+        Grid(fold.y, this.numColumns) { (row, column) ->
           this[row, column] || this.getWrapped(-row - 1, column)
         }
       }

@@ -1,4 +1,3 @@
-import Grid.Index
 import PuzzleY2022D24.Cell.BLIZZARD_MOVING_DOWN
 import PuzzleY2022D24.Cell.BLIZZARD_MOVING_LEFT
 import PuzzleY2022D24.Cell.BLIZZARD_MOVING_RIGHT
@@ -30,8 +29,8 @@ class PuzzleY2022D24 : Puzzle {
     start = inputGrid.indices.first { inputGrid[it] == '.' }
     end = inputGrid.indices.last { inputGrid[it] == '.' }
 
-    blizzardsAtTime[0] = Grid(inputGrid.numRows, inputGrid.numColumns) { row, column ->
-      when (inputGrid[row, column]) {
+    blizzardsAtTime[0] = Grid(inputGrid.numRows, inputGrid.numColumns) {
+      when (inputGrid[it]) {
         '^' -> EnumSet.of(BLIZZARD_MOVING_UP)
         'v' -> EnumSet.of(BLIZZARD_MOVING_DOWN)
         '<' -> EnumSet.of(BLIZZARD_MOVING_LEFT)
@@ -60,7 +59,7 @@ class PuzzleY2022D24 : Puzzle {
       if (index == end) return time
       if (visited.add(index to time)) {
         val blizzards = blizzardsAtTime(time)
-        for (neighbor in index.adjacentIn(blizzards) + index) {
+        for (neighbor in index.neighborsIn(blizzards) + index) {
           if (blizzards[neighbor].isEmpty()) {
             queue.add(neighbor to (time + 1))
           }
@@ -71,22 +70,22 @@ class PuzzleY2022D24 : Puzzle {
   }
 
   private fun evolve(blizzards: Grid<EnumSet<Cell>>): Grid<EnumSet<Cell>> {
-    return Grid(blizzards.numRows, blizzards.numColumns) { row, column ->
-      if (WALL in blizzards[row, column]) {
-        return@Grid blizzards[row, column]
+    return Grid(blizzards.numRows, blizzards.numColumns) {index ->
+      if (WALL in blizzards[index]) {
+        return@Grid blizzards[index]
       }
 
       val cell = EnumSet.noneOf(Cell::class.java)
-      if (BLIZZARD_MOVING_UP in blizzards.firstNonWall(row, column) { it.down() }) {
+      if (BLIZZARD_MOVING_UP in blizzards.firstNonWall(index) { it.down() }) {
         cell.add(BLIZZARD_MOVING_UP)
       }
-      if (BLIZZARD_MOVING_DOWN in blizzards.firstNonWall(row, column) { it.up() }) {
+      if (BLIZZARD_MOVING_DOWN in blizzards.firstNonWall(index) { it.up() }) {
         cell.add(BLIZZARD_MOVING_DOWN)
       }
-      if (BLIZZARD_MOVING_LEFT in blizzards.firstNonWall(row, column) { it.right() }) {
+      if (BLIZZARD_MOVING_LEFT in blizzards.firstNonWall(index) { it.right() }) {
         cell.add(BLIZZARD_MOVING_LEFT)
       }
-      if (BLIZZARD_MOVING_RIGHT in blizzards.firstNonWall(row, column) { it.left() }) {
+      if (BLIZZARD_MOVING_RIGHT in blizzards.firstNonWall(index) { it.left() }) {
         cell.add(BLIZZARD_MOVING_RIGHT)
       }
       cell
@@ -94,15 +93,14 @@ class PuzzleY2022D24 : Puzzle {
   }
 
   private inline fun Grid<EnumSet<Cell>>.firstNonWall(
-    row: Int,
-    column: Int,
+    index: Index,
     direction: (Index) -> Index,
   ): EnumSet<Cell> {
-    var index = Index(row, column)
+    var current = index
     do {
-      index = direction(index)
-    } while (WALL in getWrapped(index))
-    return getWrapped(index)
+      current = direction(current)
+    } while (WALL in getWrapped(current))
+    return getWrapped(current)
   }
 
   companion object {

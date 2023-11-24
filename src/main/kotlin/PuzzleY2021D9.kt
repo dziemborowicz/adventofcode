@@ -17,16 +17,16 @@ class PuzzleY2021D9 : Puzzle {
       .sorted().takeLast(3).product()
   }
 
-  private fun Grid<Int>.isLowPoint(index: Grid.Index) =
-    getAdjacent(index).none { it <= this[index] }
+  private fun Grid<Int>.isLowPoint(index: Index) =
+    index.neighborsIn(this).none { this[it] <= this[index] }
 
-  private fun Grid<Int>.basinSize(lowPoint: Grid.Index): Int {
-    val basin = mutableSetOf<Grid.Index>()
+  private fun Grid<Int>.basinSize(lowPoint: Index): Int {
+    val basin = mutableSetOf<Index>()
     val queue = mutableListOf(lowPoint)
     while (queue.isNotEmpty()) {
       val index = queue.removeFirst()
       if (basin.add(index)) {
-        queue.addAll(index.adjacentIn(this).filter { this[it] > this[index] && this[it] < 9 })
+        queue.addAll(index.neighborsIn(this).filter { this[it] > this[index] && this[it] < 9 })
       }
     }
     return basin.size

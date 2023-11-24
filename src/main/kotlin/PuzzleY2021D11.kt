@@ -21,12 +21,12 @@ class PuzzleY2021D11 : Puzzle {
         yield(grid)
         grid = grid.copy()
         grid.indices.forEach { grid[it]++ }
-        val flashed = mutableSetOf<Grid.Index>()
+        val flashed = mutableSetOf<Index>()
         val queue = grid.indices.filter { grid[it] > 9 }.toMutableSet()
         while (queue.isNotEmpty()) {
           val index = queue.removeFirst()
           if (flashed.add(index)) {
-            index.adjacentWithDiagonalsIn(grid).forEach { grid[it]++ }
+            grid.forEachNeighborWithDiagonalsIndexed(index) { i, _ -> grid[i]++ }
             queue.addAll(grid.indices.filter { grid[it] > 9 })
           }
         }

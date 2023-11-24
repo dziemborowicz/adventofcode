@@ -1,4 +1,3 @@
-import Grid.Index
 import PuzzleY2022D22.Facing.DOWN
 import PuzzleY2022D22.Facing.LEFT
 import PuzzleY2022D22.Facing.RIGHT

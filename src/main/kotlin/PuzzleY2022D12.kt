@@ -1,5 +1,3 @@
-import Grid.Index
-
 class PuzzleY2022D12 : Puzzle {
 
   private lateinit var heightmap: Grid<Char>
@@ -28,7 +26,7 @@ class PuzzleY2022D12 : Puzzle {
       if (stepsSoFar < minStepsTo[index]) {
         minStepsTo[index] = stepsSoFar
         queue.addAll(
-          index.adjacentIn(heightmap)
+          index.neighborsIn(heightmap)
             .filter { heightmap[it] <= heightmap[index] + 1 }
             .map { it to (stepsSoFar + 1) }
         )

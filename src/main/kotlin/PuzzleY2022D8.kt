@@ -14,7 +14,7 @@ class PuzzleY2022D8 : Puzzle {
     return grid.indices.maxOf { scenicScore(it) }
   }
 
-  private fun isVisible(location: Grid.Index): Boolean {
+  private fun isVisible(location: Index): Boolean {
     val height = grid[location]
     return (0 until location.row).all { grid[it, location.column] < height } ||
       (location.row + 1 until grid.numRows).all { grid[it, location.column] < height } ||
@@ -22,7 +22,7 @@ class PuzzleY2022D8 : Puzzle {
       (location.column + 1 until grid.numColumns).all { grid[location.row, it] < height }
   }
 
-  private fun scenicScore(location: Grid.Index): Int {
+  private fun scenicScore(location: Index): Int {
     val height = grid[location.row, location.column]
 
     var countUp = 0

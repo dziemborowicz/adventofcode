@@ -35,9 +35,9 @@ data class Point3(val x: Int, val y: Int, val z: Int) {
 
   infix fun zDistanceTo(other: Point3): Int = abs(z - other.z)
 
-  fun neighbors(): List<Point3> = neighborsIncludingDiagonals().filter { it isNeighborOf this }
+  fun neighbors(): List<Point3> = neighborsWithDiagonals().filter { it isNeighborOf this }
 
-  fun neighborsIncludingDiagonals(): List<Point3> {
+  fun neighborsWithDiagonals(): List<Point3> {
     return buildList(26) {
       for (dx in -1..1) {
         for (dy in -1..1) {
@@ -52,7 +52,7 @@ data class Point3(val x: Int, val y: Int, val z: Int) {
 
   infix fun isNeighborOf(other: Point3): Boolean = manhattanDistanceTo(other) == 1
 
-  infix fun isNeighborIncludingDiagonalsOf(other: Point3): Boolean =
+  infix fun isNeighborWithDiagonalsOf(other: Point3): Boolean =
     this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2 && zDistanceTo(other) < 2
 
   override fun toString(): String = "($x,$y,$z)"

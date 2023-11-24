@@ -85,7 +85,7 @@ class PuzzleY2022D17 : Puzzle {
   }
 
   private fun Grid<Boolean>.isValidLocation(rock: Grid<Boolean>, offset: Point): Boolean {
-    rock.forEachIndexed { row, column, isSet ->
+    rock.forEachIndexed { (row, column), isSet ->
       if (isSet) {
         val x = column + offset.x
         val y = rock.numRows - row + 1 + offset.y
@@ -96,7 +96,7 @@ class PuzzleY2022D17 : Puzzle {
   }
 
   private fun Grid<Boolean>.place(rock: Grid<Boolean>, offset: Point) {
-    rock.forEachIndexed { row, column, isSet ->
+    rock.forEachIndexed { (row, column), isSet ->
       if (isSet) {
         val x = column + offset.x
         val y = rock.numRows - row + 1 + offset.y

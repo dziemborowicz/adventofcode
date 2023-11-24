@@ -31,7 +31,7 @@ data class LongPoint(val x: Long, val y: Long) {
 
   fun neighbors(): List<LongPoint> = listOf(up(), right(), down(), left())
 
-  fun neighborsIncludingDiagonals(): List<LongPoint> =
+  fun neighborsWithDiagonals(): List<LongPoint> =
     listOf(up(), upRight(), right(), downRight(), down(), downLeft(), left(), upLeft())
 
   fun up(n: Long = 1): LongPoint = LongPoint(x, y + n)
@@ -88,7 +88,8 @@ data class LongPoint(val x: Long, val y: Long) {
 
   infix fun isImmediatelyAbove(other: LongPoint): Boolean = (x == other.x) && (y == other.y + 1)
 
-  infix fun isImmediatelyUpRightOf(other: LongPoint): Boolean = (x == other.x + 1) && (y == other.y + 1)
+  infix fun isImmediatelyUpRightOf(other: LongPoint): Boolean =
+    (x == other.x + 1) && (y == other.y + 1)
 
   infix fun isImmediatelyRightOf(other: LongPoint): Boolean = (x == other.x + 1) && (y == other.y)
 
@@ -102,14 +103,19 @@ data class LongPoint(val x: Long, val y: Long) {
 
   infix fun isImmediatelyLeftOf(other: LongPoint): Boolean = (x == other.x - 1) && (y == other.y)
 
-  infix fun isImmediatelyUpLeftOf(other: LongPoint) = (x == other.x - 1) && (y == other.y + 1)
+  infix fun isImmediatelyUpLeftOf(other: LongPoint): Boolean =
+    (x == other.x - 1) && (y == other.y + 1)
 
   infix fun isNeighborOf(other: LongPoint): Boolean = manhattanDistanceTo(other) == 1L
 
-  infix fun isNeighborIncludingDiagonalsOf(other: LongPoint): Boolean =
+  infix fun isNeighborWithDiagonalsOf(other: LongPoint): Boolean =
     this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
   override fun toString(): String = "($x,$y)"
+
+  companion object {
+    val ZERO = LongPoint(0, 0)
+  }
 }
 
 fun LongPoint(pair: Pair<Long, Long>): LongPoint = LongPoint(pair.first, pair.second)
@@ -123,3 +129,5 @@ fun LongPoint(string: String): LongPoint {
 fun Pair<Long, Long>.toLongPoint(): LongPoint = LongPoint(this)
 
 fun String.toLongPoint(): LongPoint = LongPoint(this)
+
+infix fun Long.xy(y: Long): LongPoint = LongPoint(this, y)

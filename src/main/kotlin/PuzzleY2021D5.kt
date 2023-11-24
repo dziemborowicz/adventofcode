@@ -1,13 +1,13 @@
 class PuzzleY2021D5 : Puzzle {
 
-  private lateinit var lines: List<Pair<Grid.Index, Grid.Index>>
+  private lateinit var lines: List<Pair<Index, Index>>
   private var numRows = -1
   private var numColumns = -1
 
   override fun parse(input: String) {
     lines = input.lines().map {
       val (x1, y1, x2, y2) = it.split(" -> ").flatMap { it.split(',').map(String::toInt) }
-      Pair(Grid.Index(y1, x1), Grid.Index(y2, x2))
+      Pair(Index(y1, x1), Index(y2, x2))
     }
     numRows = lines.flatMap { listOf(it.first.row, it.second.row) }.max() + 1
     numColumns = lines.flatMap { listOf(it.first.column, it.second.column) }.max() + 1
@@ -27,18 +27,18 @@ class PuzzleY2021D5 : Puzzle {
     return floor.flatten().count { it > 1 }
   }
 
-  private fun markLine(floor: Grid<Int>, line: Pair<Grid.Index, Grid.Index>) {
+  private fun markLine(floor: Grid<Int>, line: Pair<Index, Index>) {
     var index = line.first
     floor[index] += 1
     do {
       index = when {
-        line.second.row > index.row -> Grid.Index(index.row + 1, index.column)
-        line.second.row < index.row -> Grid.Index(index.row - 1, index.column)
+        line.second.row > index.row -> Index(index.row + 1, index.column)
+        line.second.row < index.row -> Index(index.row - 1, index.column)
         else -> index
       }
       index = when {
-        line.second.column > index.column -> Grid.Index(index.row, index.column + 1)
-        line.second.column < index.column -> Grid.Index(index.row, index.column - 1)
+        line.second.column > index.column -> Index(index.row, index.column + 1)
+        line.second.column < index.column -> Index(index.row, index.column - 1)
         else -> index
       }
       floor[index] += 1

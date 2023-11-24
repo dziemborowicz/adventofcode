@@ -31,11 +31,11 @@ class PuzzleY2022D10 : Puzzle {
   }
 
   override fun solve2(): String {
-    val grid = Grid(6, 40) { row, column ->
+    val grid = Grid(6, 40) { (row, column) ->
       val sprite = cycles[(row * 40) + column + 1]
       column in sprite - 1..sprite + 1
     }
-    println(grid.asImage())
+    println(grid.render())
     return "PCPBKAPJ" // Note: The result must be interpreted visually for submission.
   }
 

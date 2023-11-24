@@ -49,8 +49,8 @@ class PuzzleY2021D4 : Puzzle {
   }
 
   private fun isWon(board: Grid<Int?>): Boolean {
-    if (board.anyRowAll { it == null }) return true
-    if (board.anyColumnAll { it == null }) return true
+    if (board.rows().any { it.all { it == null } }) return true
+    if (board.columns().any { it.all { it == null } }) return true
     return false
   }
 
