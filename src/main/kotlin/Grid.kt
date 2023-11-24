@@ -380,6 +380,8 @@ class Grid<T>(data: List<List<T>>) : Iterable<T> {
     fun longDistance(other: Index): Long = distance(other).toLong()
 
     fun manhattanDistance(other: Index): Int = abs(row - other.row) + abs(column - other.column)
+
+    fun wrappedIn(grid: Grid<*>): Index = Index(row.mod(grid.numRows), column.mod(grid.numColumns))
   }
 }
 

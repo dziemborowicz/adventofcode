@@ -64,6 +64,24 @@ infix fun IntRange.intersect(other: IntRange): IntRange =
 infix fun LongRange.intersect(other: LongRange): LongRange =
   maxOf(first, other.first)..minOf(last, other.last)
 
+fun Double.remap(from: DoubleRange, to: DoubleRange): Double {
+  check(this in from)
+  val steps = (this - from.start) / from.length
+  return to.start + (steps * to.length)
+}
+
+fun Int.remap(from: IntProgression, to: IntProgression): Int {
+  check(this in from && from.count() == to.count())
+  val steps = (this - from.first) / from.step
+  return to.first + (steps * to.step)
+}
+
+fun Long.remap(from: LongProgression, to: LongProgression): Long {
+  check(this in from && from.count() == to.count())
+  val steps = (this - from.first) / from.step
+  return to.first + (steps * to.step)
+}
+
 infix fun CharRange.unionOrNull(other: CharRange): CharRange? {
   val joined = minOf(first, other.first)..maxOf(last, other.last)
   return if (joined.count - other.count <= count) joined else null

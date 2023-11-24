@@ -243,6 +243,12 @@ inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Int): Int
 inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Long): Long =
   mapIndexed(selector).productOrOne()
 
+fun sqrt(x: Int): Int = sqrt(x.toDouble()).toInt()
+
+fun sqrt(x: Double): Double = kotlin.math.sqrt(x)
+
+fun sqrt(x: Float): Float = kotlin.math.sqrt(x)
+
 fun Iterable<BigDecimal>.sum(): BigDecimal = fold(BigDecimal.ZERO) { a, b -> a + b }
 
 fun Iterable<BigInteger>.sum(): BigInteger = fold(BigInteger.ZERO) { a, b -> a + b }
