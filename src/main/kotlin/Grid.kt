@@ -7,13 +7,7 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   val rowIndices: IntRange = 0..<numRows
   val columnIndices: IntRange = 0..<numColumns
   val indices: List<Index> by lazy(LazyThreadSafetyMode.NONE) {
-    val innerIndices = ArrayList<Index>(numRows * numColumns).also {
-      for (row in rowIndices) {
-        for (column in columnIndices) {
-          it.add(Index(row, column))
-        }
-      }
-    }
+    val innerIndices = List(numRows * numColumns) { Index(it / numColumns, it.mod(numColumns)) }
 
     object : List<Index> by innerIndices {
       override fun contains(element: Index): Boolean =
@@ -26,13 +20,7 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   val xIndices: IntRange = 0..<numColumns
   val yIndices: IntRange = 0..<numRows
   val points: List<Point> by lazy(LazyThreadSafetyMode.NONE) {
-    val innerPoints = ArrayList<Point>(numRows * numColumns).also {
-      for (row in rowIndices) {
-        for (column in columnIndices) {
-          it.add(Point(column, numRows - 1 - row))
-        }
-      }
-    }
+    val innerPoints = indices.map { it.toPointIn(this) }
 
     object : List<Point> by innerPoints {
       override fun contains(element: Point): Boolean =
@@ -42,11 +30,7 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
     }
   }
 
-  @PublishedApi internal val data: MutableList<T> = ArrayList<T>(numRows * numColumns).also {
-    for (index in indices) {
-      it.add(init(index))
-    }
-  }
+  @PublishedApi internal val data = MutableList(numRows * numColumns) { init(indices[it]) }
 
   inline fun all(predicate: (T) -> Boolean): Boolean = data.all(predicate)
 
@@ -64,25 +48,12 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   inline fun anyPointed(predicate: (Point, T) -> Boolean): Boolean =
     points.any { predicate(it, this[it]) }
 
-  fun columns(): List<List<T>> {
-    return ArrayList<List<T>>(numColumns).also {
-      for (column in columnIndices) {
-        it.add(ArrayList<T>(numRows).also {
-          for (row in rowIndices) {
-            it.add(get(row, column))
-          }
-        })
-      }
-    }
-  }
+  fun columns(): List<List<T>> =
+    List(numColumns) { column -> List(numRows) { row -> get(row, column) } }
 
   fun column(column: Int): List<T> {
     if (column !in columnIndices) throw IndexOutOfBoundsException("column")
-    return ArrayList<T>(numRows).also {
-      for (row in rowIndices) {
-        it.add(get(row, column))
-      }
-    }
+    return List(numRows) { row -> get(row, column) }
   }
 
   fun columnWrapped(column: Int): List<T> = column(column.mod(numColumns))
@@ -496,25 +467,12 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   inline fun <R> mapPointed(crossinline transform: (Point, T) -> R): Grid<R> =
     Grid(numRows, numColumns) { transform(it.toPointIn(this), this[it]) }
 
-  fun rows(): List<List<T>> {
-    return ArrayList<List<T>>(numRows).also {
-      for (row in rowIndices) {
-        it.add(ArrayList<T>(numColumns).also {
-          for (column in columnIndices) {
-            it.add(get(row, column))
-          }
-        })
-      }
-    }
-  }
+  fun rows(): List<List<T>> =
+    List(numRows) { row -> List(numColumns) { column -> get(row, column) } }
 
   fun row(row: Int): List<T> {
     if (row !in rowIndices) throw IndexOutOfBoundsException("row")
-    return ArrayList<T>(numColumns).also {
-      for (column in columnIndices) {
-        it.add(get(row, column))
-      }
-    }
+    return List(numColumns) { column -> get(row, column) }
   }
 
   fun rowWrapped(row: Int): List<T> = row(row.mod(numRows))
