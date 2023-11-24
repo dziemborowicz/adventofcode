@@ -1,3 +1,52 @@
+fun <T> Iterable<T>.combinations(length: Int): Sequence<List<T>> {
+  val pool = this as? List<T> ?: toList()
+  return sequence {
+    if (length > pool.size) return@sequence
+    val indices = IntArray(length) { it }
+    while (true) {
+      yield(indices.map { pool[it] })
+      var i = length
+      do {
+        i--
+        if (i == -1) return@sequence
+      } while (indices[i] == i + pool.size - length)
+      indices[i]++
+      for (j in i + 1..<length) {
+        indices[j] = indices[j - 1] + 1
+      }
+    }
+  }
+}
+
+fun <T> Iterable<T>.permutations(length: Int? = null): Sequence<List<T>> {
+  val pool = this as? List<T> ?: toList()
+  return sequence {
+    val r = length ?: pool.size
+    if (r > pool.size) return@sequence
+    val indices = IntArray(pool.size) { it }
+    val cycles = IntArray(r) { pool.size - it }
+    yield(indices.map { pool[it] })
+    if (pool.size == 0) return@sequence
+    cycle@ while (true) {
+      for (i in r - 1 downTo 0) {
+        cycles[i]--
+        if (cycles[i] == 0) {
+          val temp = indices[i]
+          for (j in i..<pool.size - 1) indices[j] = indices[j + 1]
+          indices[pool.size - 1] = temp
+          cycles[i] = pool.size - i
+        } else {
+          val j = pool.size - cycles[i]
+          indices[i] = indices[j].also { indices[j] = indices[i] }
+          yield(indices.map { pool[it] })
+          continue@cycle
+        }
+      }
+      return@sequence
+    }
+  }
+}
+
 fun <T> List<T>.copy(): List<T> = toList()
 
 @JvmName("copyListOfList")
