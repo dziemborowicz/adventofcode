@@ -111,6 +111,26 @@ infix fun Int.upOrDownTo(other: Int): IntProgression =
 infix fun Long.upOrDownTo(other: Long): LongProgression =
   if (other >= this) this..other else this downTo other
 
+fun List<Char>.toCharRange(): CharRange {
+  require(size == 2) { "Must contain exactly two elements." }
+  return this[0]..this[1]
+}
+
+fun List<Double>.toDoubleRange(): DoubleRange {
+  require(size == 2) { "Must contain exactly two elements." }
+  return this[0]..this[1]
+}
+
+fun List<Int>.toIntRange(): IntRange {
+  require(size == 2) { "Must contain exactly two elements." }
+  return this[0]..this[1]
+}
+
+fun List<Long>.toLongRange(): LongRange {
+  require(size == 2) { "Must contain exactly two elements." }
+  return this[0]..this[1]
+}
+
 fun String.toCharRange(): CharRange {
   val (from, to) = Regex("""([a-zA-Z])(?:\.\.|,|-|\s+)([a-zA-Z])""").matchEntire(this)?.destructured
     ?: throw IllegalArgumentException("Invalid format for range: $this")
@@ -120,16 +140,16 @@ fun String.toCharRange(): CharRange {
   return from.single()..to.single()
 }
 
+fun String.toDoubleRange(): DoubleRange {
+  val (from, to) = Regex("""(.+?)(?:\.\.|,|-|\s+)(.+?)""").matchEntire(this)?.destructured
+    ?: throw IllegalArgumentException("Invalid format for range: $this")
+  return from.toDouble()..to.toDouble()
+}
+
 fun String.toIntRange(): IntRange {
   val (from, to) = Regex("""(-?\d+)(?:\.\.|,|-|\s+)(-?\d+)""").matchEntire(this)?.destructured
     ?: throw IllegalArgumentException("Invalid format for range: $this")
   return from.toInt()..to.toInt()
-}
-
-fun String.toDoubleRange(): ClosedFloatingPointRange<Double> {
-  val (from, to) = Regex("""(.+?)(?:\.\.|,|-|\s+)(.+?)""").matchEntire(this)?.destructured
-    ?: throw IllegalArgumentException("Invalid format for range: $this")
-  return from.toDouble()..to.toDouble()
 }
 
 fun String.toLongRange(): LongRange {
