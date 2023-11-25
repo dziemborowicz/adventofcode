@@ -387,6 +387,14 @@ inline fun <T> Iterable<T>.splitBy(predicate: (T) -> Boolean): List<List<T>> {
   return result
 }
 
+fun <T> Iterable<Set<T>>.intersect() = reduce { a, b -> a intersect b }
+
+inline fun <T, U> Iterable<T>.intersectOf(selector: (T) -> Set<U>) = map(selector).intersect()
+
+fun <T> Iterable<Set<T>>.union() = fold(setOf<T>()) { a, b -> a union b }
+
+inline fun <T, U> Iterable<T>.unionOf(selector: (T) -> Set<U>) = map(selector).union()
+
 fun <T> dequeOf() = ArrayDeque<T>()
 
 fun <T> dequeOf(element: T) = ArrayDeque<T>().also { it.add(element) }
