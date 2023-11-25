@@ -55,6 +55,26 @@ fun <T> List<List<T>>.copy(): List<List<T>> = map { it.toList() }
 @JvmName("copyListOfListOfList")
 fun <T> List<List<List<T>>>.copy(): List<List<List<T>>> = map { it.copy() }
 
+fun <T> List<T>.dropLast(): List<T> = dropLast(1)
+
+inline fun <T> List<T>.firstIndexed(predicate: (Int, T) -> Boolean): T {
+  for (i in indices) {
+    if (predicate(i, this[i])) {
+      return this[i]
+    }
+  }
+  throw NoSuchElementException()
+}
+
+inline fun <T> List<T>.firstIndexedOrNull(predicate: (Int, T) -> Boolean): T? {
+  for (i in indices) {
+    if (predicate(i, this[i])) {
+      return this[i]
+    }
+  }
+  return null
+}
+
 fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
 
 fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)
@@ -87,6 +107,14 @@ fun <T> List<T>.middle(): T = this[middleIndex()]
 fun List<*>.middleIndex(): Int {
   require(size.isOdd) { "List must have an odd number of elements." }
   return size / 2
+}
+
+fun <T> List<T>.subList(indices: IntRange): List<T> {
+  return if (indices.step == 1) {
+    subList(indices.first, indices.last + 1)
+  } else {
+    indices.map { this[it] }
+  }
 }
 
 inline fun <K, V> MutableMap<K, V>.computeInline(key: K, remappingFunction: (K, V?) -> V?): V? {
