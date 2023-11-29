@@ -114,7 +114,20 @@ data class LongPoint(val x: Long, val y: Long) {
   override fun toString(): String = "($x,$y)"
 
   companion object {
-    val ZERO = LongPoint(0, 0)
+    val ZERO = LongPoint(0L, 0L)
+
+    val UP = LongPoint(0L, 1L)
+    val UP_RIGHT = LongPoint(1L, 1L)
+    val RIGHT = LongPoint(1L, 0L)
+    val DOWN_RIGHT = LongPoint(1L, -1L)
+    val DOWN = LongPoint(0L, -1L)
+    val DOWN_LEFT = LongPoint(-1L, -1L)
+    val LEFT = LongPoint(-1L, 0L)
+    val UP_LEFT = LongPoint(-1L, 1L)
+
+    val DIRECTIONS = listOf(UP, RIGHT, DOWN, LEFT)
+    val DIRECTIONS_WITH_DIAGONALS =
+      listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
   }
 }
 

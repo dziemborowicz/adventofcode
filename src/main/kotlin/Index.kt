@@ -131,6 +131,19 @@ data class Index(val row: Int, val column: Int) {
 
   companion object {
     val ZERO = Index(0, 0)
+
+    val UP = Index(-1, 0)
+    val UP_RIGHT = Index(-1, 1)
+    val RIGHT = Index(0, 1)
+    val DOWN_RIGHT = Index(1, 1)
+    val DOWN = Index(1, 0)
+    val DOWN_LEFT = Index(1, -1)
+    val LEFT = Index(0, -1)
+    val UP_LEFT = Index(-1, -1)
+
+    val DIRECTIONS = listOf(UP, RIGHT, DOWN, LEFT)
+    val DIRECTIONS_WITH_DIAGONALS =
+      listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
   }
 }
 

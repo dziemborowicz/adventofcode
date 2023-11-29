@@ -113,6 +113,19 @@ data class DoublePoint(val x: Double, val y: Double) {
 
   companion object {
     val ZERO = DoublePoint(0.0, 0.0)
+
+    val UP = DoublePoint(0.0, 1.0)
+    val UP_RIGHT = DoublePoint(1.0, 1.0)
+    val RIGHT = DoublePoint(1.0, 0.0)
+    val DOWN_RIGHT = DoublePoint(1.0, -1.0)
+    val DOWN = DoublePoint(0.0, -1.0)
+    val DOWN_LEFT = DoublePoint(-1.0, -1.0)
+    val LEFT = DoublePoint(-1.0, 0.0)
+    val UP_LEFT = DoublePoint(-1.0, 1.0)
+
+    val DIRECTIONS = listOf(UP, RIGHT, DOWN, LEFT)
+    val DIRECTIONS_WITH_DIAGONALS =
+      listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
   }
 }
 
