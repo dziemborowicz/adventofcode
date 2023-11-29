@@ -12,6 +12,10 @@ data class Index(val row: Int, val column: Int) {
 
   operator fun div(other: Index): Index = Index(row / other.row, column / other.column)
 
+  operator fun times(other: Int): Index = Index(row * other, column * other)
+
+  operator fun div(other: Int): Index = Index(row / other, column / other)
+
   fun translate(other: Index): Index = translate(other.row, other.column)
 
   fun translate(dRow: Int, dColumn: Int): Index = Index(row + dRow, column + dColumn)
@@ -31,6 +35,18 @@ data class Index(val row: Int, val column: Int) {
   infix fun rowDistanceTo(other: Index): Int = abs(row - other.row)
 
   infix fun columnDistanceTo(other: Index): Int = abs(column - other.column)
+
+  fun rotateClockwise(times: Int = 1): Index {
+    return when (times.mod(4)) {
+      0 -> this
+      1 -> Index(column, -row)
+      2 -> Index(-row, -column)
+      3 -> Index(-column, row)
+      else -> fail()
+    }
+  }
+
+  fun rotateCounterclockwise(times: Int = 1): Index = rotateClockwise(-times)
 
   fun neighbors(): List<Index> = listOf(up(), right(), down(), left())
 
@@ -146,6 +162,8 @@ data class Index(val row: Int, val column: Int) {
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
   }
 }
+
+operator fun Int.times(other: Index): Index = Index(this * other.row, this * other.column)
 
 fun Index(pair: Pair<Int, Int>): Index = Index(pair.first, pair.second)
 

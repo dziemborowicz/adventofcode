@@ -14,6 +14,18 @@ data class DoublePoint3(val x: Double, val y: Double, val z: Double) {
   operator fun div(other: DoublePoint3): DoublePoint3 =
     DoublePoint3(x / other.x, y / other.y, z / other.z)
 
+  operator fun times(other: Int): DoublePoint3 = DoublePoint3(x * other, y * other, z * other)
+
+  operator fun div(other: Int): DoublePoint3 = DoublePoint3(x / other, y / other, z / other)
+
+  operator fun times(other: Long): DoublePoint3 = DoublePoint3(x * other, y * other, z * other)
+
+  operator fun div(other: Long): DoublePoint3 = DoublePoint3(x / other, y / other, z / other)
+
+  operator fun times(other: Double): DoublePoint3 = DoublePoint3(x * other, y * other, z * other)
+
+  operator fun div(other: Double): DoublePoint3 = DoublePoint3(x / other, y / other, z / other)
+
   fun translate(other: DoublePoint3): DoublePoint3 = translate(other.x, other.y, other.z)
 
   fun translate(dx: Double, dy: Double, dz: Double): DoublePoint3 =
@@ -53,6 +65,15 @@ data class DoublePoint3(val x: Double, val y: Double, val z: Double) {
 
   override fun toString(): String = "($x,$y,$z)"
 }
+
+operator fun Int.times(other: DoublePoint3): DoublePoint3 =
+  DoublePoint3(this * other.x, this * other.y, this * other.z)
+
+operator fun Long.times(other: DoublePoint3): DoublePoint3 =
+  DoublePoint3(this * other.x, this * other.y, this * other.z)
+
+operator fun Double.times(other: DoublePoint3): DoublePoint3 =
+  DoublePoint3(this * other.x, this * other.y, this * other.z)
 
 fun DoublePoint3(triple: Triple<Double, Double, Double>): DoublePoint3 =
   DoublePoint3(triple.first, triple.second, triple.third)

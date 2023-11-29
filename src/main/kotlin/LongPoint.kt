@@ -12,6 +12,14 @@ data class LongPoint(val x: Long, val y: Long) {
 
   operator fun div(other: LongPoint): LongPoint = LongPoint(x / other.x, y / other.y)
 
+  operator fun times(other: Int): LongPoint = LongPoint(x * other, y * other)
+
+  operator fun div(other: Int): LongPoint = LongPoint(x / other, y / other)
+
+  operator fun times(other: Long): LongPoint = LongPoint(x * other, y * other)
+
+  operator fun div(other: Long): LongPoint = LongPoint(x / other, y / other)
+
   fun translate(other: LongPoint): LongPoint = translate(other.x, other.y)
 
   fun translate(dx: Long, dy: Long): LongPoint = LongPoint(x + dx, y + dy)
@@ -28,6 +36,18 @@ data class LongPoint(val x: Long, val y: Long) {
   infix fun xDistanceTo(other: LongPoint): Long = abs(x - other.x)
 
   infix fun yDistanceTo(other: LongPoint): Long = abs(y - other.y)
+
+  fun rotateClockwise(times: Int = 1): LongPoint {
+    return when (times.mod(4)) {
+      0 -> this
+      1 -> LongPoint(y, -x)
+      2 -> LongPoint(-x, -y)
+      3 -> LongPoint(-y, x)
+      else -> fail()
+    }
+  }
+
+  fun rotateCounterclockwise(times: Int = 1): LongPoint = rotateClockwise(-times)
 
   fun neighbors(): List<LongPoint> = listOf(up(), right(), down(), left())
 
@@ -130,6 +150,10 @@ data class LongPoint(val x: Long, val y: Long) {
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
   }
 }
+
+operator fun Int.times(other: LongPoint): LongPoint = LongPoint(this * other.x, this * other.y)
+
+operator fun Long.times(other: LongPoint): LongPoint = LongPoint(this * other.x, this * other.y)
 
 fun LongPoint(pair: Pair<Long, Long>): LongPoint = LongPoint(pair.first, pair.second)
 

@@ -14,6 +14,14 @@ data class LongPoint3(val x: Long, val y: Long, val z: Long) {
   operator fun div(other: LongPoint3): LongPoint3 =
     LongPoint3(x / other.x, y / other.y, z / other.z)
 
+  operator fun times(other: Int): LongPoint3 = LongPoint3(x * other, y * other, z * other)
+
+  operator fun div(other: Int): LongPoint3 = LongPoint3(x / other, y / other, z / other)
+
+  operator fun times(other: Long): LongPoint3 = LongPoint3(x * other, y * other, z * other)
+
+  operator fun div(other: Long): LongPoint3 = LongPoint3(x / other, y / other, z / other)
+
   fun translate(other: LongPoint3): LongPoint3 = translate(other.x, other.y, other.z)
 
   fun translate(dx: Long, dy: Long, dz: Long): LongPoint3 = LongPoint3(x + dx, y + dy, z + dz)
@@ -59,6 +67,12 @@ data class LongPoint3(val x: Long, val y: Long, val z: Long) {
 
   override fun toString(): String = "($x,$y,$z)"
 }
+
+operator fun Int.times(other: LongPoint3): LongPoint3 =
+  LongPoint3(this * other.x, this * other.y, this * other.z)
+
+operator fun Long.times(other: LongPoint3): LongPoint3 =
+  LongPoint3(this * other.x, this * other.y, this * other.z)
 
 fun LongPoint3(triple: Triple<Long, Long, Long>): LongPoint3 =
   LongPoint3(triple.first, triple.second, triple.third)

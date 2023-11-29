@@ -12,6 +12,18 @@ data class DoublePoint(val x: Double, val y: Double) {
 
   operator fun div(other: DoublePoint): DoublePoint = DoublePoint(x / other.x, y / other.y)
 
+  operator fun times(other: Int): DoublePoint = DoublePoint(x * other, y * other)
+
+  operator fun div(other: Int): DoublePoint = DoublePoint(x / other, y / other)
+
+  operator fun times(other: Long): DoublePoint = DoublePoint(x * other, y * other)
+
+  operator fun div(other: Long): DoublePoint = DoublePoint(x / other, y / other)
+
+  operator fun times(other: Double): DoublePoint = DoublePoint(x * other, y * other)
+
+  operator fun div(other: Double): DoublePoint = DoublePoint(x / other, y / other)
+
   fun translate(other: DoublePoint): DoublePoint = translate(other.x, other.y)
 
   fun translate(dx: Double, dy: Double): DoublePoint = DoublePoint(x + dx, y + dy)
@@ -26,6 +38,18 @@ data class DoublePoint(val x: Double, val y: Double) {
   infix fun xDistanceTo(other: DoublePoint): Double = abs(x - other.x)
 
   infix fun yDistanceTo(other: DoublePoint): Double = abs(y - other.y)
+
+  fun rotateClockwise(times: Int = 1): DoublePoint {
+    return when (times.mod(4)) {
+      0 -> this
+      1 -> DoublePoint(y, -x)
+      2 -> DoublePoint(-x, -y)
+      3 -> DoublePoint(-y, x)
+      else -> fail()
+    }
+  }
+
+  fun rotateCounterclockwise(times: Int = 1): DoublePoint = rotateClockwise(-times)
 
   fun neighbors(): List<DoublePoint> = listOf(up(), right(), down(), left())
 
@@ -128,6 +152,15 @@ data class DoublePoint(val x: Double, val y: Double) {
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
   }
 }
+
+operator fun Int.times(other: DoublePoint): DoublePoint =
+  DoublePoint(this * other.x, this * other.y)
+
+operator fun Long.times(other: DoublePoint): DoublePoint =
+  DoublePoint(this * other.x, this * other.y)
+
+operator fun Double.times(other: DoublePoint): DoublePoint =
+  DoublePoint(this * other.x, this * other.y)
 
 fun DoublePoint(pair: Pair<Double, Double>): DoublePoint = DoublePoint(pair.first, pair.second)
 

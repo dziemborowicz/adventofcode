@@ -12,6 +12,10 @@ data class Point3(val x: Int, val y: Int, val z: Int) {
 
   operator fun div(other: Point3): Point3 = Point3(x / other.x, y / other.y, z / other.z)
 
+  operator fun times(other: Int): Point3 = Point3(x * other, y * other, z * other)
+
+  operator fun div(other: Int): Point3 = Point3(x / other, y / other, z / other)
+
   fun translate(other: Point3): Point3 = translate(other.x, other.y, other.z)
 
   fun translate(dx: Int, dy: Int, dz: Int): Point3 = Point3(x + dx, y + dy, z + dz)
@@ -57,6 +61,9 @@ data class Point3(val x: Int, val y: Int, val z: Int) {
 
   override fun toString(): String = "($x,$y,$z)"
 }
+
+operator fun Int.times(other: Point3): Point3 =
+  Point3(this * other.x, this * other.y, this * other.z)
 
 fun Point3(triple: Triple<Int, Int, Int>): Point3 =
   Point3(triple.first, triple.second, triple.third)

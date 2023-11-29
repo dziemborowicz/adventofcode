@@ -12,6 +12,10 @@ data class Point(val x: Int, val y: Int) {
 
   operator fun div(other: Point): Point = Point(x / other.x, y / other.y)
 
+  operator fun times(other: Int): Point = Point(x * other, y * other)
+
+  operator fun div(other: Int): Point = Point(x / other, y / other)
+
   fun translate(other: Point): Point = translate(other.x, other.y)
 
   fun translate(dx: Int, dy: Int): Point = Point(x + dx, y + dy)
@@ -28,6 +32,18 @@ data class Point(val x: Int, val y: Int) {
   infix fun xDistanceTo(other: Point): Int = abs(x - other.x)
 
   infix fun yDistanceTo(other: Point): Int = abs(y - other.y)
+
+  fun rotateClockwise(times: Int = 1): Point {
+    return when (times.mod(4)) {
+      0 -> this
+      1 -> Point(y, -x)
+      2 -> Point(-x, -y)
+      3 -> Point(-y, x)
+      else -> fail()
+    }
+  }
+
+  fun rotateCounterclockwise(times: Int = 1): Point = rotateClockwise(-times)
 
   fun neighbors(): List<Point> = listOf(up(), right(), down(), left())
 
@@ -137,6 +153,8 @@ data class Point(val x: Int, val y: Int) {
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
   }
 }
+
+operator fun Int.times(other: Point): Point = Point(this * other.x, this * other.y)
 
 fun Point(pair: Pair<Int, Int>): Point = Point(pair.first, pair.second)
 
