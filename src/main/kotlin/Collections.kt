@@ -102,6 +102,11 @@ inline fun <T> Iterable<T>.indexOfSingle(predicate: (T) -> Boolean): Int {
 inline fun <T> Iterable<T>.indexOfSingleOrThrow(predicate: (T) -> Boolean): Int =
   indexOfSingle(predicate).also { if (it == -1) throw NoSuchElementException() }
 
+fun <T> List<T>.indicesOf(element: T): List<Int> = indicesOf { it == element }
+
+inline fun <T> List<T>.indicesOf(predicate: (T) -> Boolean): List<Int> =
+  indices.filter { predicate(this[it]) }
+
 fun <T> List<T>.middle(): T = this[middleIndex()]
 
 fun List<*>.middleIndex(): Int {
