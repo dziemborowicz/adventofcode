@@ -107,6 +107,18 @@ fun <T> List<T>.indicesOf(element: T): List<Int> = indicesOf { it == element }
 inline fun <T> List<T>.indicesOf(predicate: (T) -> Boolean): List<Int> =
   indices.filter { predicate(this[it]) }
 
+inline fun <R : Any> CharSequence.lastNotNullOf(transform: (Char) -> R?): R =
+  reversed().firstNotNullOf(transform)
+
+inline fun <R : Any> CharSequence.lastNotNullOfOrNull(transform: (Char) -> R?): R? =
+  reversed().firstNotNullOfOrNull(transform)
+
+inline fun <T, R : Any> Iterable<T>.lastNotNullOf(transform: (T) -> R?): R =
+  reversed().firstNotNullOf(transform)
+
+inline fun <T, R : Any> Iterable<T>.lastNotNullOfOrNull(transform: (T) -> R?): R? =
+  reversed().firstNotNullOfOrNull(transform)
+
 fun <T> List<T>.middle(): T = this[middleIndex()]
 
 fun List<*>.middleIndex(): Int {
