@@ -108,10 +108,12 @@ class LongRangeSet : MutableSet<Long> {
           ranges[i] = intersection.last + 1..ranges[i].last
           i++
         }
+
         intersection.last == ranges[i].last -> {
           ranges[i] = ranges[i].first..intersection.first - 1
           i++
         }
+
         else -> {
           val first = ranges[i].first..intersection.first - 1
           val second = intersection.last + 1..ranges[i].last
@@ -172,24 +174,114 @@ class LongRangeSet : MutableSet<Long> {
   infix fun intersect(other: LongRangeSet): LongRangeSet =
     LongRangeSet(this).also { it.retainAll(other) }
 
-  infix fun subtract(other: Long): LongRangeSet =
+  fun max(): Long = ranges.last().last
+
+  fun maxOrNull(): Long? = ranges.lastOrNull()?.last
+
+  fun min(): Long = ranges.first().first
+
+  fun minOrNull(): Long? = ranges.firstOrNull()?.first
+
+  operator fun minusAssign(other: Long) {
+    remove(other)
+  }
+
+  operator fun minusAssign(other: Collection<Long>) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: LongRange) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: Iterable<Long>) {
+    removeAll(other)
+  }
+
+  @JvmName("minusAssignLongRangeIterable")
+  operator fun minusAssign(other: Iterable<LongRange>) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: LongRangeSet) {
+    removeAll(other)
+  }
+
+  operator fun minus(other: Long): LongRangeSet =
     LongRangeSet(this).also { it.remove(other) }
 
-  infix fun subtract(other: Collection<Long>): LongRangeSet =
+  operator fun minus(other: Collection<Long>): LongRangeSet =
     LongRangeSet(this).also { it.removeAll(other) }
 
-  infix fun subtract(other: LongRange): LongRangeSet =
+  operator fun minus(other: LongRange): LongRangeSet =
     LongRangeSet(this).also { it.removeAll(other) }
 
-  infix fun subtract(other: Iterable<Long>): LongRangeSet =
+  operator fun minus(other: Iterable<Long>): LongRangeSet =
     LongRangeSet(this).also { it.removeAll(other) }
+
+  @JvmName("minusLongRangeIterable")
+  operator fun minus(other: Iterable<LongRange>): LongRangeSet =
+    LongRangeSet(this).also { it.removeAll(other) }
+
+  operator fun minus(other: LongRangeSet): LongRangeSet =
+    LongRangeSet(this).also { it.removeAll(other) }
+
+  operator fun plusAssign(other: Long) {
+    add(other)
+  }
+
+  operator fun plusAssign(other: Collection<Long>) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: LongRange) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: Iterable<Long>) {
+    addAll(other)
+  }
+
+  @JvmName("plusAssignLongRangeIterable")
+  operator fun plusAssign(other: Iterable<LongRange>) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: LongRangeSet) {
+    addAll(other)
+  }
+
+  operator fun plus(other: Long): LongRangeSet =
+    LongRangeSet(this).also { it.add(other) }
+
+  operator fun plus(other: Collection<Long>): LongRangeSet =
+    LongRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: LongRange): LongRangeSet =
+    LongRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: Iterable<Long>): LongRangeSet =
+    LongRangeSet(this).also { it.addAll(other) }
+
+  @JvmName("plusLongRangeIterable")
+  operator fun plus(other: Iterable<LongRange>): LongRangeSet =
+    LongRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: LongRangeSet): LongRangeSet =
+    LongRangeSet(this).also { it.addAll(other) }
+
+  infix fun subtract(other: Long): LongRangeSet = this - other
+
+  infix fun subtract(other: Collection<Long>): LongRangeSet = this - other
+
+  infix fun subtract(other: LongRange): LongRangeSet = this - other
+
+  infix fun subtract(other: Iterable<Long>): LongRangeSet = this - other
 
   @JvmName("subtractLongRangeIterable")
-  infix fun subtract(other: Iterable<LongRange>): LongRangeSet =
-    LongRangeSet(this).also { it.removeAll(other) }
+  infix fun subtract(other: Iterable<LongRange>): LongRangeSet = this - other
 
-  infix fun subtract(other: LongRangeSet): LongRangeSet =
-    LongRangeSet(this).also { it.removeAll(other) }
+  infix fun subtract(other: LongRangeSet): LongRangeSet = this - other
 
   infix fun union(other: Long): LongRangeSet =
     LongRangeSet(this).also { it.add(other) }
@@ -206,6 +298,10 @@ class LongRangeSet : MutableSet<Long> {
   @JvmName("unionLongRangeIterable")
   infix fun union(other: Iterable<LongRange>): LongRangeSet =
     LongRangeSet(this).also { it.addAll(other) }
+
+  @JvmName("unionLongRangeSetIterable")
+  infix fun union(other: Iterable<LongRangeSet>): LongRangeSet =
+    LongRangeSet(this).also { set -> other.forEach { set.addAll(it) } }
 
   infix fun union(other: LongRangeSet): LongRangeSet =
     LongRangeSet(this).also { it.addAll(other) }
@@ -236,8 +332,31 @@ fun LongRangeSet(elements: Iterable<Long>): LongRangeSet =
 fun LongRangeSet(elements: Iterable<LongRange>): LongRangeSet =
   LongRangeSet().also { it.addAll(elements) }
 
+@JvmName("LongRangeSetOfLongRangeSetIterable")
+fun LongRangeSet(elements: Iterable<LongRangeSet>): LongRangeSet =
+  LongRangeSet().also { set -> elements.forEach { set.addAll(it) } }
+
 fun LongRangeSet(elements: LongRangeSet): LongRangeSet =
   LongRangeSet().also { it.addAll(elements) }
+
+fun Long.toLongRangeSet(): LongRangeSet =
+  LongRangeSet().also { it.add(this) }
+
+fun Collection<Long>.toLongRangeSet(): LongRangeSet =
+  LongRangeSet().also { it.addAll(this) }
+
+fun LongRange.toLongRangeSet(): LongRangeSet =
+  LongRangeSet().also { it.addAll(this) }
+
+fun Iterable<Long>.toLongRangeSet(): LongRangeSet =
+  LongRangeSet().also { it.addAll(this) }
+
+@JvmName("LongRangeIterableToLongRangeSet")
+fun Iterable<LongRange>.toLongRangeSet(): LongRangeSet =
+  LongRangeSet().also { it.addAll(this) }
+
+fun LongRangeSet.toLongRangeSet(): LongRangeSet =
+  LongRangeSet().also { it.addAll(this) }
 
 infix fun LongRange.intersect(other: Long): LongRangeSet =
   LongRangeSet(this).also { it.retain(other) }
@@ -248,7 +367,7 @@ infix fun LongRange.intersect(other: Collection<Long>): LongRangeSet =
 infix fun LongRange.intersect(other: Iterable<Long>): LongRangeSet =
   LongRangeSet(this).also { it.retainAll(other) }
 
-@JvmName("LongRangeLongersectWithLongRangeIterable")
+@JvmName("LongRangeIntersectWithLongRangeIterable")
 infix fun LongRange.intersect(other: Iterable<LongRange>): LongRangeSet =
   LongRangeSet(this).also { it.retainAll(other) }
 
@@ -370,3 +489,11 @@ infix fun Iterable<Long>.union(other: LongRangeSet): LongRangeSet =
 @JvmName("LongRangeIterableUnionWithLongRangeSet")
 infix fun Iterable<LongRange>.union(other: LongRangeSet): LongRangeSet =
   LongRangeSet(this).also { it.addAll(other) }
+
+@JvmName("LongRangeIterableUnion")
+fun Iterable<LongRange>.union(): LongRangeSet =
+  LongRangeSet(this)
+
+@JvmName("LongRangeSetIterableUnion")
+fun Iterable<LongRangeSet>.union(): LongRangeSet =
+  LongRangeSet(this)

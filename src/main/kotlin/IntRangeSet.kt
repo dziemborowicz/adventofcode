@@ -106,10 +106,12 @@ class IntRangeSet : MutableSet<Int> {
           ranges[i] = intersection.last + 1..ranges[i].last
           i++
         }
+
         intersection.last == ranges[i].last -> {
           ranges[i] = ranges[i].first..intersection.first - 1
           i++
         }
+
         else -> {
           val first = ranges[i].first..intersection.first - 1
           val second = intersection.last + 1..ranges[i].last
@@ -170,24 +172,114 @@ class IntRangeSet : MutableSet<Int> {
   infix fun intersect(other: IntRangeSet): IntRangeSet =
     IntRangeSet(this).also { it.retainAll(other) }
 
-  infix fun subtract(other: Int): IntRangeSet =
+  fun max(): Int = ranges.last().last
+
+  fun maxOrNull(): Int? = ranges.lastOrNull()?.last
+
+  fun min(): Int = ranges.first().first
+
+  fun minOrNull(): Int? = ranges.firstOrNull()?.first
+
+  operator fun minusAssign(other: Int) {
+    remove(other)
+  }
+
+  operator fun minusAssign(other: Collection<Int>) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: IntRange) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: Iterable<Int>) {
+    removeAll(other)
+  }
+
+  @JvmName("minusAssignIntRangeIterable")
+  operator fun minusAssign(other: Iterable<IntRange>) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: IntRangeSet) {
+    removeAll(other)
+  }
+
+  operator fun minus(other: Int): IntRangeSet =
     IntRangeSet(this).also { it.remove(other) }
 
-  infix fun subtract(other: Collection<Int>): IntRangeSet =
+  operator fun minus(other: Collection<Int>): IntRangeSet =
     IntRangeSet(this).also { it.removeAll(other) }
 
-  infix fun subtract(other: IntRange): IntRangeSet =
+  operator fun minus(other: IntRange): IntRangeSet =
     IntRangeSet(this).also { it.removeAll(other) }
 
-  infix fun subtract(other: Iterable<Int>): IntRangeSet =
+  operator fun minus(other: Iterable<Int>): IntRangeSet =
     IntRangeSet(this).also { it.removeAll(other) }
+
+  @JvmName("minusIntRangeIterable")
+  operator fun minus(other: Iterable<IntRange>): IntRangeSet =
+    IntRangeSet(this).also { it.removeAll(other) }
+
+  operator fun minus(other: IntRangeSet): IntRangeSet =
+    IntRangeSet(this).also { it.removeAll(other) }
+
+  operator fun plusAssign(other: Int) {
+    add(other)
+  }
+
+  operator fun plusAssign(other: Collection<Int>) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: IntRange) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: Iterable<Int>) {
+    addAll(other)
+  }
+
+  @JvmName("plusAssignIntRangeIterable")
+  operator fun plusAssign(other: Iterable<IntRange>) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: IntRangeSet) {
+    addAll(other)
+  }
+
+  operator fun plus(other: Int): IntRangeSet =
+    IntRangeSet(this).also { it.add(other) }
+
+  operator fun plus(other: Collection<Int>): IntRangeSet =
+    IntRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: IntRange): IntRangeSet =
+    IntRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: Iterable<Int>): IntRangeSet =
+    IntRangeSet(this).also { it.addAll(other) }
+
+  @JvmName("plusIntRangeIterable")
+  operator fun plus(other: Iterable<IntRange>): IntRangeSet =
+    IntRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: IntRangeSet): IntRangeSet =
+    IntRangeSet(this).also { it.addAll(other) }
+
+  infix fun subtract(other: Int): IntRangeSet = this - other
+
+  infix fun subtract(other: Collection<Int>): IntRangeSet = this - other
+
+  infix fun subtract(other: IntRange): IntRangeSet = this - other
+
+  infix fun subtract(other: Iterable<Int>): IntRangeSet = this - other
 
   @JvmName("subtractIntRangeIterable")
-  infix fun subtract(other: Iterable<IntRange>): IntRangeSet =
-    IntRangeSet(this).also { it.removeAll(other) }
+  infix fun subtract(other: Iterable<IntRange>): IntRangeSet = this - other
 
-  infix fun subtract(other: IntRangeSet): IntRangeSet =
-    IntRangeSet(this).also { it.removeAll(other) }
+  infix fun subtract(other: IntRangeSet): IntRangeSet = this - other
 
   infix fun union(other: Int): IntRangeSet =
     IntRangeSet(this).also { it.add(other) }
@@ -204,6 +296,10 @@ class IntRangeSet : MutableSet<Int> {
   @JvmName("unionIntRangeIterable")
   infix fun union(other: Iterable<IntRange>): IntRangeSet =
     IntRangeSet(this).also { it.addAll(other) }
+
+  @JvmName("unionIntRangeSetIterable")
+  infix fun union(other: Iterable<IntRangeSet>): IntRangeSet =
+    IntRangeSet(this).also { set -> other.forEach { set.addAll(it) } }
 
   infix fun union(other: IntRangeSet): IntRangeSet =
     IntRangeSet(this).also { it.addAll(other) }
@@ -234,8 +330,31 @@ fun IntRangeSet(elements: Iterable<Int>): IntRangeSet =
 fun IntRangeSet(elements: Iterable<IntRange>): IntRangeSet =
   IntRangeSet().also { it.addAll(elements) }
 
+@JvmName("IntRangeSetOfIntRangeSetIterable")
+fun IntRangeSet(elements: Iterable<IntRangeSet>): IntRangeSet =
+  IntRangeSet().also { set -> elements.forEach { set.addAll(it) } }
+
 fun IntRangeSet(elements: IntRangeSet): IntRangeSet =
   IntRangeSet().also { it.addAll(elements) }
+
+fun Int.toIntRangeSet(): IntRangeSet =
+  IntRangeSet().also { it.add(this) }
+
+fun Collection<Int>.toIntRangeSet(): IntRangeSet =
+  IntRangeSet().also { it.addAll(this) }
+
+fun IntRange.toIntRangeSet(): IntRangeSet =
+  IntRangeSet().also { it.addAll(this) }
+
+fun Iterable<Int>.toIntRangeSet(): IntRangeSet =
+  IntRangeSet().also { it.addAll(this) }
+
+@JvmName("IntRangeIterableToIntRangeSet")
+fun Iterable<IntRange>.toIntRangeSet(): IntRangeSet =
+  IntRangeSet().also { it.addAll(this) }
+
+fun IntRangeSet.toIntRangeSet(): IntRangeSet =
+  IntRangeSet().also { it.addAll(this) }
 
 infix fun IntRange.intersect(other: Int): IntRangeSet =
   IntRangeSet(this).also { it.retain(other) }
@@ -368,3 +487,11 @@ infix fun Iterable<Int>.union(other: IntRangeSet): IntRangeSet =
 @JvmName("IntRangeIterableUnionWithIntRangeSet")
 infix fun Iterable<IntRange>.union(other: IntRangeSet): IntRangeSet =
   IntRangeSet(this).also { it.addAll(other) }
+
+@JvmName("IntRangeIterableUnion")
+fun Iterable<IntRange>.union(): IntRangeSet =
+  IntRangeSet(this)
+
+@JvmName("IntRangeSetIterableUnion")
+fun Iterable<IntRangeSet>.union(): IntRangeSet =
+  IntRangeSet(this)

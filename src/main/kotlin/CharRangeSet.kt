@@ -106,10 +106,12 @@ class CharRangeSet : MutableSet<Char> {
           ranges[i] = intersection.last + 1..ranges[i].last
           i++
         }
+
         intersection.last == ranges[i].last -> {
           ranges[i] = ranges[i].first..intersection.first - 1
           i++
         }
+
         else -> {
           val first = ranges[i].first..intersection.first - 1
           val second = intersection.last + 1..ranges[i].last
@@ -170,24 +172,114 @@ class CharRangeSet : MutableSet<Char> {
   infix fun intersect(other: CharRangeSet): CharRangeSet =
     CharRangeSet(this).also { it.retainAll(other) }
 
-  infix fun subtract(other: Char): CharRangeSet =
+  fun max(): Char = ranges.last().last
+
+  fun maxOrNull(): Char? = ranges.lastOrNull()?.last
+
+  fun min(): Char = ranges.first().first
+
+  fun minOrNull(): Char? = ranges.firstOrNull()?.first
+
+  operator fun minusAssign(other: Char) {
+    remove(other)
+  }
+
+  operator fun minusAssign(other: Collection<Char>) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: CharRange) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: Iterable<Char>) {
+    removeAll(other)
+  }
+
+  @JvmName("minusAssignCharRangeIterable")
+  operator fun minusAssign(other: Iterable<CharRange>) {
+    removeAll(other)
+  }
+
+  operator fun minusAssign(other: CharRangeSet) {
+    removeAll(other)
+  }
+
+  operator fun minus(other: Char): CharRangeSet =
     CharRangeSet(this).also { it.remove(other) }
 
-  infix fun subtract(other: Collection<Char>): CharRangeSet =
+  operator fun minus(other: Collection<Char>): CharRangeSet =
     CharRangeSet(this).also { it.removeAll(other) }
 
-  infix fun subtract(other: CharRange): CharRangeSet =
+  operator fun minus(other: CharRange): CharRangeSet =
     CharRangeSet(this).also { it.removeAll(other) }
 
-  infix fun subtract(other: Iterable<Char>): CharRangeSet =
+  operator fun minus(other: Iterable<Char>): CharRangeSet =
     CharRangeSet(this).also { it.removeAll(other) }
+
+  @JvmName("minusCharRangeIterable")
+  operator fun minus(other: Iterable<CharRange>): CharRangeSet =
+    CharRangeSet(this).also { it.removeAll(other) }
+
+  operator fun minus(other: CharRangeSet): CharRangeSet =
+    CharRangeSet(this).also { it.removeAll(other) }
+
+  operator fun plusAssign(other: Char) {
+    add(other)
+  }
+
+  operator fun plusAssign(other: Collection<Char>) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: CharRange) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: Iterable<Char>) {
+    addAll(other)
+  }
+
+  @JvmName("plusAssignCharRangeIterable")
+  operator fun plusAssign(other: Iterable<CharRange>) {
+    addAll(other)
+  }
+
+  operator fun plusAssign(other: CharRangeSet) {
+    addAll(other)
+  }
+
+  operator fun plus(other: Char): CharRangeSet =
+    CharRangeSet(this).also { it.add(other) }
+
+  operator fun plus(other: Collection<Char>): CharRangeSet =
+    CharRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: CharRange): CharRangeSet =
+    CharRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: Iterable<Char>): CharRangeSet =
+    CharRangeSet(this).also { it.addAll(other) }
+
+  @JvmName("plusCharRangeIterable")
+  operator fun plus(other: Iterable<CharRange>): CharRangeSet =
+    CharRangeSet(this).also { it.addAll(other) }
+
+  operator fun plus(other: CharRangeSet): CharRangeSet =
+    CharRangeSet(this).also { it.addAll(other) }
+
+  infix fun subtract(other: Char): CharRangeSet = this - other
+
+  infix fun subtract(other: Collection<Char>): CharRangeSet = this - other
+
+  infix fun subtract(other: CharRange): CharRangeSet = this - other
+
+  infix fun subtract(other: Iterable<Char>): CharRangeSet = this - other
 
   @JvmName("subtractCharRangeIterable")
-  infix fun subtract(other: Iterable<CharRange>): CharRangeSet =
-    CharRangeSet(this).also { it.removeAll(other) }
+  infix fun subtract(other: Iterable<CharRange>): CharRangeSet = this - other
 
-  infix fun subtract(other: CharRangeSet): CharRangeSet =
-    CharRangeSet(this).also { it.removeAll(other) }
+  infix fun subtract(other: CharRangeSet): CharRangeSet = this - other
 
   infix fun union(other: Char): CharRangeSet =
     CharRangeSet(this).also { it.add(other) }
@@ -204,6 +296,10 @@ class CharRangeSet : MutableSet<Char> {
   @JvmName("unionCharRangeIterable")
   infix fun union(other: Iterable<CharRange>): CharRangeSet =
     CharRangeSet(this).also { it.addAll(other) }
+
+  @JvmName("unionCharRangeSetIterable")
+  infix fun union(other: Iterable<CharRangeSet>): CharRangeSet =
+    CharRangeSet(this).also { set -> other.forEach { set.addAll(it) } }
 
   infix fun union(other: CharRangeSet): CharRangeSet =
     CharRangeSet(this).also { it.addAll(other) }
@@ -234,8 +330,31 @@ fun CharRangeSet(elements: Iterable<Char>): CharRangeSet =
 fun CharRangeSet(elements: Iterable<CharRange>): CharRangeSet =
   CharRangeSet().also { it.addAll(elements) }
 
+@JvmName("CharRangeSetOfCharRangeSetIterable")
+fun CharRangeSet(elements: Iterable<CharRangeSet>): CharRangeSet =
+  CharRangeSet().also { set -> elements.forEach { set.addAll(it) } }
+
 fun CharRangeSet(elements: CharRangeSet): CharRangeSet =
   CharRangeSet().also { it.addAll(elements) }
+
+fun Char.toCharRangeSet(): CharRangeSet =
+  CharRangeSet().also { it.add(this) }
+
+fun Collection<Char>.toCharRangeSet(): CharRangeSet =
+  CharRangeSet().also { it.addAll(this) }
+
+fun CharRange.toCharRangeSet(): CharRangeSet =
+  CharRangeSet().also { it.addAll(this) }
+
+fun Iterable<Char>.toCharRangeSet(): CharRangeSet =
+  CharRangeSet().also { it.addAll(this) }
+
+@JvmName("CharRangeIterableToCharRangeSet")
+fun Iterable<CharRange>.toCharRangeSet(): CharRangeSet =
+  CharRangeSet().also { it.addAll(this) }
+
+fun CharRangeSet.toCharRangeSet(): CharRangeSet =
+  CharRangeSet().also { it.addAll(this) }
 
 infix fun CharRange.intersect(other: Char): CharRangeSet =
   CharRangeSet(this).also { it.retain(other) }
@@ -246,7 +365,7 @@ infix fun CharRange.intersect(other: Collection<Char>): CharRangeSet =
 infix fun CharRange.intersect(other: Iterable<Char>): CharRangeSet =
   CharRangeSet(this).also { it.retainAll(other) }
 
-@JvmName("CharRangeCharersectWithCharRangeIterable")
+@JvmName("CharRangeIntersectWithCharRangeIterable")
 infix fun CharRange.intersect(other: Iterable<CharRange>): CharRangeSet =
   CharRangeSet(this).also { it.retainAll(other) }
 
@@ -368,3 +487,11 @@ infix fun Iterable<Char>.union(other: CharRangeSet): CharRangeSet =
 @JvmName("CharRangeIterableUnionWithCharRangeSet")
 infix fun Iterable<CharRange>.union(other: CharRangeSet): CharRangeSet =
   CharRangeSet(this).also { it.addAll(other) }
+
+@JvmName("CharRangeIterableUnion")
+fun Iterable<CharRange>.union(): CharRangeSet =
+  CharRangeSet(this)
+
+@JvmName("CharRangeSetIterableUnion")
+fun Iterable<CharRangeSet>.union(): CharRangeSet =
+  CharRangeSet(this)

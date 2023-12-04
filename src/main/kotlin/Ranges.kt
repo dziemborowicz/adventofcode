@@ -2,21 +2,31 @@ import java.math.BigInteger
 
 typealias DoubleRange = ClosedFloatingPointRange<Double>
 
-val CharRange.count: Long
-  get() = if (isEmpty()) 0 else last.code.toLong() - first.code.toLong() + 1
+val CharProgression.count: Long
+  get() =
+    if (isEmpty()) {
+      0L
+    } else {
+      ((last.code - first.code) / step.toLong()) + 1L
+    }
 
 val DoubleRange.length: Double
   get() = if (isEmpty()) 0.0 else endInclusive - start
 
-val IntRange.count: Long
-  get() = if (isEmpty()) 0 else last.toLong() - first.toLong() + 1
+val IntProgression.count: Long
+  get() =
+    if (isEmpty()) {
+      0L
+    } else {
+      ((last.toLong() - first.toLong()) / step.toLong()) + 1L
+    }
 
-val LongRange.count: BigInteger
+val LongProgression.count: BigInteger
   get() =
     if (isEmpty()) {
       BigInteger.ZERO
     } else {
-      last.toBigInteger() - first.toBigInteger() + BigInteger.ONE
+      ((last.toBigInteger() - first.toBigInteger()) / step.toBigInteger()) + BigInteger.ONE
     }
 
 fun CharRange.containsAny(other: CharRange): Boolean = !(this intersect other).isEmpty()
@@ -65,19 +75,18 @@ infix fun LongRange.intersect(other: LongRange): LongRange =
   maxOf(first, other.first)..minOf(last, other.last)
 
 fun Double.remap(from: DoubleRange, to: DoubleRange): Double {
-  check(this in from)
   val steps = (this - from.start) / from.length
   return to.start + (steps * to.length)
 }
 
 fun Int.remap(from: IntProgression, to: IntProgression): Int {
-  check(this in from && from.count() == to.count())
+  check(from.count == to.count)
   val steps = (this - from.first) / from.step
   return to.first + (steps * to.step)
 }
 
 fun Long.remap(from: LongProgression, to: LongProgression): Long {
-  check(this in from && from.count() == to.count())
+  check(from.count == to.count)
   val steps = (this - from.first) / from.step
   return to.first + (steps * to.step)
 }
