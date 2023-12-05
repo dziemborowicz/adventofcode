@@ -55,6 +55,22 @@ fun <T> List<List<T>>.copy(): List<List<T>> = map { it.toList() }
 @JvmName("copyListOfListOfList")
 fun <T> List<List<List<T>>>.copy(): List<List<List<T>>> = map { it.copy() }
 
+fun <T> Iterable<T>.longCount(): Long {
+  var count = 0L
+  for (it in this) count++
+  return count
+}
+
+inline fun <T> Iterable<T>.longCount(predicate: (T) -> Boolean): Long {
+  var count = 0L
+  for (it in this) {
+    if (predicate(it)) {
+      count++
+    }
+  }
+  return count
+}
+
 fun <T> List<T>.dropLast(): List<T> = dropLast(1)
 
 inline fun <T> List<T>.firstIndexed(predicate: (Int, T) -> Boolean): T {
