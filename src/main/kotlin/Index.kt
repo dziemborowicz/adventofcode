@@ -139,6 +139,21 @@ data class Index(val row: Int, val column: Int) {
   infix fun isNeighborWithDiagonalsOf(other: Index): Boolean =
     this != other && rowDistanceTo(other) < 2 && columnDistanceTo(other) < 2
 
+  fun isOnTopEdgeOf(@Suppress("UNUSED_PARAMETER") grid: Grid<*>): Boolean = row == 0
+
+  fun isOnBottomEdgeOf(grid: Grid<*>): Boolean = row == grid.numRows - 1
+
+  fun isOnTopOrBottomEdgeOf(grid: Grid<*>): Boolean = row == 0 || row == grid.numRows - 1
+
+  fun isOnLeftEdgeOf(@Suppress("UNUSED_PARAMETER") grid: Grid<*>): Boolean = column == 0
+
+  fun isOnRightEdgeOf(grid: Grid<*>): Boolean = column == grid.numColumns - 1
+
+  fun isOnLeftOrRightEdgeOf(grid: Grid<*>): Boolean = column == 0 || column == grid.numColumns - 1
+
+  fun isOnAnyEdgeOf(grid: Grid<*>): Boolean =
+    row == 0 || column == 0 || row == grid.numRows - 1 || column == grid.numColumns - 1
+
   fun toPointIn(grid: Grid<*>): Point = Point(column, grid.numRows - 1 - row)
 
   override fun toString(): String = "(${row}r,${column}c)"

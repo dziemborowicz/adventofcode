@@ -130,6 +130,21 @@ data class Point(val x: Int, val y: Int) {
   infix fun isNeighborWithDiagonalsOf(other: Point): Boolean =
     this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
+  fun isOnTopEdgeOf(grid: Grid<*>): Boolean = y == grid.numRows - 1
+
+  fun isOnBottomEdgeOf(@Suppress("UNUSED_PARAMETER") grid: Grid<*>): Boolean = y == 0
+
+  fun isOnTopOrBottomEdgeOf(grid: Grid<*>): Boolean = y == 0 || y == grid.numRows - 1
+
+  fun isOnLeftEdgeOf(@Suppress("UNUSED_PARAMETER") grid: Grid<*>): Boolean = x == 0
+
+  fun isOnRightEdgeOf(grid: Grid<*>): Boolean = x == grid.numColumns - 1
+
+  fun isOnLeftOrRightEdgeOf(grid: Grid<*>): Boolean = x == 0 || x == grid.numColumns - 1
+
+  fun isOnAnyEdgeOf(grid: Grid<*>): Boolean =
+    x == 0 || y == 0 || x == grid.numColumns - 1 || y == grid.numRows - 1
+
   fun toIndexIn(grid: Grid<*>): Index = Index(x, grid.numRows - 1 - y)
 
   fun toPoint3(): Point3 = Point3(x, y, 0)
