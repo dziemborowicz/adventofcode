@@ -517,11 +517,15 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
 
   fun toMutableSet(): Set<T> = data.toMutableSet()
 
-  fun values(): List<T> = toList()
-
   override fun toString(): String = data.joinToString(",\n", "[\n", "\n]") { "  $it" }
 
   fun transpose(): Grid<T> = Grid(numColumns, numRows) { (row, column) -> this[column, row] }
+
+  fun values(): List<T> = toList()
+
+  fun withIndex(): List<Pair<Index, T>> = indices.map { it to this[it] }
+
+  fun withPoint(): List<Pair<Point, T>> = points.map { it to this[it] }
 
   @PublishedApi internal val Point.row: Int
     get() = numRows - 1 - y

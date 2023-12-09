@@ -133,6 +133,8 @@ data class DoublePoint(val x: Double, val y: Double) {
   infix fun isNeighborWithDiagonalsOf(other: DoublePoint): Boolean =
     this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
+  fun toDoublePoint3(): DoublePoint3 = DoublePoint3(x, y, 0.0)
+
   override fun toString(): String = "($x,$y)"
 
   companion object {

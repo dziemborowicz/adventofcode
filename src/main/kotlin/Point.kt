@@ -132,6 +132,8 @@ data class Point(val x: Int, val y: Int) {
 
   fun toIndexIn(grid: Grid<*>): Index = Index(x, grid.numRows - 1 - y)
 
+  fun toPoint3(): Point3 = Point3(x, y, 0)
+
   override fun toString(): String = "($x,$y)"
 
   fun wrappedIn(grid: Grid<*>): Point = Point(x.mod(grid.numColumns), y.mod(grid.numRows))

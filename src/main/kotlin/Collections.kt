@@ -47,6 +47,27 @@ fun <T> Iterable<T>.permutations(length: Int? = null): Sequence<List<T>> {
   }
 }
 
+inline fun <reified T> Iterable<T>.permutationsWithReplacement(length: Int? = null): Sequence<List<T>> {
+  if (length == 0) return sequenceOf()
+  val pool = this as? List<T> ?: toList()
+  return sequence {
+    val size = length ?: pool.size
+    val permutation = Array(size) { pool.first() }
+    val indices = IntArray(size)
+    while (true) {
+      indices.forEachIndexed { i, x -> permutation[i] = pool[x] }
+      yield(permutation.toList())
+      var i = 0
+      while (true) {
+        indices[i]++
+        if (indices[i] < pool.size) break
+        indices[i++] = 0
+        if (i == size) return@sequence
+      }
+    }
+  }
+}
+
 fun <T> List<T>.copy(): List<T> = toList()
 
 @JvmName("copyListOfList")

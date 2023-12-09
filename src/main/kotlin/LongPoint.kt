@@ -131,6 +131,8 @@ data class LongPoint(val x: Long, val y: Long) {
   infix fun isNeighborWithDiagonalsOf(other: LongPoint): Boolean =
     this != other && xDistanceTo(other) < 2 && yDistanceTo(other) < 2
 
+  fun toLongPoint3(): LongPoint3 = LongPoint3(x, y, 0L)
+
   override fun toString(): String = "($x,$y)"
 
   companion object {
