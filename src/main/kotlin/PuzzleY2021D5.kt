@@ -18,13 +18,13 @@ class PuzzleY2021D5 : Puzzle {
     lines
       .filter { it.first.row == it.second.row || it.first.column == it.second.column }
       .forEach { markLine(floor, it) }
-    return floor.flatten().count { it > 1 }
+    return floor.flattenToList().count { it > 1 }
   }
 
   override fun solve2(): Int {
     val floor = Grid(numRows, numColumns, 0)
     lines.forEach { markLine(floor, it) }
-    return floor.flatten().count { it > 1 }
+    return floor.flattenToList().count { it > 1 }
   }
 
   private fun markLine(floor: Grid<Int>, line: Pair<Index, Index>) {

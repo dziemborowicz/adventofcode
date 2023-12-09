@@ -371,7 +371,57 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
     point.upLeft().wrappedIn(this).let { action(it, this[it]) }
   }
 
-  fun flatten(): List<T> = toList()
+  fun flattenToList(): List<T> = toList()
+
+  fun flipHorizontally() {
+    for (row in rowIndices) {
+      for (column in 0..(numColumns - 1) / 2) {
+        val temp = this[row, column]
+        this[row, column] = this[row, numColumns - 1 - column]
+        this[row, numColumns - 1 - column] = temp
+      }
+    }
+  }
+
+  fun flippedHorizontally(): Grid<T> {
+    return Grid(numRows, numColumns) { (row, column) ->
+      this[row, numColumns - 1 - column]
+    }
+  }
+
+  fun flipVertically() {
+    for (row in 0..(numRows - 1) / 2) {
+      for (column in columnIndices) {
+        val temp = this[row, column]
+        this[row, column] = this[numRows - 1 - row, column]
+        this[numRows - 1 - row, column] = temp
+      }
+    }
+  }
+
+  fun flippedVertically(): Grid<T> {
+    return Grid(numRows, numColumns) { (row, column) ->
+      this[numRows - 1 - row, column]
+    }
+  }
+
+  fun flips(): List<Grid<T>> = listOf(
+    copy(),
+    flippedHorizontally(),
+    flippedVertically(),
+    rotatedAround(),
+  )
+
+  fun flipsAndRotations(): List<Grid<T>> = listOf(
+    copy(),
+    rotatedClockwise(),
+    rotatedCounterclockwise(),
+    rotatedAround(),
+    flippedHorizontally(),
+    flippedVertically(),
+    transposed(),
+    rotatedAround().transposed(),
+  )
 
   operator fun get(row: Int, column: Int): T = data[(row * numColumns) + column]
 
@@ -420,6 +470,36 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
 
   fun getWrapped(point: Point): T = getWrapped(point.row, point.column)
 
+  fun grow(amount: Int, initialValue: T): Grid<T> = grow(amount) { initialValue }
+
+  fun grow(amount: Int, init: (Index) -> T): Grid<T> = grow(amount, amount, init)
+
+  fun grow(amountRows: Int, amountColumns: Int, initialValue: T): Grid<T> =
+    grow(amountRows, amountColumns) { initialValue }
+
+  fun grow(amountRows: Int, amountColumns: Int, init: (Index) -> T): Grid<T> =
+    grow(amountRows, amountColumns, amountRows, amountColumns, init)
+
+  fun grow(up: Int = 0, right: Int = 0, down: Int = 0, left: Int = 0, initialValue: T): Grid<T> =
+    grow(up, right, down, left) { initialValue }
+
+  fun grow(
+    up: Int = 0,
+    right: Int = 0,
+    down: Int = 0,
+    left: Int = 0,
+    init: (Index) -> T,
+  ): Grid<T> {
+    return Grid(numRows + up + down, numColumns + left + right) { (row, column) ->
+      val oldIndex = Index(row - up, column - left)
+      if (oldIndex in indices) {
+        this[oldIndex]
+      } else {
+        init(oldIndex)
+      }
+    }
+  }
+
   override fun hashCode(): Int {
     var result = 1
     result = (result * 31) + numRows
@@ -449,6 +529,10 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
 
   inline fun indexOfLastOrNull(predicate: (T) -> Boolean): Index? =
     indices.lastOrNull { predicate(this[it]) }
+
+  fun isEmpty(): Boolean = count == 0
+
+  fun isNotEmpty(): Boolean = count != 0
 
   inline fun last(predicate: (T) -> Boolean): T = data.last(predicate)
 
@@ -499,6 +583,17 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   inline fun singlePointed(predicate: (Point, T) -> Boolean): T =
     this[points.single { predicate(it, this[it]) }]
 
+  fun shrink(amount: Int): Grid<T> = shrink(amount, amount)
+
+  fun shrink(amountRows: Int, amountColumns: Int): Grid<T> =
+    shrink(amountRows, amountColumns, amountRows, amountColumns)
+
+  fun shrink(up: Int = 0, right: Int = 0, down: Int = 0, left: Int = 0): Grid<T> {
+    return Grid(numRows - up - down, numColumns - left - right) { (row, column) ->
+      this[row + up, column + left]
+    }
+  }
+
   fun swap(aRow: Int, aColumn: Int, bRow: Int, bColumn: Int) {
     this[aRow, aColumn] = this[bRow, bColumn].also { this[bRow, bColumn] = this[aRow, aColumn] }
   }
@@ -506,6 +601,60 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   fun swap(a: Index, b: Index) = swap(a.row, a.column, b.row, b.column)
 
   fun swap(a: Point, b: Point) = swap(a.row, a.column, b.row, b.column)
+
+  fun rotateClockwise(times: Int = 1) {
+    check(numRows == numColumns) { "Grid must be a square to rotate in-place." }
+    when (times.mod(4)) {
+      0 -> {}
+
+      1 -> {
+        transpose()
+        flipHorizontally()
+      }
+
+      2 -> {
+        flipVertically()
+        flipHorizontally()
+      }
+
+      3 -> {
+        flipHorizontally()
+        transpose()
+      }
+    }
+  }
+
+  fun rotatedClockwise(times: Int = 1): Grid<T> {
+    return when (times.mod(4)) {
+      0 -> copy()
+
+      1 -> Grid(numColumns, numRows) { (row, column) ->
+        this[numRows - 1 - column, row]
+      }
+
+      2 -> Grid(numRows, numColumns) { (row, column) ->
+        this[numRows - 1 - row, numColumns - 1 - column]
+      }
+
+      3 -> Grid(numColumns, numRows) { (row, column) ->
+        this[column, numColumns - 1 - row]
+      }
+
+      else -> fail()
+    }
+  }
+
+  fun rotateCounterclockwise(times: Int = 1) = rotateClockwise(-times)
+
+  fun rotatedCounterclockwise(times: Int = 1) = rotatedClockwise(-times)
+
+  fun rotateAround() = rotateClockwise(2)
+
+  fun rotatedAround() = rotatedClockwise(2)
+
+  fun rotations(): List<Grid<T>> = (0..3).map { rotatedClockwise(it) }
+
+  fun rotationsAndFlips(): List<Grid<T>> = flipsAndRotations()
 
   fun toGrid(): Grid<T> = Grid(numRows, numColumns) { this[it] }
 
@@ -519,7 +668,18 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
 
   override fun toString(): String = data.joinToString(",\n", "[\n", "\n]") { "  $it" }
 
-  fun transpose(): Grid<T> = Grid(numColumns, numRows) { (row, column) -> this[column, row] }
+  fun transpose() {
+    check(numRows == numColumns) { "Grid must be a square to transpose in-place." }
+    for (row in rowIndices) {
+      for (column in row + 1..<numColumns) {
+        val temp = this[row, column]
+        this[row, column] = this[column, row]
+        this[column, row] = temp
+      }
+    }
+  }
+
+  fun transposed(): Grid<T> = Grid(numColumns, numRows) { (row, column) -> this[column, row] }
 
   fun values(): List<T> = toList()
 
@@ -568,6 +728,21 @@ fun <T> List<Grid<T>>.copy(): List<Grid<T>> = map { it.toGrid() }
 
 @JvmName("copyListOfListOfGrid")
 fun <T> List<List<Grid<T>>>.copy(): List<List<Grid<T>>> = map { it.copy() }
+
+fun <T> emptyGrid(): Grid<T> = Grid(0, 0) { throw AssertionError() }
+
+fun <T> Grid<Grid<T>>.flattenToGrid(): Grid<T> {
+  if (isEmpty()) return emptyGrid()
+
+  val numSubRows = get(0, 0).numRows
+  check(all { it.numRows == numSubRows })
+  val numSubColumns = get(0, 0).numColumns
+  check(all { it.numColumns == numSubColumns })
+
+  return Grid(numRows * numSubRows, numColumns * numSubColumns) { (row, column) ->
+    this[row / numSubRows, column / numSubColumns][row.mod(numSubRows), column.mod(numSubColumns)]
+  }
+}
 
 fun Grid<Boolean>.render(on: Char = '█', off: Char = '·'): String = render { if (it) on else off }
 

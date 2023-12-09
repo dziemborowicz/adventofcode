@@ -55,7 +55,7 @@ class PuzzleY2021D4 : Puzzle {
   }
 
   private fun score(board: Grid<Int?>): Int {
-    return board.flatten().filterNotNull().sum()
+    return board.flattenToList().filterNotNull().sum()
   }
 
   companion object {
