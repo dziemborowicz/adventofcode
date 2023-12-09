@@ -18,6 +18,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
+  runtimeOnly("org.jetbrains.kotlin:kotlin-scripting-jsr223:1.9.21")
   testImplementation(kotlin("test"))
 }
 
