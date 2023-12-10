@@ -448,6 +448,21 @@ inline fun <T> MutableList<T>.removeLastWhile(predicate: (T) -> Boolean): List<T
   return removeManyLast(size - index - 1)
 }
 
+fun <T> MutableList<T>.rotateRight(offset: Int) {
+  val effectiveOffset = offset.mod(size)
+  if (effectiveOffset != 0) {
+    subList(0, size - effectiveOffset).reverse()
+    subList(size - effectiveOffset, size).reverse()
+    reverse()
+  }
+}
+
+fun <T> MutableList<T>.rotateLeft(offset: Int) = rotateRight(-offset)
+
+fun <T> List<T>.rotatedRight(offset: Int): List<T> = toMutableList().also { it.rotateRight(offset) }
+
+fun <T> List<T>.rotatedLeft(offset: Int): List<T> = rotatedRight(-offset)
+
 fun <T> Iterable<T>.split(vararg delimiters: T): List<List<T>> = splitBy { it in delimiters }
 
 fun Iterable<String>.splitByBlank() = splitBy { it.isBlank() }
