@@ -1,3 +1,5 @@
+import java.util.PriorityQueue
+
 fun <T> Iterable<T>.combinations(length: Int): Sequence<List<T>> {
   val pool = this as? List<T> ?: toList()
   return sequence {
@@ -434,4 +436,22 @@ fun <T> Iterable<T>.toDeque(): ArrayDeque<T> = ArrayDeque<T>().also { it.addAll(
 
 fun <T> List<T>.toDeque(): ArrayDeque<T> = ArrayDeque(this)
 
-fun String.toDeque(): ArrayDeque<Char> = ArrayDeque(toList())
+fun String.toDeque(): ArrayDeque<Char> = toList().toDeque()
+
+fun <T> priorityQueueOf() = PriorityQueue<T>()
+
+fun <T> priorityQueueOf(element: T, comparator: Comparator<in T>? = null) =
+  PriorityQueue(comparator).also { it.add(element) }
+
+fun <T> priorityQueueOf(vararg elements: T) = PriorityQueue(elements.toList())
+
+fun <T> priorityQueueWith(comparator: Comparator<in T>) = PriorityQueue(comparator)
+
+fun <T> Iterable<T>.toPriorityQueue(comparator: Comparator<in T>? = null): PriorityQueue<T> =
+  PriorityQueue(comparator).also { it.addAll(this) }
+
+fun <T> List<T>.toPriorityQueue(comparator: Comparator<in T>? = null): PriorityQueue<T> =
+  PriorityQueue(comparator).also { it.addAll(this) }
+
+fun String.toPriorityQueue(comparator: Comparator<in Char>? = null): PriorityQueue<Char> =
+  toList().toPriorityQueue(comparator)
