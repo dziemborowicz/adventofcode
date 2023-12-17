@@ -21,10 +21,10 @@ class PuzzleY2023D12 : Puzzle {
   }
 
   private fun possibleConfigurations(record: Record): Long {
-    val visited = hashMapOf<Triple<Int, Int, Long>, Long>()
+    val visited = cacheOf<Long>()
 
     fun possibleConfigurations(conditions: String, groups: List<Long>, count: Long): Long {
-      return visited.getOrPut(Triple(conditions.length, groups.size, count)) {
+      return visited.getOrPut(conditions.length, groups.size, count) {
         if (conditions.isEmpty()) {
           when {
             count == 0L && groups.isEmpty() -> 1L
