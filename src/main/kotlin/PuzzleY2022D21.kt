@@ -19,7 +19,7 @@ class PuzzleY2022D21 : Puzzle {
     val definitions = input.lines().associate { it.split(": ").toPair() }
     val monkeys = hashMapOf<String, Monkey>()
     val parseMonkey = DeepRecursiveFunction { name ->
-      monkeys.computeIfAbsentInline(name) {
+      monkeys.getOrPut(name) {
         val number = definitions.getValue(name).toLongOrNull()
         if (number != null) {
           Literal(number)
@@ -33,7 +33,7 @@ class PuzzleY2022D21 : Puzzle {
             else -> error()
           }
         }
-      }!!
+      }
     }
     root = parseMonkey("root") as Operation
     humn = parseMonkey("humn")

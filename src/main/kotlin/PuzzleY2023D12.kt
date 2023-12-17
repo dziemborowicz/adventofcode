@@ -24,7 +24,7 @@ class PuzzleY2023D12 : Puzzle {
     val visited = hashMapOf<Triple<Int, Int, Long>, Long>()
 
     fun possibleConfigurations(conditions: String, groups: List<Long>, count: Long): Long {
-      return visited.computeIfAbsentInline(Triple(conditions.length, groups.size, count)) {
+      return visited.getOrPut(Triple(conditions.length, groups.size, count)) {
         if (conditions.isEmpty()) {
           when {
             count == 0L && groups.isEmpty() -> 1L
@@ -54,7 +54,7 @@ class PuzzleY2023D12 : Puzzle {
             }
           }
         }
-      }!!
+      }
     }
 
     return possibleConfigurations(record.conditions, record.groups, 0L)

@@ -20,13 +20,13 @@ class PuzzleY2020D10 : Puzzle {
   override fun solve2(): Long {
     val cache = hashMapOf<Int, Long>()
     fun numArrangementsFrom(adapter: Int): Long {
-      return cache.computeIfAbsentInline(adapter) {
+      return cache.getOrPut(adapter) {
         when (adapter) {
           builtInAdapter -> 1
           !in allAdapters -> 0
           else -> (1..3).sumOf { numArrangementsFrom(adapter + it) }
         }
-      }!!
+      }
     }
     return numArrangementsFrom(chargingOutlet)
   }
