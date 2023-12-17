@@ -6,6 +6,10 @@ import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.functions
 import kotlin.reflect.full.memberProperties
 
+data object NoAnswer {
+  override fun toString(): String = "(No answer.)"
+}
+
 private fun solve(args: List<String>) {
   require(args.size in 2..3) { "Wrong number of args for `solve` command." }
   val year = args[0].toInt()
@@ -54,8 +58,13 @@ private fun solve(year: Int, day: Int, levels: IntRange = (1..2)) {
             }
           println("Expected Answer: $expectedAnswer")
           println("Actual Answer  : $actualAnswer")
-          if (actualAnswer.toString() != expectedAnswer.toString()) {
-            fail("Test $label failed.")
+          if (actualAnswer !is NoAnswer) {
+            if (expectedAnswer is NoAnswer) {
+              fail("Test $label has no answer set.")
+            }
+            if (actualAnswer.toString() != expectedAnswer.toString()) {
+              fail("Test $label failed.")
+            }
           }
         }
       }
@@ -95,17 +104,19 @@ private fun solve(year: Int, day: Int, levels: IntRange = (1..2)) {
         println("Answer: $it")
       }
     }
-   timed("$puzzleName Upload Answer $level") {
-     when (val result = client.uploadAnswer(year, day, level, answer).also { println(it) }) {
-       is AnswerResult.Correct -> {}
-       is AnswerResult.AlreadyAnswered -> check(result.answer.toString() == result.correctAnswer.toString())
-       is AnswerResult.Incorrect -> fail(result)
-       is AnswerResult.IncorrectTooLow -> fail(result)
-       is AnswerResult.IncorrectTooHigh -> fail(result)
-       is AnswerResult.AnsweredTooRecently -> fail(result)
-       is AnswerResult.Unknown -> fail(result)
-     }
-   }
+    if (answer !is NoAnswer) {
+      timed("$puzzleName Upload Answer $level") {
+        when (val result = client.uploadAnswer(year, day, level, answer).also { println(it) }) {
+          is AnswerResult.Correct -> {}
+          is AnswerResult.AlreadyAnswered -> check(result.answer.toString() == result.correctAnswer.toString())
+          is AnswerResult.Incorrect -> fail(result)
+          is AnswerResult.IncorrectTooLow -> fail(result)
+          is AnswerResult.IncorrectTooHigh -> fail(result)
+          is AnswerResult.AnsweredTooRecently -> fail(result)
+          is AnswerResult.Unknown -> fail(result)
+        }
+      }
+    }
   }
 }
 
