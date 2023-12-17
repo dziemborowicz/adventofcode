@@ -744,11 +744,18 @@ fun <T> Grid<Grid<T>>.flattenToGrid(): Grid<T> {
   }
 }
 
-fun Grid<Boolean>.render(on: Char = '█', off: Char = '·'): String = render { if (it) on else off }
+fun Grid<Boolean>.render(on: Char = '█', off: Char = '·'): Unit = println(renderToString(on, off))
 
-fun Grid<Char>.render(): String = render { it }
+fun Grid<Boolean>.renderToString(on: Char = '█', off: Char = '·'): String =
+  renderToString { if (it) on else off }
 
-inline fun <T> Grid<T>.render(renderer: (T) -> Char): String {
+fun Grid<Char>.render(): Unit = println(renderToString())
+
+fun Grid<Char>.renderToString(): String = renderToString { it }
+
+inline fun <T> Grid<T>.render(renderer: (T) -> Char): Unit = println(renderToString(renderer))
+
+inline fun <T> Grid<T>.renderToString(renderer: (T) -> Char): String {
   val grid = this
   return buildString {
     for (row in rowIndices) {

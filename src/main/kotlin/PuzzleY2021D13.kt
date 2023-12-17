@@ -32,7 +32,7 @@ class PuzzleY2021D13 : Puzzle {
 
   override fun solve2(): String {
     val grid = folds.fold(grid) { grid, fold -> grid.fold(fold) }
-    println(grid.render())
+    grid.render()
     return "JZGUAPRB" // Note: The result must be interpreted visually for submission.
   }
 
