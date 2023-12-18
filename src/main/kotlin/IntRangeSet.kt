@@ -9,6 +9,8 @@ class IntRangeSet : MutableSet<Int> {
       return count.toInt()
     }
 
+  fun copy(): IntRangeSet = IntRangeSet(this)
+
   fun count(): Long = ranges.sumOf { it.count }
 
   override fun contains(element: Int): Boolean = ranges.any { element in it }

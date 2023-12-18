@@ -330,10 +330,10 @@ inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Int): Int
 inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Long): Long =
   mapIndexed(selector).productOrOne()
 
-val Int.RANGE: IntRange
+val Int.Companion.RANGE: IntRange
   get() = Int.MIN_VALUE..Int.MAX_VALUE
 
-val Long.RANGE: LongRange
+val Long.Companion.RANGE: LongRange
   get() = Long.MIN_VALUE..Long.MAX_VALUE
 
 fun sqrt(x: Int): Int = sqrt(x.toDouble()).toInt()

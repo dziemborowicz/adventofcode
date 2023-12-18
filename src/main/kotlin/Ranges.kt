@@ -74,6 +74,12 @@ infix fun IntRange.intersect(other: IntRange): IntRange =
 infix fun LongRange.intersect(other: LongRange): LongRange =
   maxOf(first, other.first)..minOf(last, other.last)
 
+fun CharRange.inverted(): CharRangeSet = toCharRangeSet().inverted()
+
+fun IntRange.inverted(): IntRangeSet = toIntRangeSet().inverted()
+
+fun LongRange.inverted(): LongRangeSet = toLongRangeSet().inverted()
+
 fun Double.remap(from: DoubleRange, to: DoubleRange): Double {
   val steps = (this - from.start) / from.length
   return to.start + (steps * to.length)

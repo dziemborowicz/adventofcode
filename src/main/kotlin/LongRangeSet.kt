@@ -11,6 +11,8 @@ class LongRangeSet : MutableSet<Long> {
       return count.toInt()
     }
 
+  fun copy(): LongRangeSet = LongRangeSet(this)
+
   fun count(): BigInteger = ranges.sumOf { it.count }
 
   override fun contains(element: Long): Boolean = ranges.any { element in it }

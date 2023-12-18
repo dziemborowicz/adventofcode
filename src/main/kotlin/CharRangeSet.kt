@@ -9,6 +9,8 @@ class CharRangeSet : MutableSet<Char> {
       return count.toInt()
     }
 
+  fun copy(): CharRangeSet = CharRangeSet(this)
+
   fun count(): Long = ranges.sumOf { it.count }
 
   override fun contains(element: Char): Boolean = ranges.any { element in it }
