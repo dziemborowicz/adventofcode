@@ -35,8 +35,7 @@ class PuzzleY2022D10 : Puzzle {
       val sprite = cycles[(row * 40) + column + 1]
       column in sprite - 1..sprite + 1
     }
-    grid.render()
-    return "PCPBKAPJ" // Note: The result must be interpreted visually for submission.
+    return grid.toStringFromAsciiArt()
   }
 
   companion object {
