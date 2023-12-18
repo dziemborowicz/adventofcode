@@ -667,6 +667,25 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
 
   fun rotationsAndFlips(): List<Grid<T>> = flipsAndRotations()
 
+  fun subGrid(row: Int, column: Int, numRows: Int, numColumns: Int): Grid<T> {
+    return Grid(
+      if (numRows < 0) this.numRows else numRows,
+      if (numColumns < 0) this.numColumns else numColumns,
+    ) { index -> this[row + index.row, column + index.column] }
+  }
+
+  fun subGrid(index: Index, numRows: Int, numColumns: Int): Grid<T> =
+    subGrid(index.row, index.column, numRows, numColumns)
+
+  fun subGrid(index: Index, size: Index): Grid<T> =
+    subGrid(index.row, index.column, size.row, size.column)
+
+  fun subGrid(point: Point, width: Int, height: Int): Grid<T> =
+    subGrid(point.row - height + 1, point.column, height, width)
+
+  fun subGrid(point: Point, size: Point): Grid<T> =
+    subGrid(point.row - height + 1, point.column, size.y, size.x)
+
   fun toGrid(): Grid<T> = Grid(numRows, numColumns) { this[it] }
 
   fun toList(): List<T> = data.toList()
