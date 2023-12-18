@@ -48,6 +48,17 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   inline fun anyPointed(predicate: (Point, T) -> Boolean): Boolean =
     points.any { predicate(it, this[it]) }
 
+  fun chunked(
+    numRows: Int,
+    numColumns: Int = numRows,
+  ): Grid<Grid<T>> = chunked(numRows, numColumns) { it }
+
+  inline fun <R> chunked(
+    numRows: Int,
+    numColumns: Int = numRows,
+    crossinline transform: (Grid<T>) -> R,
+  ): Grid<R> = windowed(numRows, numColumns, numRows, numColumns, partialWindows = true, transform)
+
   fun columns(): List<List<T>> =
     List(numColumns) { column -> List(numRows) { row -> get(row, column) } }
 
@@ -683,6 +694,35 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
 
   fun values(): List<T> = toList()
 
+  fun windowed(
+    numRows: Int,
+    numColumns: Int = numRows,
+    rowStep: Int = 1,
+    columnStep: Int = rowStep,
+    partialWindows: Boolean = false,
+  ): Grid<Grid<T>> = windowed(numRows, numColumns, rowStep, columnStep, partialWindows) { it }
+
+  inline fun <R> windowed(
+    numRows: Int,
+    numColumns: Int = numRows,
+    rowStep: Int = 1,
+    columnStep: Int = rowStep,
+    partialWindows: Boolean = false,
+    crossinline transform: (Grid<T>) -> R,
+  ): Grid<R> {
+    return Grid(
+      this.numRows / rowStep + if (this.numRows % rowStep != 0 && partialWindows) 1 else 0,
+      this.numColumns / columnStep + if (this.numColumns % columnStep != 0 && partialWindows) 1 else 0,
+    ) { index ->
+      val baseRow = index.row * rowStep
+      val baseColumn = index.column * columnStep
+      transform(Grid(
+        minOf(numRows, this.numRows - baseRow),
+        minOf(numColumns, this.numColumns - baseColumn),
+      ) { this[baseRow + it.row, baseColumn + it.column] })
+    }
+  }
+
   fun withIndex(): List<Pair<Index, T>> = indices.map { it to this[it] }
 
   fun withPoint(): List<Pair<Point, T>> = points.map { it to this[it] }
@@ -762,7 +802,9 @@ inline fun <T> Grid<T>.renderToString(renderer: (T) -> Char): String {
       for (column in columnIndices) {
         append(renderer(grid[row, column]))
       }
-      append('\n')
+      if (row != rowIndices.last) {
+        append('\n')
+      }
     }
   }
 }
