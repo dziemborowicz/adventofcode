@@ -34,49 +34,54 @@ class PuzzleY2021D24 : Puzzle {
     instructions = input.lines().map { it.split(' ') }
   }
 
-  override fun solve1(): String {
+  override fun solve1(): Long {
     return find(9L downTo 1L)
   }
 
-  override fun solve2(): String {
+  override fun solve2(): Long {
     return find(1L..9L)
   }
 
-  private fun find(digits: LongProgression): String {
-    val visited = hashSetOf<Pair<Int, Long>>()
-    tailrec fun process(index: Int, state: State, modelNumber: String): String? {
-      if (index > instructions.lastIndex) return if (state.z == 0L) modelNumber else null
+  private fun find(digits: LongProgression): Long {
+    val state = State()
+    val visited = List(instructions.size) { mutableSetOf<Long>() }
+    fun process(index: Int, modelNumber: Long): Long {
+      if (index > instructions.lastIndex) {
+        return if (state.z == 0L) modelNumber else 0L
+      }
       val instruction = instructions[index]
       val a = instruction[1].first()
       if (instruction[0] == "inp") {
         // x and y are always reinitialized before being read after inp instructions, so we don't
         // need to track them in the visited set. And np always has w as its param.
-        if (visited.add(Pair(index, state.z))) {
-          if (modelNumber.length == 2) {
-            println("Searching (${modelNumber.padEnd(14, 'x')})...")
+        if (visited[index].add(state.z)) {
+          if (modelNumber < 100) {
+            println("Trying model number (${modelNumber.toString().padEnd(14, 'x')})...")
           }
           for (input in digits) {
-            val nextState = state.copy()
-            nextState[a] = input
-            @Suppress("NON_TAIL_RECURSIVE_CALL")
-            val result = process(index + 1, nextState, modelNumber + input)
-            if (result != null) return result
+            val prevValue = state[a]
+            state[a] = input
+            val result = process(index + 1, (10 * modelNumber) + input)
+            state[a] = prevValue
+            if (result != 0L) return result
           }
         }
-        return null
+        return 0L
       }
       val b = instruction[2].toLongOrNull() ?: state[instruction[2].first()]
-      val nextState = state.copy()
+      val prevValue = state[a]
       when (instruction[0]) {
-        "add" -> nextState[a] += b
-        "mul" -> nextState[a] *= b
-        "div" -> nextState[a] /= b
-        "mod" -> nextState[a] %= b
-        "eql" -> nextState[a] = (nextState[a] == b).toLong()
+        "add" -> state[a] += b
+        "mul" -> state[a] *= b
+        "div" -> state[a] /= b
+        "mod" -> state[a] %= b
+        "eql" -> state[a] = (state[a] == b).toLong()
         else -> fail()
       }
-      return process(index + 1, nextState, modelNumber)
+      val result = process(index + 1, modelNumber)
+      state[a] = prevValue
+      return result
     }
-    return process(0, State(), "")!!
+    return process(index = 0, modelNumber = 0)
   }
 }
