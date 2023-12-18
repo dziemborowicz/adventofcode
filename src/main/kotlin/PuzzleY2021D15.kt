@@ -19,19 +19,18 @@ class PuzzleY2021D15 : Puzzle {
   }
 
   private fun solve(cavern: Grid<Int>): Int {
-    val minRisk = Grid(cavern.numRows, cavern.numColumns) { (row, column) ->
-      (row * 9) + (column * 9) + 1
-    }
-
-    fun visit(index: Index, risk: Int) {
-      if (risk < minRisk[index]) {
+    val minRisk = cavern.map { Int.MAX_VALUE }
+    val queue = priorityQueueOf(Index.ZERO to 0, compareBy { it.second })
+    while (queue.isNotEmpty()) {
+      val (index, risk) = queue.poll()
+      if (index == cavern.indices.last()) {
+        return risk
+      } else if (risk < minRisk[index]) {
         minRisk[index] = risk
-        cavern.forEachNeighborIndexed(index) { newIndex, value -> visit(newIndex, risk + value) }
+        cavern.forEachNeighborIndexed(index) { nextIndex, value -> queue.add(nextIndex to risk + value) }
       }
     }
-    visit(Index.ZERO, 0)
-
-    return minRisk[cavern.numRows - 1, cavern.numColumns - 1]
+    fail()
   }
 
   companion object {
