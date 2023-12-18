@@ -1,6 +1,93 @@
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.experimental.ExperimentalTypeInference
+import kotlin.math.absoluteValue
+
+fun List<Index>.area(): Int {
+  if (first() != last()) return (this + first()).area()
+  return windowed(2).sumOf { (a, b) -> a.row * b.column - b.row * a.column }.absoluteValue / 2
+}
+
+fun List<Index>.areaEnclosedByIntegralBoundary(): Int {
+  if (first() != last()) return (this + first()).areaEnclosedByIntegralBoundary()
+  val boundaryPoints = numIntegralBoundaryPoints()
+  return areaIncludingIntegralBoundary() - boundaryPoints
+}
+
+fun List<Index>.areaIncludingIntegralBoundary(): Int {
+  if (first() != last()) return (this + first()).areaIncludingIntegralBoundary()
+  val boundaryPoints = numIntegralBoundaryPoints()
+  val interiorPoints = area() - (boundaryPoints / 2) + 1
+  return boundaryPoints + interiorPoints
+}
+
+fun List<Index>.numIntegralBoundaryPoints(): Int {
+  if (first() != last()) return (this + first()).numIntegralBoundaryPoints()
+  check(windowed(2).all { (a, b) -> a.row == b.row || a.column == b.column }) { "The polygon must be rectilinear." }
+  return windowed(2).sumOf { (a, b) -> a manhattanDistanceTo b }
+}
+
+@JvmName("areaOfPointList")
+fun List<Point>.area(): Int {
+  if (first() != last()) return (this + first()).area()
+  return windowed(2).sumOf { (a, b) -> a.x * b.y - b.x * a.y }.absoluteValue / 2
+}
+
+@JvmName("areaEnclosedByIntegralBoundaryOfPointList")
+fun List<Point>.areaEnclosedByIntegralBoundary(): Int {
+  if (first() != last()) return (this + first()).areaEnclosedByIntegralBoundary()
+  val boundaryPoints = numIntegralBoundaryPoints()
+  return areaIncludingIntegralBoundary() - boundaryPoints
+}
+
+@JvmName("areaIncludingIntegralBoundaryOfPointList")
+fun List<Point>.areaIncludingIntegralBoundary(): Int {
+  if (first() != last()) return (this + first()).areaIncludingIntegralBoundary()
+  val boundaryPoints = numIntegralBoundaryPoints()
+  val interiorPoints = area() - (boundaryPoints / 2) + 1
+  return boundaryPoints + interiorPoints
+}
+
+@JvmName("numIntegralBoundaryPointsOfPointList")
+fun List<Point>.numIntegralBoundaryPoints(): Int {
+  if (first() != last()) return (this + first()).numIntegralBoundaryPoints()
+  check(windowed(2).all { (a, b) -> a.x == b.x || a.y == b.y }) { "The polygon must be rectilinear." }
+  return windowed(2).sumOf { (a, b) -> a manhattanDistanceTo b }
+}
+
+@JvmName("areaOfLongPointList")
+fun List<LongPoint>.area(): Long {
+  if (first() != last()) return (this + first()).area()
+  return windowed(2).sumOf { (a, b) -> a.x * b.y - b.x * a.y }.absoluteValue / 2L
+}
+
+@JvmName("areaEnclosedByIntegralBoundaryOfLongPointList")
+fun List<LongPoint>.areaEnclosedByIntegralBoundary(): Long {
+  if (first() != last()) return (this + first()).areaEnclosedByIntegralBoundary()
+  val boundaryPoints = numIntegralBoundaryPoints()
+  return areaIncludingIntegralBoundary() - boundaryPoints
+}
+
+@JvmName("areaIncludingIntegralBoundaryOfLongPointList")
+fun List<LongPoint>.areaIncludingIntegralBoundary(): Long {
+  if (first() != last()) return (this + first()).areaIncludingIntegralBoundary()
+  val boundaryPoints = numIntegralBoundaryPoints()
+  val interiorPoints = area() - (boundaryPoints / 2L) + 1L
+  return boundaryPoints + interiorPoints
+}
+
+@JvmName("numIntegralBoundaryPointsOfLongPointList")
+fun List<LongPoint>.numIntegralBoundaryPoints(): Long {
+  if (first() != last()) return (this + first()).numIntegralBoundaryPoints()
+  check(windowed(2).all { (a, b) -> a.x == b.x || a.y == b.y }) { "The polygon must be rectilinear." }
+  return windowed(2).sumOf { (a, b) -> a manhattanDistanceTo b }
+}
+
+@JvmName("areaOfDoublePointList")
+fun List<DoublePoint>.area(): Double {
+  if (first() != last()) return (this + first()).area()
+  return windowed(2).sumOf { (a, b) -> a.x * b.y - b.x * a.y }.absoluteValue / 2.0
+}
 
 infix fun BigInteger.isDivisibleBy(other: BigInteger): Boolean = this % other == BigInteger.ZERO
 
@@ -242,6 +329,12 @@ inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Int): Int
 @OverloadResolutionByLambdaReturnType
 inline fun <T> Iterable<T>.productOfIndexedOrOne(selector: (Int, T) -> Long): Long =
   mapIndexed(selector).productOrOne()
+
+val Int.RANGE: IntRange
+  get() = Int.MIN_VALUE..Int.MAX_VALUE
+
+val Long.RANGE: LongRange
+  get() = Long.MIN_VALUE..Long.MAX_VALUE
 
 fun sqrt(x: Int): Int = sqrt(x.toDouble()).toInt()
 

@@ -2,7 +2,6 @@ import LongPoint.Companion.DOWN
 import LongPoint.Companion.LEFT
 import LongPoint.Companion.RIGHT
 import LongPoint.Companion.UP
-import kotlin.math.absoluteValue
 
 class PuzzleY2023D18 : Puzzle {
 
@@ -28,7 +27,7 @@ class PuzzleY2023D18 : Puzzle {
       }
       polygon.add(current)
     }
-    return area(polygon)
+    return polygon.areaIncludingIntegralBoundary()
   }
 
   override fun solve2(): Long {
@@ -46,15 +45,7 @@ class PuzzleY2023D18 : Puzzle {
       }
       polygon.add(current)
     }
-    return area(polygon)
-  }
-
-  private fun area(polygon: List<LongPoint>): Long {
-    check(polygon.first() == polygon.last())
-    val area = polygon.windowed(2).sumOf { (a, b) -> a.x * b.y - b.x * a.y }.absoluteValue / 2L
-    val boundaryPoints = polygon.windowed(2).sumOf { (a, b) -> a manhattanDistanceTo b }
-    val interiorPoints = area - (boundaryPoints / 2L) + 1L
-    return boundaryPoints + interiorPoints
+    return polygon.areaIncludingIntegralBoundary()
   }
 
   companion object {

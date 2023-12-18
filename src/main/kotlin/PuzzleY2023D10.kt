@@ -1,97 +1,39 @@
 class PuzzleY2023D10 : Puzzle {
 
-  private lateinit var grid: Grid<Char>
-  private lateinit var start: Index
+  private lateinit var loop: List<Index>
 
   override fun parse(input: String) {
-    grid = input.parseDenseCharGrid()
-    start = grid.indexOf('S')
+    val grid = input.parseDenseCharGrid()
+    val start = grid.indexOf('S')
     grid.patchPipeAt(start)
+    loop = grid.loopIncluding(start)
   }
 
-  override fun solve1(): Int {
-    return grid.loopIncluding(start).size / 2
-  }
+  override fun solve1(): Int = loop.size / 2
 
-  override fun solve2(): Int {
-    val grid = grid.grow(1, '.').double('.')
-    val start = start.plus(1 rc 1).times(2)
-    val loop = grid.loopIncluding(start).toSet()
-
-    fun indicesReachableFrom(start: Index): Set<Index> {
-      return buildSet {
-        val queue = dequeOf(start)
-        while (queue.isNotEmpty()) {
-          val index = queue.removeFirst()
-          if (index in loop || !add(index)) continue
-          queue.addAll(index.neighborsIn(grid))
-        }
-      }
-    }
-
-    val reachability = grid.map<Boolean?> { null }
-    for (index in reachability.indices) {
-      if (reachability[index] == null) {
-        val group = indicesReachableFrom(index)
-        if (group.any { it.isOnAnyEdgeOf(grid) }) {
-          group.forEach { reachability[it] = true }
-        } else {
-          group.forEach { reachability[it] = false }
-        }
-      }
-    }
-    return reachability.halve().count { it == false }
-  }
-
-  private fun Grid<Char>.double(c: Char): Grid<Char> {
-    return Grid(numRows * 2, numColumns * 2) { (row, column) ->
-      if (row % 2 == 0 && column % 2 == 0) {
-        this[row / 2, column / 2]
-      } else {
-        c
-      }
-    }.apply { indices.filter { it.row.isOdd || it.column.isOdd }.forEach { patchPipeAt(it) } }
-  }
-
-  private fun <T> Grid<T>.halve(): Grid<T> {
-    return Grid(numRows / 2, numColumns / 2) { (row, column) ->
-      this[row * 2, column * 2]
-    }
-  }
+  override fun solve2(): Int = loop.areaEnclosedByIntegralBoundary()
 
   private fun Grid<Char>.loopIncluding(start: Index): List<Index> {
     val grid = this
     return buildList {
-      var index = start
-      do {
-        val nextIndex = index.pipeNeighborsIn(grid).first { it != lastOrNull() }
-        add(index)
-        index = nextIndex
-      } while (index != start)
+      add(start)
+      while (true) {
+        add(last().pipeNeighborsIn(grid).filter { it !in this }.firstOrNull() ?: break)
+      }
     }
   }
 
   private fun Grid<Char>.patchPipeAt(index: Index) {
-    val grid = this
-    val connectable = buildList {
-      if (grid.getOrDefault(index.up(), '.') in "|7F") add(index.up())
-      if (grid.getOrDefault(index.right(), '.') in "-7J") add(index.right())
-      if (grid.getOrDefault(index.down(), '.') in "|JL") add(index.down())
-      if (grid.getOrDefault(index.left(), '.') in "-LF") add(index.left())
-    }
-    grid[index] = when {
-      index.up() in connectable && index.down() in connectable -> '|'
-      index.up() in connectable && index.left() in connectable -> 'J'
-      index.up() in connectable && index.right() in connectable -> 'L'
-      index.down() in connectable && index.left() in connectable -> '7'
-      index.down() in connectable && index.right() in connectable -> 'F'
-      index.left() in connectable && index.right() in connectable -> '-'
-      else -> grid[index]
-    }
+    val possible = mutableSetOf('-', '|', '7', 'F', 'J', 'L')
+    if (index !in index.up().pipeNeighborsIn(this)) possible -= listOf('|', '7', 'F')
+    if (index !in index.right().pipeNeighborsIn(this)) possible -= listOf('-', 'F', 'L')
+    if (index !in index.down().pipeNeighborsIn(this)) possible -= listOf('|', 'J', 'L')
+    if (index !in index.left().pipeNeighborsIn(this)) possible -= listOf('-', '7', 'J')
+    this[index] = possible.single()
   }
 
   private fun Index.pipeNeighborsIn(grid: Grid<Char>): List<Index> {
-    return when (grid[this]) {
+    return when (grid.getOrNull(this)) {
       '-' -> listOf(left(), right())
       '|' -> listOf(up(), down())
       '7' -> listOf(left(), down())
@@ -99,7 +41,7 @@ class PuzzleY2023D10 : Puzzle {
       'J' -> listOf(left(), up())
       'L' -> listOf(right(), up())
       else -> listOf()
-    }
+    }.filter { it in grid.indices }
   }
 
   companion object {
