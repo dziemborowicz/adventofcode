@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.9.20"
+  kotlin("jvm") version "2.0.21"
   application
 }
 
@@ -13,12 +13,12 @@ repositories {
 }
 
 dependencies {
-  implementation("com.google.guava:guava:32.1.3-jre")
-  implementation("com.google.truth:truth:1.1.5")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
-  runtimeOnly("org.jetbrains.kotlin:kotlin-scripting-jsr223:1.9.21")
+  implementation("com.google.guava:guava:33.3.1-jre")
+  implementation("com.google.truth:truth:1.4.4")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:2.0.21")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.9.0")
+  runtimeOnly("org.jetbrains.kotlin:kotlin-scripting-jsr223:2.0.21")
   testImplementation(kotlin("test"))
 }
 
