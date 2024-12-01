@@ -49,6 +49,11 @@ fun Grid<Boolean>.toStringFromAsciiArt(): String {
 }
 
 private fun Grid<Boolean>.splitByEmptyColumns(): List<Grid<Boolean>> {
-  val emptyColumns = listOf(-1) + columnIndices.filter { column(it).none { it } }
+  val emptyColumns =
+    if (columnWrapped(-1).none { it }) {
+      listOf(-1) + columnIndices.filter { column(it).none { it } }
+    } else {
+      listOf(-1) + columnIndices.filter { column(it).none { it } } + listOf(numColumns)
+    }
   return emptyColumns.windowed(2) { (a, b) -> subGrid(0, a + 1, -1, b - a - 1) }
 }
