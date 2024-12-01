@@ -1,6 +1,7 @@
 import Client.AnswerResult
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KClass
+import kotlin.reflect.KVisibility.PUBLIC
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.functions
@@ -26,7 +27,9 @@ private fun solve(year: Int, day: Int, levels: IntRange = (1..2)) {
 
   val puzzleCompanion = puzzleClass.companionObjectInstance
   if (puzzleCompanion != null) {
-    for (testMethod in puzzleCompanion::class.functions.filter { it.name.startsWith("test") }) {
+    val testMethods =
+      puzzleCompanion::class.functions.filter { it.name.startsWith("test") && it.visibility == PUBLIC }
+    for (testMethod in testMethods) {
       timed("$puzzleName ${testMethod.name}") {
         try {
           testMethod.call(puzzleCompanion)
@@ -37,11 +40,13 @@ private fun solve(year: Int, day: Int, levels: IntRange = (1..2)) {
     }
 
     for (level in levels) {
-      for (inputProperty in puzzleCompanion::class.memberProperties) {
+      val publicProperties =
+        puzzleCompanion::class.memberProperties.filter { it.visibility == PUBLIC }
+      for (inputProperty in publicProperties) {
         val match = Regex("testInput($level(_.+)?)").matchEntire(inputProperty.name) ?: continue
         val label = match.groups[1]!!.value
         val answerProperty =
-          puzzleCompanion::class.memberProperties.firstOrNull { it.name == "testAnswer$label" }
+          publicProperties.firstOrNull { it.name == "testAnswer$label" }
             ?: fail("No testAnswer$label found.")
 
         val input = inputProperty.call(puzzleCompanion) as String
