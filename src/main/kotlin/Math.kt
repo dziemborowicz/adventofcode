@@ -89,6 +89,15 @@ fun List<DoublePoint>.area(): Double {
   return windowed(2).sumOf { (a, b) -> a.x * b.y - b.x * a.y }.absoluteValue / 2.0
 }
 
+val BigInteger.digits: List<Int>
+  get() = toString().map { it.digitToInt() }
+
+val Int.digits: List<Int>
+  get() = toString().map { it.digitToInt() }
+
+val Long.digits: List<Int>
+  get() = toString().map { it.digitToInt() }
+
 infix fun BigInteger.isDivisibleBy(other: BigInteger): Boolean = this % other == BigInteger.ZERO
 
 infix fun Int.isDivisibleBy(other: Int): Boolean = this % other == 0
