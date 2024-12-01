@@ -443,6 +443,8 @@ fun <T> List<T>.toDeque(): ArrayDeque<T> = ArrayDeque(this)
 
 fun String.toDeque(): ArrayDeque<Char> = toList().toDeque()
 
+fun <K, V> Iterable<Pair<K, V>>.toHashMap(): HashMap<K, V> = hashMapOf<K, V>().also { it.putAll(this) }
+
 fun <T> priorityQueueOf() = PriorityQueue<T>()
 
 fun <T> priorityQueueOf(element: T, comparator: Comparator<in T>? = null) =
