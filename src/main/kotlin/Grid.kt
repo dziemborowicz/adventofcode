@@ -434,7 +434,12 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
     rotatedAround().transposed(),
   )
 
-  operator fun get(row: Int, column: Int): T = data[(row * numColumns) + column]
+  operator fun get(row: Int, column: Int): T {
+    if (row !in rowIndices || column !in columnIndices) {
+      throw IndexOutOfBoundsException("($row, $column) out of bounds (numRows=$numRows, numColumns=$numColumns")
+    }
+    return data[(row * numColumns) + column]
+  }
 
   operator fun get(index: Index): T = get(index.row, index.column)
 
@@ -572,8 +577,12 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
 
   fun rowWrapped(row: Int): List<T> = row(row.mod(numRows))
 
-  operator fun set(row: Int, column: Int, value: T): T =
-    value.also { data[(row * numColumns) + column] = value }
+  operator fun set(row: Int, column: Int, value: T): T {
+    if (row !in rowIndices || column !in columnIndices) {
+      throw IndexOutOfBoundsException("($row, $column) out of bounds (numRows=$numRows, numColumns=$numColumns")
+    }
+    return value.also { data[(row * numColumns) + column] = value }
+  }
 
   operator fun set(index: Index, value: T): T = set(index.row, index.column, value)
 
@@ -735,10 +744,11 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
     ) { index ->
       val baseRow = index.row * rowStep
       val baseColumn = index.column * columnStep
-      transform(Grid(
-        minOf(numRows, this.numRows - baseRow),
-        minOf(numColumns, this.numColumns - baseColumn),
-      ) { this[baseRow + it.row, baseColumn + it.column] })
+      transform(
+        Grid(
+          minOf(numRows, this.numRows - baseRow),
+          minOf(numColumns, this.numColumns - baseColumn),
+        ) { this[baseRow + it.row, baseColumn + it.column] })
     }
   }
 
