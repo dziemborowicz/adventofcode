@@ -85,6 +85,46 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   inline fun countPointed(predicate: (Point, T) -> Boolean): Int =
     points.count { predicate(it, this[it]) }
 
+  fun allDiagonals(): List<List<T>> = allDiagonalsDown() + allDiagonalsUp()
+
+  fun allDiagonalsDown(): List<List<T>> {
+    val grid = this
+    return buildList(numRows + numColumns - 1) {
+      fun addFrom(row: Int, column: Int) {
+        add(buildList(minOf(numRows - row, numColumns - column)) {
+          var r = row
+          var c = column
+          while (r in grid.rowIndices && c in grid.columnIndices) {
+            add(grid[r, c])
+            r += 1
+            c += 1
+          }
+        })
+      }
+      grid.rowIndices.reversed().forEach { addFrom(it, 0) }
+      grid.columnIndices.drop(1).forEach { addFrom(0, it) }
+    }
+  }
+
+  fun allDiagonalsUp(): List<List<T>> {
+    val grid = this
+    return buildList(numRows + numColumns - 1) {
+      fun addFrom(row: Int, column: Int) {
+        add(buildList(minOf(numRows - row, numColumns - column)) {
+          var r = row
+          var c = column
+          while (r in grid.rowIndices && c in grid.columnIndices) {
+            add(grid[r, c])
+            r -= 1
+            c += 1
+          }
+        })
+      }
+      grid.rowIndices.forEach { addFrom(it, 0) }
+      grid.columnIndices.drop(1).forEach { addFrom(numRows - 1, it) }
+    }
+  }
+
   fun diagonals(): List<List<T>> = listOf(diagonalDown(), diagonalUp())
 
   fun diagonalDown(): List<T> {
@@ -738,9 +778,21 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
     partialWindows: Boolean = false,
     crossinline transform: (Grid<T>) -> R,
   ): Grid<R> {
+    require(numRows > 0) { "numRows must be strictly positive." }
+    require(numColumns > 0) { "numColumns must be strictly positive." }
+    require(rowStep > 0) { "rowStep must be strictly positive." }
+    require(columnStep > 0) { "columnStep must be strictly positive." }
     return Grid(
-      this.numRows / rowStep + if (this.numRows % rowStep != 0 && partialWindows) 1 else 0,
-      this.numColumns / columnStep + if (this.numColumns % columnStep != 0 && partialWindows) 1 else 0,
+      if (partialWindows) {
+        (this.numRows + rowStep - 1) / rowStep
+      } else {
+        maxOf((this.numRows - numRows + rowStep) / rowStep, 0)
+      },
+      if (partialWindows) {
+        (this.numColumns + columnStep - 1) / columnStep
+      } else {
+        maxOf((this.numColumns - numColumns + columnStep) / columnStep, 0)
+      },
     ) { index ->
       val baseRow = index.row * rowStep
       val baseColumn = index.column * columnStep
