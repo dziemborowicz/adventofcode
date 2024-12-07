@@ -8,6 +8,10 @@ fun String.toChar(): Char {
   return first()
 }
 
+fun String.extractBigIntegers(): List<BigInteger> {
+  return Regex("""((?<!\d)-)?\d+""").findAll(this).map { it.value.toBigInteger() }.toList()
+}
+
 fun String.extractInts(): List<Int> {
   return Regex("""((?<!\d)-)?\d+""").findAll(this).map { it.value.toInt() }.toList()
 }
@@ -15,6 +19,13 @@ fun String.extractInts(): List<Int> {
 fun String.extractLongs(): List<Long> {
   return Regex("""((?<!\d)-)?\d+""").findAll(this).map { it.value.toLong() }.toList()
 }
+
+fun String.extractBigIntegerLists(): List<List<BigInteger>> =
+  lines().map { it.extractBigIntegers() }
+
+fun String.extractIntLists(): List<List<Int>> = lines().map { it.extractInts() }
+
+fun String.extractLongLists(): List<List<Long>> = lines().map { it.extractLongs() }
 
 fun <A> String.parse(a: (String) -> A) = lines().parse(a)
 
