@@ -89,6 +89,12 @@ fun List<DoublePoint>.area(): Double {
   return windowed(2).sumOf { (a, b) -> a.x * b.y - b.x * a.y }.absoluteValue / 2.0
 }
 
+fun BigInteger.ceilDiv(other: BigInteger): BigInteger = (this + other - BigInteger.ONE) / other
+
+fun Int.ceilDiv(other: Int): Int = (this + other - 1) / other
+
+fun Long.ceilDiv(other: Long): Long = (this + other - 1L) / other
+
 val BigInteger.digits: List<Int>
   get() = toString().map { it.digitToInt() }
 
