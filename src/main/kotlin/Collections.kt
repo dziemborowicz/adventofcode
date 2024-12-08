@@ -83,6 +83,8 @@ fun <T> List<List<T>>.copy(): List<List<T>> = map { it.toList() }
 @JvmName("copyListOfListOfList")
 fun <T> List<List<List<T>>>.copy(): List<List<List<T>>> = map { it.copy() }
 
+fun Iterable<*>.countDistinct(): Int = toSet().size
+
 fun <T> Iterable<T>.longCount(): Long {
   var count = 0L
   for (it in this) count++
