@@ -3,31 +3,28 @@ import java.math.BigInteger
 typealias DoubleRange = ClosedFloatingPointRange<Double>
 
 val CharProgression.count: Long
-  get() =
-    if (isEmpty()) {
-      0L
-    } else {
-      ((last.code - first.code) / step.toLong()) + 1L
-    }
+  get() = if (isEmpty()) {
+    0L
+  } else {
+    ((last.code - first.code) / step.toLong()) + 1L
+  }
 
 val DoubleRange.length: Double
   get() = if (isEmpty()) 0.0 else endInclusive - start
 
 val IntProgression.count: Long
-  get() =
-    if (isEmpty()) {
-      0L
-    } else {
-      ((last.toLong() - first.toLong()) / step.toLong()) + 1L
-    }
+  get() = if (isEmpty()) {
+    0L
+  } else {
+    ((last.toLong() - first.toLong()) / step.toLong()) + 1L
+  }
 
 val LongProgression.count: BigInteger
-  get() =
-    if (isEmpty()) {
-      BigInteger.ZERO
-    } else {
-      ((last.toBigInteger() - first.toBigInteger()) / step.toBigInteger()) + BigInteger.ONE
-    }
+  get() = if (isEmpty()) {
+    BigInteger.ZERO
+  } else {
+    ((last.toBigInteger() - first.toBigInteger()) / step.toBigInteger()) + BigInteger.ONE
+  }
 
 fun CharRange.containsAny(other: CharRange): Boolean = !(this intersect other).isEmpty()
 
@@ -79,6 +76,42 @@ fun CharRange.inverted(): CharRangeSet = toCharRangeSet().inverted()
 fun IntRange.inverted(): IntRangeSet = toIntRangeSet().inverted()
 
 fun LongRange.inverted(): LongRangeSet = toLongRangeSet().inverted()
+
+fun CharRange.moveToEndAt(end: Char): CharRange {
+  val start = end.code - count + 1
+  check(start >= Char.MIN_VALUE.code)
+  return start.toInt().toChar()..end
+}
+
+fun IntRange.moveToEndAt(end: Int): IntRange {
+  val start = end - count + 1
+  check(start >= Int.MIN_VALUE)
+  return start.toInt()..end
+}
+
+fun LongRange.moveToEndAt(end: Long): LongRange {
+  val start = end.toBigInteger() - count + BigInteger.ONE
+  check(start >= Long.MIN_VALUE.toBigInteger())
+  return start.toLong()..end
+}
+
+fun CharRange.moveToStartAt(start: Char): CharRange {
+  val end = start.code + count - 1
+  check(end <= Char.MAX_VALUE.code)
+  return start..end.toInt().toChar()
+}
+
+fun IntRange.moveToStartAt(start: Int): IntRange {
+  val end = start + count - 1
+  check(end <= Int.MAX_VALUE)
+  return start..end.toInt()
+}
+
+fun LongRange.moveToStartAt(start: Long): LongRange {
+  val end = start.toBigInteger() + count - BigInteger.ONE
+  check(end <= Long.MAX_VALUE.toBigInteger())
+  return start..end.toLong()
+}
 
 fun Double.remap(from: DoubleRange, to: DoubleRange): Double {
   val steps = (this - from.start) / from.length

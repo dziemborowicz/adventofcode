@@ -361,9 +361,9 @@ fun Iterable<BigDecimal>.sum(): BigDecimal = fold(BigDecimal.ZERO) { a, b -> a +
 
 fun Iterable<BigInteger>.sum(): BigInteger = fold(BigInteger.ZERO) { a, b -> a + b }
 
-fun IntRange.sum(): Int = sumOfRange(first, last)
+fun IntRange.sum(): Long = sumOfRange(first, last)
 
-fun LongRange.sum(): Long = sumOfRange(first, last)
+fun LongRange.sum(): BigInteger = sumOfRange(first, last)
 
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
@@ -389,14 +389,14 @@ inline fun <T> Iterable<T>.sumOfIndexed(selector: (Int, T) -> Int): Int = mapInd
 inline fun <T> Iterable<T>.sumOfIndexed(selector: (Int, T) -> Long): Long =
   mapIndexed(selector).sum()
 
-fun sumOfRange(firstInclusive: Int, lastInclusive: Int): Int {
+fun sumOfRange(firstInclusive: Int, lastInclusive: Int): Long {
   if (firstInclusive > lastInclusive) return 0
-  return ((lastInclusive - firstInclusive + 1) * (firstInclusive + lastInclusive)) / 2
+  return ((lastInclusive.toLong() - firstInclusive.toLong() + 1) * (firstInclusive.toLong() + lastInclusive.toLong())) / 2
 }
 
-fun sumOfRange(firstInclusive: Long, lastInclusive: Long): Long {
-  if (firstInclusive > lastInclusive) return 0
-  return ((lastInclusive - firstInclusive + 1) * (firstInclusive + lastInclusive)) / 2
+fun sumOfRange(firstInclusive: Long, lastInclusive: Long): BigInteger {
+  if (firstInclusive > lastInclusive) return BigInteger.ZERO
+  return ((lastInclusive.toBigInteger() - firstInclusive.toBigInteger() + BigInteger.ONE) * (firstInclusive.toBigInteger() + lastInclusive.toBigInteger())) / BigInteger.TWO
 }
 
 fun sumOfRangeUpTo(lastInclusive: Int) = sumOfRange(0, lastInclusive)
