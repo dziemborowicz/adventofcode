@@ -48,6 +48,8 @@ data class Index(val row: Int, val column: Int) {
 
   fun rotateCounterclockwise(times: Int = 1): Index = rotateClockwise(-times)
 
+  fun corners(): List<List<Index>> = CORNERS.map { corner -> corner.map { this + it } }
+
   fun neighbors(): List<Index> = listOf(up(), right(), down(), left())
 
   fun neighborsWithDiagonals(): List<Index> =
@@ -175,6 +177,9 @@ data class Index(val row: Int, val column: Int) {
     val DIRECTIONS = listOf(UP, RIGHT, DOWN, LEFT)
     val DIRECTIONS_WITH_DIAGONALS =
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
+
+    val CORNERS =
+      listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP).windowed(3, 2)
   }
 }
 

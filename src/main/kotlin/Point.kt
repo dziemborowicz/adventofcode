@@ -45,6 +45,8 @@ data class Point(val x: Int, val y: Int) {
 
   fun rotateCounterclockwise(times: Int = 1): Point = rotateClockwise(-times)
 
+  fun corners(): List<List<Point>> = CORNERS.map { corner -> corner.map { this + it } }
+
   fun neighbors(): List<Point> = listOf(up(), right(), down(), left())
 
   fun neighborsWithDiagonals(): List<Point> =
@@ -168,6 +170,9 @@ data class Point(val x: Int, val y: Int) {
     val DIRECTIONS = listOf(UP, RIGHT, DOWN, LEFT)
     val DIRECTIONS_WITH_DIAGONALS =
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
+
+    val CORNERS =
+      listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP).windowed(3, 2)
   }
 }
 

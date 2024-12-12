@@ -51,6 +51,8 @@ data class DoublePoint(val x: Double, val y: Double) {
 
   fun rotateCounterclockwise(times: Int = 1): DoublePoint = rotateClockwise(-times)
 
+  fun corners(): List<List<DoublePoint>> = CORNERS.map { corner -> corner.map { this + it } }
+
   fun neighbors(): List<DoublePoint> = listOf(up(), right(), down(), left())
 
   fun neighborsWithDiagonals(): List<DoublePoint> =
@@ -152,6 +154,9 @@ data class DoublePoint(val x: Double, val y: Double) {
     val DIRECTIONS = listOf(UP, RIGHT, DOWN, LEFT)
     val DIRECTIONS_WITH_DIAGONALS =
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
+
+    val CORNERS =
+      listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP).windowed(3, 2)
   }
 }
 
