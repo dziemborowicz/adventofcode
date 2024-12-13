@@ -7,7 +7,7 @@ class PuzzleY2022D20 : Puzzle {
   private lateinit var numbers: List<Long>
 
   override fun parse(input: String) {
-    numbers = input.parseLongs()
+    numbers = input.extractLongs()
   }
 
   override fun solve1(): Long {

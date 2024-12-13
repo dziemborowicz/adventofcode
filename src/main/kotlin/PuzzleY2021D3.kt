@@ -6,7 +6,7 @@ class PuzzleY2021D3 : Puzzle {
     get() = report[0].length
 
   override fun parse(input: String) {
-    report = input.parseStrings()
+    report = input.lines()
   }
 
   override fun solve1(): Int {

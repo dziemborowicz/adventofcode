@@ -4,15 +4,15 @@ class PuzzleY2021D13 : Puzzle {
   data class FoldLeft(val x: Int) : Fold
   data class FoldUp(val y: Int) : Fold
 
-  private lateinit var dots: List<Pair<Int, Int>>
+  private lateinit var dots: List<List<Int>>
   private lateinit var grid: Grid<Boolean>
   private lateinit var folds: List<Fold>
 
   override fun parse(input: String) {
     val parts = input.lines().splitByBlank()
-    dots = parts[0].parseIntInts()
-    grid = Grid(dots.maxOf { it.second } + 1, dots.maxOf { it.first } + 1, false).also { grid ->
-      dots.forEach { grid[it.second, it.first] = true }
+    dots = parts[0].extractIntLists()
+    grid = Grid(dots.maxOf { it.second() } + 1, dots.maxOf { it.first() } + 1, false).also { grid ->
+      dots.forEach { grid[it.second(), it.first()] = true }
     }
     folds = parts[1].map { instruction ->
       val regex = Regex("fold along ([xy])=(\\d+)")

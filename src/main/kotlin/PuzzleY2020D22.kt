@@ -5,7 +5,7 @@ class PuzzleY2020D22 : Puzzle {
   private lateinit var cards: List<List<Int>>
 
   override fun parse(input: String) {
-    cards = input.lines().splitByBlank().map { it.drop(1).parseInts() }
+    cards = input.lines().splitByBlank().map { it.drop(1).extractInts() }
   }
 
   override fun solve1(): Int = play(cards, recursive = false).score

@@ -5,7 +5,7 @@ class PuzzleY2021D7 : Puzzle {
   private lateinit var crabs: List<Int>
 
   override fun parse(input: String) {
-    crabs = input.parseIntLists().first()
+    crabs = input.extractInts()
   }
 
   override fun solve1(): Int {

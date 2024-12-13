@@ -3,7 +3,7 @@ class PuzzleY2020D25 : Puzzle {
   private lateinit var publicKeys: List<Long>
 
   override fun parse(input: String) {
-    publicKeys = input.parseLongs()
+    publicKeys = input.extractLongs()
   }
 
   override fun solve1(): Long {

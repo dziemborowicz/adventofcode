@@ -3,7 +3,7 @@ class PuzzleY2021D2 : Puzzle {
   private lateinit var commands: List<Pair<String, Int>>
 
   override fun parse(input: String) {
-    commands = input.parseStringInts()
+    commands = input.extractList(String::toString, String::toInt)
   }
 
   override fun solve1(): Int {

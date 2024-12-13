@@ -5,7 +5,7 @@ class PuzzleY2020D9 : Puzzle {
   private var invalidNumber: Long = -1
 
   override fun parse(input: String) {
-    numbers = input.parseLongs()
+    numbers = input.extractLongs()
     val preambleLength = if (numbers.size > 20) 25 else 5
 
     invalidNumber = numbers.firstIndexed { i, number ->

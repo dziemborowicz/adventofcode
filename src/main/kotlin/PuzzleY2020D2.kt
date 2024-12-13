@@ -30,7 +30,7 @@ class PuzzleY2020D2 : Puzzle {
     companion object {
       fun parse(string: String): PasswordPolicy {
         val (count, char) = string.split(' ')
-        return PasswordPolicy(count.extractInts(), char.toChar())
+        return PasswordPolicy(count.extractInts(), char.single())
       }
     }
   }

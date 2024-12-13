@@ -3,7 +3,7 @@ class PuzzleY2021D1 : Puzzle {
   private lateinit var depths: List<Int>
 
   override fun parse(input: String) {
-    depths = input.parseInts()
+    depths = input.extractInts()
   }
 
   override fun solve1(): Int {

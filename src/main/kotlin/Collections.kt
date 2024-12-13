@@ -75,6 +75,11 @@ operator fun <T> List<T>.component7(): T = get(6)
 operator fun <T> List<T>.component8(): T = get(7)
 operator fun <T> List<T>.component9(): T = get(8)
 
+fun <T> List<T>.second(): T = get(1)
+fun <T> List<T>.third(): T = get(2)
+fun <T> List<T>.fourth(): T = get(3)
+fun <T> List<T>.fifth(): T = get(4)
+
 fun <T> List<T>.copy(): List<T> = toList()
 
 @JvmName("copyListOfList")

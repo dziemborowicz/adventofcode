@@ -5,7 +5,7 @@ class PuzzleY2021D4 : Puzzle {
 
   override fun parse(input: String) {
     val parts = input.lines().splitByBlank()
-    draw = parts.first().parseIntLists().first()
+    draw = parts.first().extractIntLists().single()
     boards = parts.drop(1).map { it.parseNullableIntGrid() }
   }
 

@@ -7,7 +7,7 @@ class PuzzleY2020D10 : Puzzle {
   private var chargingOutlet = 0
 
   override fun parse(input: String) {
-    adapters = input.parseInts().toSet()
+    adapters = input.extractInts().toSet()
     builtInAdapter = adapters.max() + 3
     allAdapters = adapters + builtInAdapter + chargingOutlet
   }

@@ -4,7 +4,7 @@ class PuzzleY2021D6 : Puzzle {
   private val cache = mutableMapOf<Pair<Int, Int>, Long>()
 
   override fun parse(input: String) {
-    daysUntilSpawn = input.parseIntLists().first()
+    daysUntilSpawn = input.extractInts()
   }
 
   override fun solve1(): Long {

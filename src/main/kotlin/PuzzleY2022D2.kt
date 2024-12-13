@@ -1,24 +1,24 @@
 class PuzzleY2022D2 : Puzzle {
 
-  lateinit var strategyGuide: List<Pair<Char, Char>>
+  lateinit var strategyGuide: List<List<Char>>
 
   override fun parse(input: String) {
-    strategyGuide = input.parseCharChars()
+    strategyGuide = input.extractCharLists()
   }
 
   override fun solve1(): Int {
-    return strategyGuide.sumOf {
-      val opponentsShape = it.first - 'A' + 1
-      val yourShape = it.second - 'X' + 1
+    return strategyGuide.sumOf { (first, second) ->
+      val opponentsShape = first - 'A' + 1
+      val yourShape = second - 'X' + 1
       val outcome = (yourShape - opponentsShape + 1).mod(3) * 3
       yourShape + outcome
     }
   }
 
   override fun solve2(): Int {
-    return strategyGuide.sumOf {
-      val opponentsShape = it.first - 'A' + 1
-      val outcome = (it.second - 'X') * 3
+    return strategyGuide.sumOf { (first, second) ->
+      val opponentsShape = first - 'A' + 1
+      val outcome = (second - 'X') * 3
       val yourShape = (opponentsShape - 1 + (outcome / 3) - 1).mod(3) + 1
       yourShape + outcome
     }
