@@ -16,8 +16,8 @@ class PuzzleY2024D13 : Puzzle {
       val b = (px - a * ax) / bx
 
       when {
-        a < 0 || a > 100 || a.isNotIntegral() -> Rational.ZERO
-        b < 0 || b > 100 || b.isNotIntegral() -> Rational.ZERO
+        a !in 0..100 || a.isNotIntegral() -> Rational.ZERO
+        b !in 0..100 || b.isNotIntegral() -> Rational.ZERO
         else -> (3 * a) + b
       }
     }

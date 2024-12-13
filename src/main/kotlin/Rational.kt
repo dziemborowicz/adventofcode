@@ -156,6 +156,12 @@ infix operator fun Rational.div(other: Int): Rational = this / other.toRational(
 infix operator fun Rational.div(other: Long): Rational = this / other.toRational()
 infix operator fun Rational.div(other: BigInteger): Rational = this / other.toRational()
 
+operator fun IntRange.contains(rational: Rational): Boolean =
+  rational in (first.toRational()..last.toRational())
+
+operator fun LongRange.contains(rational: Rational): Boolean =
+  rational in (first.toRational()..last.toRational())
+
 fun Iterable<Rational>.product(): Rational {
   var sum = Rational.ONE
   for (element in this) {
