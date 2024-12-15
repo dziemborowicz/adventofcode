@@ -15,7 +15,7 @@ class PuzzleY2024D14 : Puzzle {
   override fun solve2(): Int {
     var grid = robots.toGrid(numRows = 103, numColumns = 101)
     var seconds = 0
-    while (!grid.containsBlock()) {
+    while (!grid.all { it.size in 0..1 }) {
       grid = evolve(grid)
       seconds++
     }
@@ -36,18 +36,6 @@ class PuzzleY2024D14 : Puzzle {
       @Suppress("UNCHECKED_CAST") return result as Grid<List<Robot>>
     }
 
-    private fun safetyFactor(robots: List<Robot>, numRows: Int, numColumns: Int): Int {
-      var grid = robots.toGrid(numRows, numColumns)
-      repeat(100) { grid = evolve(grid) }
-      val quadrants = listOf(
-        grid.subGrid(0, 0, numRows / 2, numColumns / 2),
-        grid.subGrid(0, numColumns / 2 + 1, numRows / 2, numColumns / 2),
-        grid.subGrid(numRows / 2 + 1, 0, numRows / 2, numColumns / 2),
-        grid.subGrid(numRows / 2 + 1, numColumns / 2 + 1, numRows / 2, numColumns / 2),
-      )
-      return quadrants.productOf { it.values().sumOf { it.size } }
-    }
-
     private fun evolve(grid: Grid<List<Robot>>): Grid<List<Robot>> {
       val result = Grid(grid.numRows, grid.numColumns) { mutableListOf<Robot>() }
       grid.forEachIndexed { position, robots ->
@@ -59,10 +47,16 @@ class PuzzleY2024D14 : Puzzle {
       @Suppress("UNCHECKED_CAST") return result as Grid<List<Robot>>
     }
 
-    private fun Grid<List<Robot>>.containsBlock(): Boolean {
-      return indices.filter { this[it].isNotEmpty() }.any {
-        it.neighborsWithDiagonals().all { it in this.indices && this[it].isNotEmpty() }
-      }
+    private fun safetyFactor(robots: List<Robot>, numRows: Int, numColumns: Int): Int {
+      var grid = robots.toGrid(numRows, numColumns)
+      repeat(100) { grid = evolve(grid) }
+      val quadrants = listOf(
+        grid.subGrid(0, 0, numRows / 2, numColumns / 2),
+        grid.subGrid(0, numColumns / 2 + 1, numRows / 2, numColumns / 2),
+        grid.subGrid(numRows / 2 + 1, 0, numRows / 2, numColumns / 2),
+        grid.subGrid(numRows / 2 + 1, numColumns / 2 + 1, numRows / 2, numColumns / 2),
+      )
+      return quadrants.productOf { it.values().sumOf { it.size } }
     }
 
     fun test1() {
