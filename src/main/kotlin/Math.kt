@@ -95,6 +95,30 @@ fun Int.ceilDiv(other: Int): Int = (this + other - 1) / other
 
 fun Long.ceilDiv(other: Long): Long = (this + other - 1L) / other
 
+fun Long.coerceToInt(): Int {
+  return when {
+    this < Int.MIN_VALUE -> Int.MIN_VALUE
+    this > Int.MAX_VALUE -> Int.MAX_VALUE
+    else -> this.toInt()
+  }
+}
+
+fun BigInteger.coerceToInt(): Int {
+  return when {
+    this < Int.MIN_VALUE.toBigInteger() -> Int.MIN_VALUE
+    this > Int.MAX_VALUE.toBigInteger() -> Int.MAX_VALUE
+    else -> this.toInt()
+  }
+}
+
+fun BigInteger.coerceToLong(): Long {
+  return when {
+    this < Long.MIN_VALUE.toBigInteger() -> Long.MIN_VALUE
+    this > Long.MAX_VALUE.toBigInteger() -> Long.MAX_VALUE
+    else -> this.toLong()
+  }
+}
+
 val BigInteger.digits: List<Int>
   get() = toString().map { it.digitToInt() }
 
