@@ -177,6 +177,7 @@ data class Index(val row: Int, val column: Int) {
     val DIRECTIONS = listOf(UP, RIGHT, DOWN, LEFT)
     val DIRECTIONS_WITH_DIAGONALS =
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
+    val DIAGONALS = listOf(UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT)
 
     val CORNERS =
       listOf(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP).windowed(3, 2)
