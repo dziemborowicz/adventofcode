@@ -126,6 +126,9 @@ inline fun <T> List<T>.firstIndexedOrNull(predicate: (Int, T) -> Boolean): T? {
   return null
 }
 
+fun <T> List<T>.getOrDefault(index: Int, default: T): T =
+  if (index in indices) get(index) else default
+
 fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
 
 fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)
@@ -450,7 +453,8 @@ fun <T> List<T>.toDeque(): ArrayDeque<T> = ArrayDeque(this)
 
 fun String.toDeque(): ArrayDeque<Char> = toList().toDeque()
 
-fun <K, V> Iterable<Pair<K, V>>.toHashMap(): HashMap<K, V> = hashMapOf<K, V>().also { it.putAll(this) }
+fun <K, V> Iterable<Pair<K, V>>.toHashMap(): HashMap<K, V> =
+  hashMapOf<K, V>().also { it.putAll(this) }
 
 fun <T> priorityQueueOf() = PriorityQueue<T>()
 

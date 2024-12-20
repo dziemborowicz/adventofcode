@@ -11,4 +11,6 @@ fun List<String>.getOrDefault(index: Index, default: Char): Char = getOrNull(ind
 
 fun List<String>.getOrNull(index: Index): Char? = getOrNull(index.row)?.getOrNull(index.column)
 
+fun String.getWrapped(index: Int): Char = get(index.mod(length))
+
 fun String.splitByBlank(): List<String> = this.split("\n\n")
