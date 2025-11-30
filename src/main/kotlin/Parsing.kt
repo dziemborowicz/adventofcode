@@ -225,6 +225,7 @@ fun Iterable<String>.parseStringGrid() = Grid(extractStringLists())
 
 fun String.parseDenseBigDecimalGrid() = lines().parseDenseBigDecimalGrid()
 fun String.parseDenseBigIntegerGrid() = lines().parseDenseBigIntegerGrid()
+fun String.parseDenseBooleanGrid() = lines().parseDenseBooleanGrid()
 fun String.parseDenseCharGrid() = lines().parseDenseCharGrid()
 fun String.parseDenseDoubleGrid() = lines().parseDenseDoubleGrid()
 fun String.parseDenseIntGrid() = lines().parseDenseIntGrid()
@@ -236,6 +237,8 @@ fun Iterable<String>.parseDenseBigDecimalGrid() =
   Grid(map { it.toList().map(Char::toString).map(String::toBigDecimal) })
 fun Iterable<String>.parseDenseBigIntegerGrid() =
   Grid(map { it.toList().map(Char::toString).map(String::toBigInteger) })
+fun Iterable<String>.parseDenseBooleanGrid(trueValue: Char = '#') =
+  Grid(map { it.map { it == trueValue }})
 fun Iterable<String>.parseDenseCharGrid(): Grid<Char> {
   val numColumns = maxOf { it.length }
   return Grid(map { it.padEnd(numColumns, ' ').toList() })
@@ -271,6 +274,7 @@ fun Iterable<String>.parseNullableStringGrid() = parseStringGrid() as Grid<Strin
 
 fun String.parseNullableDenseBigDecimalGrid() = parseDenseBigDecimalGrid() as Grid<BigDecimal?>
 fun String.parseNullableDenseBigIntegerGrid() = parseDenseBigIntegerGrid() as Grid<BigInteger?>
+fun String.parseNullableDenseBooleanGrid() = parseDenseBooleanGrid() as Grid<BigInteger?>
 fun String.parseNullableDenseCharGrid() = parseDenseCharGrid() as Grid<Char?>
 fun String.parseNullableDenseDoubleGrid() = parseDenseDoubleGrid() as Grid<Double?>
 fun String.parseNullableDenseIntGrid() = parseDenseIntGrid() as Grid<Int?>
@@ -280,6 +284,7 @@ fun String.parseNullableDenseStringGrid() = parseDenseStringGrid() as Grid<Strin
 
 fun Iterable<String>.parseNullableDenseBigDecimalGrid() = parseDenseBigDecimalGrid() as Grid<BigDecimal?>
 fun Iterable<String>.parseNullableDenseBigIntegerGrid() = parseDenseBigIntegerGrid() as Grid<BigInteger?>
+fun Iterable<String>.parseNullableDenseBooleanGrid() = parseDenseBooleanGrid() as Grid<BigInteger?>
 fun Iterable<String>.parseNullableDenseCharGrid() = parseDenseCharGrid() as Grid<Char?>
 fun Iterable<String>.parseNullableDenseDoubleGrid() = parseDenseDoubleGrid() as Grid<Double?>
 fun Iterable<String>.parseNullableDenseIntGrid() = parseDenseIntGrid() as Grid<Int?>

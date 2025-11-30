@@ -80,6 +80,10 @@ fun <T> List<T>.third(): T = get(2)
 fun <T> List<T>.fourth(): T = get(3)
 fun <T> List<T>.fifth(): T = get(4)
 
+fun Iterable<Boolean>.all(): Boolean = all { it }
+fun Iterable<Boolean>.any(): Boolean = any { it }
+fun Iterable<Boolean>.none(): Boolean = none { it }
+
 fun <T> List<T>.copy(): List<T> = toList()
 
 @JvmName("copyListOfList")
