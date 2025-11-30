@@ -1,7 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-  kotlin("jvm") version "2.0.21"
+  kotlin("jvm") version "2.2.21"
   application
 }
 
@@ -13,21 +11,21 @@ repositories {
 }
 
 dependencies {
-  implementation("com.google.guava:guava:33.3.1-jre")
-  implementation("com.google.truth:truth:1.4.4")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:2.0.21")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.9.0")
-  runtimeOnly("org.jetbrains.kotlin:kotlin-scripting-jsr223:2.0.21")
+  implementation("com.google.guava:guava:33.5.0-jre")
+  implementation("com.google.truth:truth:1.4.5")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.21")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.10.2")
+  runtimeOnly("org.jetbrains.kotlin:kotlin-scripting-jsr223:2.2.21")
   testImplementation(kotlin("test"))
+}
+
+kotlin {
+  jvmToolchain(23)
 }
 
 tasks.test {
   useJUnitPlatform()
-}
-
-tasks.withType<KotlinCompile> {
-  kotlinOptions.jvmTarget = "1.8"
 }
 
 application {
