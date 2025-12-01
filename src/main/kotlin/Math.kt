@@ -128,6 +128,10 @@ val Int.digits: List<Int>
 val Long.digits: List<Int>
   get() = toString().map { it.digitToInt() }
 
+fun Long.digitToChar(): Char = toInt().digitToChar()
+
+fun Long.digitToChar(radix: Int): Char = toInt().digitToChar(radix)
+
 infix fun BigInteger.isDivisibleBy(other: BigInteger): Boolean = this % other == BigInteger.ZERO
 
 infix fun Int.isDivisibleBy(other: Int): Boolean = this % other == 0
