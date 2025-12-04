@@ -137,6 +137,9 @@ fun <T> List<T>.getWrapped(index: Int): T = get(index.mod(size))
 
 fun <T> MutableList<T>.setWrapped(index: Int, element: T): T = set(index.mod(size), element)
 
+fun <T, K> Iterable<T>.groupedBy(selector: (T) -> K): List<List<T>> =
+  groupBy(selector).values.toList()
+
 fun <T> Iterable<T>.indexOfOrThrow(element: T): Int =
   indexOf(element).also { if (it == -1) throw NoSuchElementException() }
 
