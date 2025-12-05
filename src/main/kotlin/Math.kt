@@ -223,6 +223,9 @@ inline fun <T> Iterable<T>.lcmOf(selector: (T) -> Int): Int = map(selector).lcm(
 @OverloadResolutionByLambdaReturnType
 inline fun <T> Iterable<T>.lcmOf(selector: (T) -> Long): Long = map(selector).lcm()
 
+fun Int.modInverse(m: Int): Int = toBigInteger().modInverse(m.toBigInteger()).toInt()
+fun Long.modInverse(m: Long): Long = toBigInteger().modInverse(m.toBigInteger()).toLong()
+
 infix fun Int.pow(exponent: Int): Int {
   if (exponent < 0) throw ArithmeticException("Negative exponent")
   var base = this
