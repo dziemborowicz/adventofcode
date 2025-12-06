@@ -4,6 +4,8 @@ class Counter<T> {
 
   private val counts = hashMapOf<T, Int>()
 
+  fun clear(): Unit = counts.clear()
+
   fun countAll(): Int = counts.values.sum()
 
   fun countUnique(): Int = counts.values.count { it != 0 }

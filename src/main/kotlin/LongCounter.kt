@@ -4,6 +4,8 @@ class LongCounter<T> {
 
   private val counts = hashMapOf<T, Long>()
 
+  fun clear(): Unit = counts.clear()
+
   fun countAll(): Long = counts.values.sum()
 
   fun countUnique(): Long = counts.values.count { it != 0L }.toLong()

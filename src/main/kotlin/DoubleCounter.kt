@@ -4,6 +4,8 @@ class DoubleCounter<T> {
 
   private val counts = hashMapOf<T, Double>()
 
+  fun clear(): Unit = counts.clear()
+
   fun countAll(): Double = counts.values.sum()
 
   fun countUnique(): Double = counts.values.count { it != 0.0 }.toDouble()
