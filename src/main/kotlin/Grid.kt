@@ -889,3 +889,77 @@ inline fun <T> Grid<T>.renderToString(renderer: (T) -> Char): String {
     }
   }
 }
+
+fun Grid<Char>.splitByBlankColumns(): List<Grid<Char>> = splitByColumnsOf(' ')
+
+fun <T> Grid<T>.splitByColumnsOf(element: T): List<Grid<T>> = splitByColumnsThat { it == element }
+
+inline fun <T> Grid<T>.splitByColumnsThat(predicate: (T) -> Boolean): List<Grid<T>> {
+  val grid = this
+
+  val emptyColumns = listOf(-1) + grid.columns().mapIndexedNotNull { c, values ->
+    if (values.all { predicate(it) }) {
+      c
+    } else {
+      null
+    }
+  } + grid.numColumns
+
+  return emptyColumns.windowed(2) { (a, b) ->
+    grid.subGrid(row = 0, column = a + 1, numRows = grid.numRows, numColumns = b - a - 1)
+  }
+}
+
+fun Grid<Char>.splitByBlankRows(): List<Grid<Char>> = splitByRowsOf(' ')
+
+fun <T> Grid<T>.splitByRowsOf(element: T): List<Grid<T>> = splitByRowsThat { it == element }
+
+inline fun <T> Grid<T>.splitByRowsThat(predicate: (T) -> Boolean): List<Grid<T>> {
+  val grid = this
+
+  val emptyRows = listOf(-1) + grid.rows().mapIndexedNotNull { r, values ->
+    if (values.all { predicate(it) }) {
+      r
+    } else {
+      null
+    }
+  } + grid.numRows
+
+  return emptyRows.windowed(2) { (a, b) ->
+    grid.subGrid(row = a + 1, column = 0, numRows = b - a - 1, numColumns = grid.numColumns)
+  }
+}
+
+fun Grid<Char>.splitByBlankRowsAndColumns(): Grid<Grid<Char>> = splitByRowsAndColumnsOf(' ')
+
+fun <T> Grid<T>.splitByRowsAndColumnsOf(element: T): Grid<Grid<T>> =
+  splitByRowsAndColumnsThat { it == element }
+
+inline fun <T> Grid<T>.splitByRowsAndColumnsThat(isBlank: (T) -> Boolean): Grid<Grid<T>> {
+  val grid = this
+
+  val emptyRows = listOf(-1) + grid.rows().mapIndexedNotNull { r, values ->
+    if (values.all { isBlank(it) }) {
+      r
+    } else {
+      null
+    }
+  } + grid.numRows
+
+  val emptyColumns = listOf(-1) + grid.columns().mapIndexedNotNull { c, values ->
+    if (values.all { isBlank(it) }) {
+      c
+    } else {
+      null
+    }
+  } + grid.numColumns
+
+  val subGridRows = emptyRows.windowed(2)
+  val subGridColumns = emptyColumns.windowed(2)
+
+  return Grid(subGridRows.size, subGridColumns.size) { index ->
+    val (ra, rb) = subGridRows[index.row]
+    val (ca, cb) = subGridColumns[index.column]
+    grid.subGrid(row = ra + 1, column = ca + 1, numRows = rb - ra - 1, numColumns = cb - ca - 1)
+  }
+}
