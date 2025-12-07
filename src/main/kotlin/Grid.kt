@@ -48,6 +48,19 @@ class Grid<T>(val numRows: Int, val numColumns: Int, init: (Index) -> T) {
   inline fun anyPointed(predicate: (Point, T) -> Boolean): Boolean =
     points.any { predicate(it, this[it]) }
 
+  val centerIndex: Index
+    get() = centerIndexOrNull ?: throw NoSuchElementException()
+
+  val centerIndexOrNull: Index? = if (numRows and 1 == 1 && numColumns and 1 == 1) {
+    Index(numRows / 2, numColumns / 2)
+  } else {
+    null
+  }
+
+  fun center(): T = this[centerIndex]
+
+  fun centerOrNull(): T? = centerIndexOrNull?.let { this[it] }
+
   fun chunked(
     numRows: Int,
     numColumns: Int = numRows,
