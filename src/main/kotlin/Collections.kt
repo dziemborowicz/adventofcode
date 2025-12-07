@@ -1,5 +1,11 @@
 import java.util.PriorityQueue
 
+fun <T> Iterable<T>.combinations(): Sequence<List<T>> =
+  combinations(0..count())
+
+fun <T> Iterable<T>.combinations(length: IntRange): Sequence<List<T>> =
+  length.map { combinations(it) }.reduce { a, b -> a + b }
+
 fun <T> Iterable<T>.combinations(length: Int): Sequence<List<T>> {
   val pool = this as? List<T> ?: toList()
   return sequence {
