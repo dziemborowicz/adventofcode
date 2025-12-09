@@ -83,6 +83,10 @@ fun LongPoint3(string: String): LongPoint3 {
   return LongPoint3(parts[0].toLong(), parts[1].toLong(), parts[2].toLong())
 }
 
+fun Point3.toLongPoint3(): LongPoint3 = LongPoint3(x.toLong(), y.toLong(), z.toLong())
+
+fun DoublePoint3.toLongPoint3(): LongPoint3 = LongPoint3(x.toLong(), y.toLong(), z.toLong())
+
 fun Triple<Long, Long, Long>.toLongPoint3(): LongPoint3 = LongPoint3(this)
 
 fun String.toLongPoint3(): LongPoint3 = LongPoint3(this)

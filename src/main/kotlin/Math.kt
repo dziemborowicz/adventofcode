@@ -89,6 +89,122 @@ fun List<DoublePoint>.area(): Double {
   return windowed(2).sumOf { (a, b) -> a.x * b.y - b.x * a.y }.absoluteValue / 2.0
 }
 
+fun Index.isInsidePolygon(polygon: List<Index>): Boolean =
+  Point(column, row).isInsidePolygon(polygon.map { Point(it.column, it.row) })
+
+fun Point.isInsidePolygon(polygon: List<Point>): Boolean =
+  toDoublePoint().isInsidePolygon(polygon.map { it.toDoublePoint() })
+
+fun LongPoint.isInsidePolygon(polygon: List<LongPoint>): Boolean =
+  toDoublePoint().isInsidePolygon(polygon.map { it.toDoublePoint() })
+
+@JvmName("isPointInsidePolygon")
+fun DoublePoint.isInsidePolygon(polygon: List<Point>): Boolean =
+  isInsidePolygon(polygon.map { it.toDoublePoint() })
+
+@JvmName("isLongPointInsidePolygon")
+fun DoublePoint.isInsidePolygon(polygon: List<LongPoint>): Boolean =
+  isInsidePolygon(polygon.map { it.toDoublePoint() })
+
+fun DoublePoint.isInsidePolygon(polygon: List<DoublePoint>): Boolean {
+  var inside = false
+  for ((a, b) in (polygon + polygon.first()).windowed(2)) {
+    if ((a.y > y) != (b.y > y)) {
+      val intersectX = a.x + (y - a.y) * (b.x - a.x) / (b.y - a.y)
+      if (x < intersectX) {
+        inside = !inside
+      }
+    }
+  }
+  return inside
+}
+
+fun Index.isOnBoundaryOfPolygon(polygon: List<Index>): Boolean =
+  Point(column, row).isOnBoundaryOfPolygon(polygon.map { Point(it.column, it.row) })
+
+fun Point.isOnBoundaryOfPolygon(polygon: List<Point>): Boolean {
+  for ((a, b) in (polygon + polygon.first()).windowed(2)) {
+    when {
+      a.x == b.x -> {
+        if (a.x == x) {
+          val min = minOf(a.y, b.y)
+          val max = maxOf(a.y, b.y)
+          if (y in min..max) return true
+        }
+      }
+
+      a.y == b.y -> {
+        if (a.y == y) {
+          val min = minOf(a.x, b.x)
+          val max = maxOf(a.x, b.x)
+          if (x in min..max) return true
+        }
+      }
+
+      else -> fail("The polygon must be rectilinear.")
+    }
+  }
+  return false
+}
+
+fun LongPoint.isOnBoundaryOfPolygon(polygon: List<LongPoint>): Boolean {
+  for ((a, b) in (polygon + polygon.first()).windowed(2)) {
+    when {
+      a.x == b.x -> {
+        if (a.x == x) {
+          val min = minOf(a.y, b.y)
+          val max = maxOf(a.y, b.y)
+          if (y in min..max) return true
+        }
+      }
+
+      a.y == b.y -> {
+        if (a.y == y) {
+          val min = minOf(a.x, b.x)
+          val max = maxOf(a.x, b.x)
+          if (x in min..max) return true
+        }
+      }
+
+      else -> fail("The polygon must be rectilinear.")
+    }
+  }
+  return false
+}
+
+@JvmName("isOnBoundaryOfPointPolygon")
+fun DoublePoint.isOnBoundaryOfPolygon(polygon: List<Point>): Boolean =
+  isOnBoundaryOfPolygon(polygon.map { it.toDoublePoint() })
+
+@JvmName("isOnBoundaryOfLongPointPolygon")
+fun DoublePoint.isOnBoundaryOfPolygon(polygon: List<LongPoint>): Boolean =
+  isOnBoundaryOfPolygon(polygon.map { it.toDoublePoint() })
+
+fun DoublePoint.isOnBoundaryOfPolygon(polygon: List<DoublePoint>): Boolean {
+  for ((a, b) in (polygon + polygon.first()).windowed(2)) {
+    when {
+      a.x == b.x -> {
+        if ((a.x - x).absoluteValue < 1e-9) {
+          val min = minOf(a.y, b.y)
+          val max = maxOf(a.y, b.y)
+          if (y in min..max) return true
+        }
+      }
+
+      a.y == b.y -> {
+        if ((a.y - y).absoluteValue < 1e-9) {
+          val min = minOf(a.x, b.x)
+          val max = maxOf(a.x, b.x)
+          if (x in min..max) return true
+        }
+      }
+
+      else -> fail("The polygon must be rectilinear.")
+    }
+  }
+  return false
+}
+
 fun BigInteger.ceilDiv(other: BigInteger): BigInteger = (this + other - BigInteger.ONE) / other
 
 fun Int.ceilDiv(other: Int): Int = (this + other - 1) / other

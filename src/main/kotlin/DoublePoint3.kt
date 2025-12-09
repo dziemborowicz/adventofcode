@@ -84,6 +84,11 @@ fun DoublePoint3(string: String): DoublePoint3 {
   return DoublePoint3(parts[0].toDouble(), parts[1].toDouble(), parts[2].toDouble())
 }
 
+fun Point3.toDoublePoint3(): DoublePoint3 = DoublePoint3(x.toDouble(), y.toDouble(), z.toDouble())
+
+fun LongPoint3.toDoublePoint3(): DoublePoint3 =
+  DoublePoint3(x.toDouble(), y.toDouble(), z.toDouble())
+
 fun Triple<Double, Double, Double>.toDoublePoint3(): DoublePoint3 = DoublePoint3(this)
 
 fun String.toDoublePoint3(): DoublePoint3 = DoublePoint3(this)

@@ -178,6 +178,10 @@ fun DoublePoint(string: String): DoublePoint {
   return DoublePoint(parts[0].toDouble(), parts[1].toDouble())
 }
 
+fun Point.toDoublePoint(): DoublePoint = DoublePoint(x.toDouble(), y.toDouble())
+
+fun LongPoint.toDoublePoint(): DoublePoint = DoublePoint(x.toDouble(), y.toDouble())
+
 fun Pair<Double, Double>.toDoublePoint(): DoublePoint = DoublePoint(this)
 
 fun String.toDoublePoint(): DoublePoint = DoublePoint(this)

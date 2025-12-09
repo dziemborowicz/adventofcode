@@ -187,6 +187,10 @@ fun Point(string: String): Point {
   return Point(parts[0].toInt(), parts[1].toInt())
 }
 
+fun LongPoint.toPoint(): Point = Point(x.toInt(), y.toInt())
+
+fun DoublePoint.toPoint(): Point = Point(x.toInt(), y.toInt())
+
 fun Pair<Int, Int>.toPoint(): Point = Point(this)
 
 fun String.toPoint(): Point = Point(this)

@@ -171,6 +171,10 @@ fun LongPoint(string: String): LongPoint {
   return LongPoint(parts[0].toLong(), parts[1].toLong())
 }
 
+fun Point.toLongPoint(): LongPoint = LongPoint(x.toLong(), y.toLong())
+
+fun DoublePoint.toLongPoint(): LongPoint = LongPoint(x.toLong(), y.toLong())
+
 fun Pair<Long, Long>.toLongPoint(): LongPoint = LongPoint(this)
 
 fun String.toLongPoint(): LongPoint = LongPoint(this)
