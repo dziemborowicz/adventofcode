@@ -1,3 +1,7 @@
+import com.microsoft.z3.Context
+import com.microsoft.z3.IntNum
+import com.microsoft.z3.Status
+
 class PuzzleY2025D10 : Puzzle {
 
   private data class Schematic(
@@ -29,9 +33,9 @@ class PuzzleY2025D10 : Puzzle {
 
         if (state == schematic.goal) return@sumOf presses
 
-        for (machines in schematic.buttons) {
+        for (lights in schematic.buttons) {
           val newState = state.mapIndexed { i, value ->
-            if (i in machines) {
+            if (i in lights) {
               !value
             } else {
               value
@@ -45,8 +49,39 @@ class PuzzleY2025D10 : Puzzle {
     }
   }
 
-  /** Solved using equation solver. */
-  override fun solve2() = NoAnswer
+  override fun solve2(): Int {
+    return schematics.sumOf { schematic ->
+      Context().use { ctx ->
+        val opt = ctx.mkOptimize()
+
+        val buttonPressCounts = schematic.buttons.indices.map { ctx.mkIntConst("x{$it}") }
+
+        buttonPressCounts.forEach { buttonPressCount ->
+          opt.Add(ctx.mkGe(buttonPressCount, ctx.mkInt(0)))
+        }
+
+        schematic.joltageRequirement.forEachIndexed { joltageIndex, joltage ->
+          opt.Add(
+            ctx.mkEq(
+              ctx.mkInt(joltage), ctx.mkAdd(
+                schematic.buttons.indices.mapNotNull { buttonsIndex ->
+                  if (joltageIndex in schematic.buttons[buttonsIndex]) {
+                    buttonPressCounts[buttonsIndex]
+                  } else {
+                    null
+                  }
+                })
+            )
+          )
+        }
+
+        val sum = ctx.mkAdd(buttonPressCounts)
+        val result = opt.MkMinimize(sum)
+        check(opt.Check() == Status.SATISFIABLE)
+        (result.value as IntNum).int
+      }
+    }
+  }
 
   companion object {
     val testInput1 = """

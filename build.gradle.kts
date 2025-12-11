@@ -16,6 +16,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.21")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.10.2")
+  implementation("tools.aqua:z3-turnkey:4.14.1")
   runtimeOnly("org.jetbrains.kotlin:kotlin-scripting-jsr223:2.2.21")
   testImplementation(kotlin("test"))
 }
