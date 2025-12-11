@@ -6,37 +6,52 @@ import java.math.BigInteger
 fun String.toChar(): Char = single()
 
 fun String.extractStrings(): List<String> {
-  return Regex("""\w+""").findAll(this).map { it.value }.toList()
+  return extractRegexes("""\w+""")
 }
 
 fun String.extractChars(): List<Char> {
-  return Regex("""\w""").findAll(this).map { it.value.single() }.toList()
+  return extractRegexes("""\w""").map { it.single() }.toList()
 }
 
 fun String.extractDoubles(): List<Double> {
-  return Regex("""((?<!\d)-)?\d+(\.\d+)?([eE][+-]?\d+)?""").findAll(this)
-    .map { it.value.toDouble() }.toList()
+  return extractRegexes("""((?<!\d)-)?\d+(\.\d+)?([eE][+-]?\d+)?""").map { it.toDouble() }.toList()
 }
 
 fun String.extractBigDecimals(): List<BigDecimal> {
-  return Regex("""((?<!\d)-)?\d+(\.\d+)?([eE][+-]?\d+)?""").findAll(this)
-    .map { it.value.toBigDecimal() }.toList()
+  return extractRegexes("""((?<!\d)-)?\d+(\.\d+)?([eE][+-]?\d+)?""").map { it.toBigDecimal() }
+    .toList()
 }
 
 fun String.extractBigIntegers(): List<BigInteger> {
-  return Regex("""((?<!\d)-)?\d+""").findAll(this).map { it.value.toBigInteger() }.toList()
+  return extractRegexes("""((?<!\d)-)?\d+""").map { it.toBigInteger() }.toList()
 }
 
 fun String.extractInts(): List<Int> {
-  return Regex("""((?<!\d)-)?\d+""").findAll(this).map { it.value.toInt() }.toList()
+  return extractRegexes("""((?<!\d)-)?\d+""").map { it.toInt() }.toList()
 }
 
 fun String.extractLongs(): List<Long> {
-  return Regex("""((?<!\d)-)?\d+""").findAll(this).map { it.value.toLong() }.toList()
+  return extractRegexes("""((?<!\d)-)?\d+""").map { it.toLong() }.toList()
 }
 
 fun String.extractRationals(): List<Rational> {
-  return Regex("""((?<!\d)-)?\d+(/\d+)?""").findAll(this).map { it.value.toRational() }.toList()
+  return extractRegexes("""((?<!\d)-)?\d+(/\d+)?""").map { it.toRational() }.toList()
+}
+
+fun String.extractRegexes(regex: Regex): List<String> {
+  return regex.findAll(this).map { it.value }.toList()
+}
+
+fun String.extractRegexes(regex: String): List<String> {
+  return extractRegexes(Regex(regex))
+}
+
+fun String.extractRegex(regex: Regex): String {
+  return extractRegexes(regex).single()
+}
+
+fun String.extractRegex(regex: String): String {
+  return extractRegexes(regex).single()
 }
 
 fun <A> String.extract(a: (String) -> A): A = a(extractStrings().single())
@@ -82,6 +97,8 @@ fun String.extractBigIntegerLists(): List<List<BigInteger>> = lines().extractBig
 fun String.extractIntLists(): List<List<Int>> = lines().extractIntLists()
 fun String.extractLongLists(): List<List<Long>> = lines().extractLongLists()
 fun String.extractRationalLists(): List<List<Rational>> = lines().extractRationalLists()
+fun String.extractRegexLists(regex: Regex): List<List<String>> = lines().extractRegexLists(regex)
+fun String.extractRegexLists(regex: String): List<List<String>> = lines().extractRegexLists(regex)
 
 fun <A> String.extractList(a: (String) -> A): List<A> = lines().extractList(a)
 
@@ -125,6 +142,8 @@ fun Iterable<String>.extractBigIntegers(): List<BigInteger> = extractBigIntegerL
 fun Iterable<String>.extractInts(): List<Int> = extractIntLists().flatten()
 fun Iterable<String>.extractLongs(): List<Long> = extractLongLists().flatten()
 fun Iterable<String>.extractRationals(): List<Rational> = extractRationalLists().flatten()
+fun Iterable<String>.extractRegexes(regex: Regex): List<String> = extractRegexLists(regex).flatten()
+fun Iterable<String>.extractRegexes(regex: String): List<String> = extractRegexLists(regex).flatten()
 
 fun <A> Iterable<String>.extract(a: (String) -> A): A = extractList(a).single()
 
@@ -170,6 +189,8 @@ fun Iterable<String>.extractBigIntegerLists(): List<List<BigInteger>> =
 fun Iterable<String>.extractIntLists(): List<List<Int>> = map { it.extractInts() }
 fun Iterable<String>.extractLongLists(): List<List<Long>> = map { it.extractLongs() }
 fun Iterable<String>.extractRationalLists(): List<List<Rational>> = map { it.extractRationals() }
+fun Iterable<String>.extractRegexLists(regex: Regex): List<List<String>> = map { it.extractRegexes(regex) }
+fun Iterable<String>.extractRegexLists(regex: String): List<List<String>> = map { it.extractRegexes(regex) }
 
 fun <A> Iterable<String>.extractList(a: (String) -> A): List<A> = map { it.extract(a) }
 
