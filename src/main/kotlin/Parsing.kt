@@ -6,11 +6,11 @@ import java.math.BigInteger
 fun String.toChar(): Char = single()
 
 fun String.extractStrings(): List<String> {
-  return Regex("""[^\s,-]+""").findAll(this).map { it.value }.toList()
+  return Regex("""\w+""").findAll(this).map { it.value }.toList()
 }
 
 fun String.extractChars(): List<Char> {
-  return Regex("""[^\s,-]""").findAll(this).map { it.value.single() }.toList()
+  return Regex("""\w""").findAll(this).map { it.value.single() }.toList()
 }
 
 fun String.extractDoubles(): List<Double> {
